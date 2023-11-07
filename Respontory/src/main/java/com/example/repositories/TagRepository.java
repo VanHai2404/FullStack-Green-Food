@@ -7,5 +7,5 @@ import com.example.entities.Tag;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Integer> {
-	//het 
+	
 }
