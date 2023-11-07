@@ -12,24 +12,25 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "post_tag")
-public class PostTag implements Serializable{
+public class PostTag implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "postId", nullable = false)
-    private Post post;
+	@ManyToOne
+	@JoinColumn(name = "postId", nullable = false)
+	private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "tag_id", nullable = false)
-    private Tag tag;
+	@ManyToOne
+	@JoinColumn(name = "tag_id", nullable = false)
+	private Tag tag;
 
-    // Constructors, getters, and setters
+	// Constructors, getters, and setters
 }

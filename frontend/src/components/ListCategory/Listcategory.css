@@ -1,0 +1,34 @@
+.categoriegrit {
+    /* Your styles for categoriegrit component */
+  }
+  
+  .gridContainer {
+    display: grid;
+    column-count: 6;
+    column-gap: 0px;
+    margin: 0% 5% 4%;
+    padding: 0%;
+    border: 0px solid rgb(224, 224, 224);
+    grid-template-columns: auto auto auto auto auto auto;
+}
+
+
+  
+  
+  .vp-cont {
+    background: rgb(255, 255, 255);
+    margin: 0% 4% 4% 0%;
+    padding: 0%;
+    padding-bottom: 10px;
+  }
+  
+  .vp-cont img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  /* Add more styles as needed */
+  

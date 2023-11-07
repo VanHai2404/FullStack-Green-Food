@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "roles")
 public class Role implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String name;
 }
