@@ -11,6 +11,7 @@ import com.edu.shop.domain.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+	
 	List<Product> findByNameContaining(String Name);
 
 	Page<Product> findByNameContaining(String Name, Pageable pageable);

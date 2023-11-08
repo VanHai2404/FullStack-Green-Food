@@ -12,7 +12,6 @@ import com.edu.shop.domain.Supplier;
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 	List<Supplier> findByNameContaining(String Name);
-
 	Page<Supplier> findByNameContaining(String Name, Pageable pageable);
 
 }

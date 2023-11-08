@@ -7,5 +7,4 @@ import com.edu.shop.domain.ProductImage;
 
 @Repository
 public interface ProductImageRepostory  extends JpaRepository<ProductImage, Integer>{
-
 }
