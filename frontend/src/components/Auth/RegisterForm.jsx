@@ -17,8 +17,7 @@ const RegisterForm = () => {
                 <input required=""type="password" defaultValue="" name="#" id="#" placeholder="Nhập số điện thoại" className="text"/>
             </div>
             <div className="clearfix custommer_account_action">
-                <div
-                    className="action_bottom"
+                <div className="action_bottom"
                      >
                         <button className="btnLogin" type="submit" defaultValue="Đăng nhập" >Gửi mã xác nhận</button>
                     
