@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Danh Mục Sản Phẩm</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 56px;
+            background: url('https://munfirm-react.vercel.app/assets/images/background/footer-bg-shape.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        #contactForm {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: rgba(12, 183, 12, 0.66);
+            color: #fff;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
+
+        .flower-basket img {
+            max-width: 100%;
+            height: auto;
+
+        }
+
+        button:hover {
+            background-color: darkorange;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page Content -->
+    <div class="container">
+
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <form id="contactForm" name="contactForm" method="post">
+                    <div>
+                        <span class="sub-title mb-15">Contact With Us</span>
+                        <h3>Send Us a Message</h3>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Full Name"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone Number"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email Address"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" id="message" class="form-control" rows="4" placeholder="Write Message"
+                            required></textarea>
+                    </div>
+                    <div class="form-group mb-0">
+                        <button type="submit">Send Message<i></i></button>
+                        <div id="msgSubmit" class="hidden"></div>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="flower-basket">
+                    <img src="https://munfirm-react.vercel.app/assets/images/contact/contact-right.png"
+                        alt="Flower Basket">
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
