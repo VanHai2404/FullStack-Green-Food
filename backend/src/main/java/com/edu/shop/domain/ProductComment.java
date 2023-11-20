@@ -43,4 +43,8 @@ public class ProductComment implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "customerId")
 	private Customer customer;
+	
+	@ManyToOne
+	@JoinColumn(name = "productId")
+	private Product product;
 }

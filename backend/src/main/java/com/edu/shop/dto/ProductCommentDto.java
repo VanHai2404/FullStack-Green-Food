@@ -3,6 +3,7 @@ package com.edu.shop.dto;
 import java.util.Date;
 
 import com.edu.shop.domain.Customer;
+import com.edu.shop.domain.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +21,5 @@ public class ProductCommentDto {
 	private Date createDate;
 	private Date updatedDate;
 	private Customer customer;
+	private Product product;
 }
