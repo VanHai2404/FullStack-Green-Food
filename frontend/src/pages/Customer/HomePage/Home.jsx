@@ -112,27 +112,6 @@ const Home = () => {
         
         }
       ];
-      
-//     const [products, setProducts] = useState([]);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await fetch('../../../data/Products.json'); // Đường dẫn đến file products.json
-//         console.log("dữ  Liệu",response);
-//         if (!response.ok) {
-//             throw new Error('Network response was not ok');
-//           }
-//         const data = await response.json();
-//         setProducts(data);
-//       } catch (error) {
-//         console.error('Error fetching data:', error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []); // Sử dụng mảng rỗng để chỉ chạy effect một lần khi component được mount 
-
     return (
         <div>
             <SliderComponent />

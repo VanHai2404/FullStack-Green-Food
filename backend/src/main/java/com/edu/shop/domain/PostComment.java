@@ -22,11 +22,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "postComments")
-public class PostComment implements Serializable{
+public class PostComment implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer commentId;
+	private Long commentId;
 	@Column(columnDefinition = "nvarchar(200) not null")
 	private String detail;
 	@Column(nullable = false)

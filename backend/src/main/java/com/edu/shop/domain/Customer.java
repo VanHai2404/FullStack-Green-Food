@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class Customer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int customerId;
+	private Integer customerId;
 
 	@Column(length = 50)
 	private String username;
@@ -66,8 +66,8 @@ public class Customer implements Serializable {
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<PostComment> comments;
-	
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<ProductComment> productComments;
+
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private Set<ProductComment> productComments;
 
 }

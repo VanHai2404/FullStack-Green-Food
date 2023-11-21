@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,16 +21,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "tags")
 public class Tag implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tag_id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long tag_id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "tag")
-    private Set<PostTag> postTags;
+	@OneToMany(mappedBy = "tag")
+	private Set<PostTag> postTags;
 
-
-  
 }

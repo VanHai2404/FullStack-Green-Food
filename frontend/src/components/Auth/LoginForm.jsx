@@ -12,13 +12,13 @@ const LoginForm = () => {
             style={{ fontWeight: 400 }}
         >
             <div className="clearfix large_form">
-                <label htmlFor="#" className="icon-field">
+                <label className="icon-field">
                     <i className="icon-login icon-envelope " />
                 </label>
                 <input required="" type="text" defaultValue="" name="#" id="#" placeholder="Vui số điện thoại của bạn "className="text" />
             </div>
             <div className="clearfix large_form large_form-mrb">
-                <label htmlFor="#" className="icon-field">
+                <label className="icon-field">
                     <i className="icon-login icon-shield" />
                 </label>
                 <input required=""type="password" defaultValue="" name="#" id="#" placeholder="Vui lòng nhập mật khẩu" className="text"/>
@@ -67,4 +67,4 @@ const LoginForm = () => {
 
     );
 };
-export default LoginForm;
+export default LoginForm; 

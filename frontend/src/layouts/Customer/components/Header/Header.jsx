@@ -19,7 +19,7 @@ const Header = ({ toggleCart }) => {
     };
     const handleScroll = () => {
         const scrollPosition = window.scrollY;
-        const scrollThreshold = 1000; // Độ dài mà bạn muốn người dùng lướt chuột xuống trước khi ẩn app-header
+        const scrollThreshold = 700; // Độ dài mà bạn muốn người dùng lướt chuột xuống trước khi ẩn app-header
 
         if (scrollPosition > scrollThreshold && isAppHeaderVisible) {
             setAppHeaderVisible(false);
@@ -160,8 +160,12 @@ const Header = ({ toggleCart }) => {
         
                                 <li> NƯỚC ÉP &CẮT LÁT  <FaSortDown className='fa-caret-down' /> </li>
                                 <li> GIỎ QUÀ  <FaSortDown className='fa-caret-down' /> </li>
+                                <Link to={config.routes.Post}>
                                 <li> BÀI VIẾT  <FaSortDown className='fa-caret-down' /> </li>
+                                </Link>
+                                <Link to={config.routes.Contact}>
                                 <li> LIÊN HỆ</li>
+                                </Link>
                                 <li> CHÍNH SÁCH </li>
                                 <li> VỀ CHUNG TÔI  <FaSortDown className='fa-caret-down' /></li>
                             </ul>

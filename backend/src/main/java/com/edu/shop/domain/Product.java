@@ -2,6 +2,7 @@ package com.edu.shop.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.edu.shop.constants.ProductUnit;
@@ -42,6 +43,9 @@ public class Product implements Serializable {
 
 	@Column(nullable = false)
 	private Double untiPrice;
+	@Column(nullable = false)
+	private Double importPrice;
+
 
 	@Column(length = 200)
 	private String image;
@@ -85,12 +89,14 @@ public class Product implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "categoryId")
 	private Category category;
-	
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private Set<ProductImage> images;
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private Set<ProductImage> images;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<OrderDetail> orderDetails;
+	
+	   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	    private List<ProductComment> comments;
 
 }
