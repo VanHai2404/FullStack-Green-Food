@@ -31,14 +31,14 @@ const SidebarMenu = () => {
 
   ];
   const Invoice = [
-    { href: '#', title: 'Danh Sách Hóa Đơn' },
+    { to: config.routes.ListOrder, title: 'Danh Sách Hóa Đơn' },
     { href: '#', title: 'Tạo Hóa Đơn' },
     { href: '#', title: 'Thông Tin Chi Tiết' },
 
   ];
   const Blog = [
     { href: '#', title: 'Danh Sách Bài Viết' },
-    { href: '#', title: 'Tags' },
+    {to: config.routes.TagPost, title: 'Tags' },
     { href: '#', title: 'Danh Mục Bài Viết' },
     { href: '#', title: 'Tạo Bài Viết' },
 

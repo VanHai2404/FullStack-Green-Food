@@ -13,8 +13,6 @@ import Logo from '../../assets/images/Logo/LogoUser.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 const TableListCategory = () => {
     const [categories, setCategories] = useState([]);
     useEffect(() => {
@@ -70,13 +68,7 @@ const TableListCategory = () => {
                                 </font>
                             </div>
                         </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>SỰ MIÊU TẢ</font>
-                                </font>
-                            </div>
-                        </th>
+                     
                         <th className='rc-table-cell' scope="col">
                             <div className="flex items-center">
                                 <font style={{ verticalAlign: "inherit" }}>
@@ -127,9 +119,7 @@ const TableListCategory = () => {
                             <td className="td-table-cell">
                                 <p className="text-sm">{category.name}</p>
                             </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm"> {category.description}</p>
-                            </td>
+                           
                             <td className="td-table-cell">
                                 <p className="text-sm">{category.slug}</p>
                             </td>

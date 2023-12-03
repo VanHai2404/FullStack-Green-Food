@@ -2,31 +2,54 @@ import React, { useState, useRef,useEffect  } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import LogoUser from '../../assets/images/Logo/LogoUser.png'
 import './Dropdown.css';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../redux/actions/auth-action';
 
 const MenuProfile = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [username, setUsername] = useState('');
   const menuRef = useRef(null);
 
   const handleDropdownToggle = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
+
   useEffect(() => {
+    // Retrieve user data from localStorage
+    const accountData = JSON.parse(localStorage.getItem('account'));
+  
+    // Kiểm tra nếu có dữ liệu và có trường 'username'
+    if (accountData && accountData.fullname) {
+      setUsername(accountData.fullname);
+    }
+  
+    // Handle outside clicks to close the dropdown
     const handleOutsideClick = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
-
+  
     document.addEventListener('mousedown', handleOutsideClick);
-
+  
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
-  }, [menuRef]); 
+  }, [menuRef]);
+
+  
 
   const handleMenuClick = () => {
     setDropdownOpen(false);
+  };
+
+  const  handlelogout=()=>{
+    dispatch(logout(navigate));
+
   };
 
   return (
@@ -37,7 +60,7 @@ const MenuProfile = () => {
         onClick={handleDropdownToggle}> 
         <img className="rounded-circle header-profile-user" src={LogoUser} alt="Header Avatar"/>
         <span className="d-none d-xl-inline-block ms-1 fw-medium font-size-15">
-            VanHai
+        {username}
         </span>
         <i className="uil-angle-down d-none d-xl-inline-block font-size-15" />
     </button>
@@ -76,7 +99,7 @@ const MenuProfile = () => {
             <i className="uil uil-lock-alt font-size-18 align-middle me-1 text-muted" />
             <span className="align-middle">Màn hình khóa</span>
         </a>
-        <a className="dropdown-item" href="/logout">
+        <a className="dropdown-item"  onClick={handlelogout}> 
             <i className="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted" />
             <span className="align-middle">Đăng xuất</span>
         </a>

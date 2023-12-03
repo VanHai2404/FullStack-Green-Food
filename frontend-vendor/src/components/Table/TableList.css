@@ -1,3 +1,30 @@
+
+/* Không áp dụng filter và giảm độ mờ */
+img {
+    filter: none; /* Không áp dụng filter */
+    -webkit-filter: none; /* Cho trình duyệt Safari/Chrome cũ */
+    -moz-filter: none; /* Cho trình duyệt Firefox cũ */
+    -o-filter: none; /* Cho trình duyệt Opera cũ */
+    -ms-filter: none; /* Cho trình duyệt IE cũ */
+  }
+  
+  /* Disable thuộc tính lazy loading */
+  img[loading="lazy"] {
+    filter: none; /* Cho một số trình duyệt không hỗ trợ loading="lazy" */
+    -webkit-filter: none;
+    -moz-filter: none;
+    -o-filter: none;
+    -ms-filter: none;
+    isolation: auto; /* Tăng độ phân giải của ảnh */
+  }
+  
+  /* Chỉ định kích thước tối ưu của ảnh */
+  img {
+    image-rendering: optimizeQuality; /* Đối với một số trình duyệt cụ thể */
+    image-rendering: -webkit-optimize-contrast; /* Cho Safari/Chrome cũ */
+    image-rendering: crisp-edges; /* Đảm bảo rõ nét */
+  }
+
 .rc-table-cell{
     letter-spacing: .05em;
 

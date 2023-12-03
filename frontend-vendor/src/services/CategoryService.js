@@ -13,7 +13,10 @@ const CategoryService = {
 
   add(data) {
     const url = '/categories';
-    return axiosAdmin.post(url, data);
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    return axiosAdmin.post(url, data, { headers });
   },
 
   update(data) {

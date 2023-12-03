@@ -1,12 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { addCustomer ,addImageCustomer } from '../../redux/actions/customer-action';
 
 const AddCustomerForm = () => {
+    const dispatch = useDispatch();
+    const [customerDto, setCustomerDto] = useState({
+        customerId: "",
+        username: "",
+        fullname: "",
+        email: "",
+        gender: "",
+        password: "",
+        phone: "",
+        imageFile: null,
+        image: null,
+        dateOfBirth: "",
+        registeredDate: "",
+        status: ""
+    });
+    // 
+    const handleChange = (e) => {
+        const { name, value, type, files } = e.target;
+        // Xử lý trường input là file hoặc các trường thông tin khác
+        const newValue = type === 'file' ? files[0] : value;
+
+        setCustomerDto((prevDto) => ({
+            ...prevDto,
+            [name]: newValue,
+        }));
+    };
+
+    const handleCheckboxChange = (value) => {
+        setCustomerDto((prevDto) => ({
+            ...prevDto,
+            gender: value,
+        }));
+    };
+    //   
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const customerId = await dispatch(addCustomer(customerDto));
+
+            // Thêm bất kỳ hành động nào khác sau khi thêm khách hàng thành công
+            console.log('Thêm khách hàng thành công, ID:', customerId);
+
+            // Nếu có hình ảnh, gửi hình ảnh sau khi đã lưu thông tin khách hàng
+            if (customerDto.imageFile) {
+                await dispatch(addImageCustomer(customerId, customerDto.imageFile));
+                console.log('Lưu ảnh thành công');
+            }
+        } catch (error) {
+            console.error('Lỗi khi thêm khách hàng:', error);
+        }
+    };
+
 
 
     return (
         <>
             {/* Multi Columns Form */}
-            <form className="row g-3 needs-validation" noValidate="">
+            <form className="row g-3 needs-validation" onSubmit={handleSubmit} noValidate="">
                 <div className="row g-3">
                     <div className="col-md-6">
                         <div className="col pt-4">
@@ -14,9 +69,11 @@ const AddCustomerForm = () => {
                                 Tên đăng nhập
                             </label>
                             <input
-                                type="email"
+                                type="text"
                                 className="form-control form-add form-add"
-                                id="inputEmail5"
+                                name="username"
+                                value={customerDto.username}
+                                onChange={handleChange}
                                 required=""
                             />
                         </div>
@@ -25,12 +82,13 @@ const AddCustomerForm = () => {
                                 Họ và tên
                             </label>
                             <input
-                                type="email"
-                                className="form-control form-add"
-                                id="inputEmail5"
+                                type="text"
+                                className="form-control form-add form-add"
+                                name="fullname"
+                                value={customerDto.fullname}
+                                onChange={handleChange}
                                 required=""
                             />
-                            <div className="invalid-feedback">Name Not Null</div>
                         </div>
                         <div className="col pt-4">
                             <label htmlFor="inputEmail5" className="form-label">
@@ -38,26 +96,36 @@ const AddCustomerForm = () => {
                             </label>
                             <input
                                 type="email"
-                                className="form-control form-add"
-                                id="inputEmail5"
+                                className="form-control form-add form-add"
+                                name="email"
+                                value={customerDto.email}
+                                onChange={handleChange}
                                 required=""
                             />
                         </div>
                     </div>
                     <div className="col-md-6">
                         <div className="pr">
-                            <img
-                                src="/img/product/SANPHAM2.jpeg"
-                                alt=""
-                                height="250px"
-                                width="200px"
-                            />
+                            {/* Hiển thị ảnh trước khi upload */}
+                            {customerDto.imageFile && (
+                                <img
+                                    src={URL.createObjectURL(customerDto.imageFile)}
+                                    alt="Preview"
+                                    height="250px"
+                                    width="200px"
+                                />
+                            )}
                         </div>
                         <label htmlFor="inputEmail5" className="form-label">
-                            lmage File
+                            Image File
                         </label>{" "}
                         <br />
-                        <input type="file" required="" />
+                        <input
+                            type="file"
+                            name="imageFile"
+                            onChange={handleChange}
+                            required=""
+                        />
                     </div>
                 </div>
 
@@ -68,7 +136,9 @@ const AddCustomerForm = () => {
                     <input
                         type="password"
                         className="form-control form-add form-add"
-                        id="inputEmail5"
+                        name="password"
+                        value={customerDto.password}
+                        onChange={handleChange}
                         required=""
                     />
                 </div>
@@ -79,49 +149,82 @@ const AddCustomerForm = () => {
                     <input
                         type="password"
                         className="form-control form-add form-add"
-                        id="inputEmail5"
+
+                    />
+                </div>
+                {/*  */}
+                <div className="col-md-6">
+                    <label htmlFor="inputState" className="form-label">
+                        SĐT
+                    </label>
+                    <input
+                        type="number"
+                        className="form-control form-add form-add"
+                        name="phone"
+                        value={customerDto.phone}
+                        onChange={handleChange}
                         required=""
                     />
                 </div>
-                <div className="col-12 " style={{display:"flex"}}>
-                    <div className="form-check form-check-inline" style={{paddingRight:"40px"}}>
+                <div className="col-md-6">
+                    <label htmlFor="inputState" className="form-label">
+                        Ngày sinh
+                    </label>
+                    <input
+                        type="date"
+                        className="form-control form-add form-add"
+                        name="dateOfBirth"
+                        value={customerDto.dateOfBirth}
+                        onChange={handleChange}
+                        required=""
+
+                    />
+                </div>
+                <div className="col-12 " style={{ display: "flex" }}>
+                    <div className="form-check form-check-inline" style={{ paddingRight: "40px" }}>
                         <input
                             className="form-check-input"
                             type="checkbox"
-                            id="gridCheck"
+                            id="maleCheckbox"
+                            checked={customerDto.gender === 'male'}
+                            onChange={() => handleCheckboxChange('male')}
                             required=""
                         />
-                        <label className="form-check-label" htmlFor="gridCheck">
-                        Male
+                        <label className="form-check-label" htmlFor="maleCheckbox">
+                            Male
                         </label>
                     </div>
-                    <div className="form-check form-check-inline" style={{paddingRight:"40px"}}>
+                    <div className="form-check form-check-inline" style={{ paddingRight: "40px" }}>
                         <input
                             className="form-check-input"
                             type="checkbox"
-                            id="gridCheck"
+                            id="femaleCheckbox"
+                            checked={customerDto.gender === 'female'}
+                            onChange={() => handleCheckboxChange('female')}
                             required=""
                         />
-                        <label className="form-check-label" htmlFor="gridCheck">
-                        Female
+                        <label className="form-check-label" htmlFor="femaleCheckbox">
+                            Female
                         </label>
                     </div>
                     <div className="form-check form-check-inline">
                         <input
                             className="form-check-input"
                             type="checkbox"
-                            id="gridCheck"
+                            id="differentCheckbox"
+                            checked={customerDto.gender === 'different'}
+                            onChange={() => handleCheckboxChange('different')}
                             required=""
                         />
-                        <label className="form-check-label" htmlFor="gridCheck">
-                        Different
+                        <label className="form-check-label" htmlFor="differentCheckbox">
+                            Different
                         </label>
                     </div>
                 </div>
 
                 <div className="col-12">
                     <div className="form-floating mb-3">
-                  
+
                         <textarea
                             className="form-control form-add"
                             placeholder="Leave a comment here"

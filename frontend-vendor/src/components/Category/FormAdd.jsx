@@ -1,63 +1,51 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import CKEditorComponent from '../CKEditor/CKEditor';
-import CategoryService from '../../services/CategoryService';
-import { toast } from 'react-toastify';
+import { addCategory } from '../../redux/actions/category-action'; 
+// import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const FormCategory = () => {
-
-    const [category, setCategory] = useState({
+    const dispatch = useDispatch();
+    const [categoryDto, setCategoryDto] = useState({
         name: "",
         slug: "",
         description: "",
-        
+
     });
+
     const {
         name,
         slug,
         description,
-    } = category;
+      } = categoryDto;
 
-    const handleInputChange = (e) => {
+      const handleChange = (e) => {
         if (e.target && e.target.name !== undefined && e.target.value !== undefined) {
-            setCategory({
-                ...category,
-                [e.target.name]: e.target.value,
-            });
+          setCategoryDto({
+            ...categoryDto,
+            [e.target.name]: e.target.value,
+          });
         } else {
-            // Handle CKEditor change
-            setCategory({
-                ...category,
-                description: e,
-            });
+          // Handle CKEditor change
+          setCategoryDto({
+            ...categoryDto,
+            description: e.target.value,
+          });
         }
-    };
-    
-
+      };
+      
     const handleSaveCategory = async (e) => {
         e.preventDefault();
-        try {
-            console.log("Mô Tả", category.description);
-             await CategoryService.add(category);
-            toast.success('Thêm Danh Muc Thanh Công', { position: toast.POSITION.TOP_RIGHT });
-            resetForm()
+        dispatch(addCategory(categoryDto));
+         // Reset form after successful submission
+     setCategoryDto({
+        name: "",
+        slug: "",
+        description: "",
+      });
 
-            console.log("Thêm Danh Muc Thanh Công")
-
-        } catch (error) {
-            toast.error('Xảy ra lỗi khi thêm category', { position: toast.POSITION.TOP_RIGHT });
-            console.error('Error saving category:', error);
-        }
+      
     };
-    const resetForm = () => {
-        this.setCategory({
-            name: '',
-            slug: '',
-            description: '',
-          });
-    };
-    
-    
-
     return (
         <form action="">
             <div className="row">
@@ -74,13 +62,13 @@ const FormCategory = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Tiêu đề</span>
-                                <input type="text" name="name" className="form-control form-add" placeholder="Tiêu đề danh mục" value={name} onChange={handleInputChange} />
+                                <input type="text" name="name" className="form-control form-add" placeholder="Tiêu đề danh mục" value={name} onChange={handleChange} />
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Slug</span>
-                                <input type="text" name="slug" className="form-control form-add" placeholder="Slug danh mục" value={slug} onChange={handleInputChange} />
+                                <input type="text" name="slug" className="form-control form-add" placeholder="Slug danh mục" value={slug} onChange={handleChange} />
                             </div>
                         </div>
                     </div>
@@ -88,8 +76,7 @@ const FormCategory = () => {
                     <div className="row mb-4">
                         <div className="form-outline mb-4">
                             <span className='form-label'>Mô tả Danh mục</span>
-                                <CKEditorComponent  name="description" value={description} onChange={handleInputChange} />
-
+                            <CKEditorComponent name="description" value={description} onChange={handleChange} />
                         </div>
 
 

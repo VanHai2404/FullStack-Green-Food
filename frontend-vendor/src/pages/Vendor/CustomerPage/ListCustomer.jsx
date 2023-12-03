@@ -2,7 +2,7 @@
 import React from 'react';
 import '../ProductPage/AddProducts.css';
 import { BsSearch }from 'react-icons/bs';
-import TableListCustomer from '../../../components/Table/TableListCustomer';
+import TableListCustomer from '../../../components/Customer/TableListCustomer';
 
 const ListCustomer = () => {
     return (

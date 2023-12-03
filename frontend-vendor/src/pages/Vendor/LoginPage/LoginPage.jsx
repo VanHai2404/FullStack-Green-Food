@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo from '../../../assets/images/Logo/LOGO2.png';
-import { FaFacebookF,FaTwitter,FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import LoginForm from '../../../components/Auth/LoginForm';
 import './Login.css'
 
 const Login = () => {
@@ -18,61 +19,12 @@ const Login = () => {
                     <h3 className="mb-1 font-w600">Chào mừng bạn đến Fruit FPT</h3>
                     <p className="">Đăng nhập bằng cách nhập thông tin bên dưới</p>
                   </div>
-                  <form>
-                    <div className="form-group">
-                      <label className="mb-2 ">
-                        <strong className="">Email</strong>
-                      </label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        defaultValue="demo@email.com"
-                        fdprocessedid="dshr78"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="mb-2 ">
-                        <strong className="">Password</strong>
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        defaultValue={123456}
-                        fdprocessedid="esxpcl"
-                      />
-                    </div>
-                    <div className="form-row d-flex justify-content-between mt-4 mb-2">
-                      <div className="form-group">
-                        <div className="custom-control custom-checkbox ml-1 ">
-                          <input
-                            type="checkbox"
-                            className="form-check-input"
-                            id="basic_checkbox_1"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="basic_checkbox_1"
-                          >
-                            Ghi nhớ tôi
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <button
-                        type="submit"
-                        className="btnLogin btn-primary btn-block"
-                        fdprocessedid="zh9ik4"
-                      >
-                        Sign In
-                      </button>
-                    </div>
-                  </form>
+                  <LoginForm />
                   <div className="new-account mt-2">
                     <p className="mb-0">
-                    Bạn chưa có tài khoản?{" "}
+                      Bạn chưa có tài khoản?{" "}
                       <a className="text-black" href="/admin/demo/page-register">
-                         Đăng ký
+                        Đăng ký
                       </a>
                     </p>
                   </div>
@@ -81,7 +33,7 @@ const Login = () => {
               <div className="col-lg-6 col-md-5 d-flex box-skew1">
                 <div className="inner-content align-self-center">
                   <a className="login-logo" href="admin/dashboard">
-                 
+
                     <img
                       src={Logo}
                       alt=""
@@ -95,17 +47,17 @@ const Login = () => {
                   <ul className="social-icons mt-4">
                     <li>
                       <a href="admin/login">
-                        <FaFacebookF/>
+                        <FaFacebookF />
                       </a>
                     </li>
                     <li>
                       <a href="admin/login">
-                       <FaTwitter/>
+                        <FaTwitter />
                       </a>
                     </li>
                     <li>
                       <a href="admin/login">
-                        <FaLinkedinIn/>
+                        <FaLinkedinIn />
                       </a>
                     </li>
                   </ul>
