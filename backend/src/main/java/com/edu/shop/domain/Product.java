@@ -85,10 +85,9 @@ public class Product implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "categoryId")
 	private Category category;
-	
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private Set<ProductImage> images;
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private Set<ProductImage> images;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<OrderDetail> orderDetails;

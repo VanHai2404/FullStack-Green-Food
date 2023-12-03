@@ -43,5 +43,5 @@ public class Voucher implements Serializable {
 	private String Desciption;
 	@Column(nullable = true)
 	private Integer usageLimit;
-	
+
 }

@@ -21,12 +21,13 @@ import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "posts")
-public class Post implements Serializable{
+public class Post implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer postId;
@@ -48,14 +49,12 @@ public class Post implements Serializable{
 	private Date createDate;
 	@Temporal(TemporalType.DATE)
 	private Date updateDate;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "accountId")
 	private Account account;
-	
+
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private Set<PostComment> postComments;
-	
-	
 
 }

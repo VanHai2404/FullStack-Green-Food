@@ -62,6 +62,4 @@ public class Order implements Serializable {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<OrderDetail> orderDetails;
 
-
-
 }

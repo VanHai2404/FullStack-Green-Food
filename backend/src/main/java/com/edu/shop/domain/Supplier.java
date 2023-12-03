@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,18 +22,18 @@ import lombok.NoArgsConstructor;
 @Table(name = "suppliers")
 public class Supplier implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long supplierId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long supplierId;
 	@Column(columnDefinition = "nvarchar(100) null")
-    private String name;
+	private String name;
 	@Column(columnDefinition = "nvarchar(100) null")
-    private String address;
+	private String address;
 	@Column(length = 13)
-    private String contactNumber;
+	private String contactNumber;
 
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
 	private Set<Product> products;
 
-    // Constructors, getters, and setters
+	// Constructors, getters, and setters
 }

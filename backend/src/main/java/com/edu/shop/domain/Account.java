@@ -32,7 +32,7 @@ public class Account implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer accountId;
-	
+
 	@Column(length = 30)
 	private String username;
 
@@ -48,7 +48,6 @@ public class Account implements Serializable {
 	private Date birthday;
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
-
 	@Temporal(TemporalType.DATE)
 	private Date updateDate;
 	@Column(length = 200)
@@ -59,10 +58,10 @@ public class Account implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "accountId"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles;
-	
+
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 	private Set<Product> products;
-	
+
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 	private Set<Post> posts;
 

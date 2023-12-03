@@ -66,8 +66,8 @@ public class Customer implements Serializable {
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<PostComment> comments;
-	
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<ProductComment> productComments;
+
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private Set<ProductComment> productComments;
 
 }

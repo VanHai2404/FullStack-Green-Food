@@ -20,22 +20,23 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "product_images")
 public class ProductImage implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int imageId;
-    
-    @Column(nullable = false)
-    private String imageUrl;
-  
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int imageId;
+
+	@Column(nullable = false)
+	private String imageUrl;
+
 	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "productId")
-    private Product product;
-    
-    // Các getter và setter
+	@JoinColumn(name = "productId")
+	private Product product;
+
+	// Các getter và setter
 }
