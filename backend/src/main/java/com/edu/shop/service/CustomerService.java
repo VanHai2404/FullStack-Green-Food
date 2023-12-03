@@ -41,10 +41,11 @@ public interface CustomerService {
 
 	Page<Customer> findByUsernameContaining(String username, Pageable pageable);
 
-	Optional<Customer> findByEmail(String email);
 
 	Optional<Customer> findByUsername(String username);
 
 	void uploadImage(Integer customerId, MultipartFile imageFile);
+
+	Optional<Customer> findByEmail(String email);
 
 }

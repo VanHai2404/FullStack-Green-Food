@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.edu.shop.domain.Category;
 import com.edu.shop.domain.Product;
@@ -66,7 +67,11 @@ public interface ProductService {
 	List<Product> findByNameContaining(String Name);
 
 	<S extends Product> S save(S entity);
-
+	
+	void uploadImage(Integer productId, MultipartFile[] imageFiles);
+	
 	List<Product> findByCategory(Category category);
+
+	
 
 }

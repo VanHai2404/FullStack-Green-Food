@@ -35,6 +35,10 @@ public class PostComment implements Serializable {
 	private String images;
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
+    @Column
+    private Integer likeCount;
+    @Column
+    private Integer dislikeCount;
 
 	@Temporal(TemporalType.DATE)
 	private Date updatedDate;

@@ -28,15 +28,21 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepository.findByUsername(username);
 	}
 
-	@Override
-	public Optional<Customer> findByEmail(String email) {
-		return customerRepository.findByEmail(email);
-	}
+
 
 	@Override
 	public Page<Customer> findByUsernameContaining(String username, Pageable pageable) {
 		return customerRepository.findByUsernameContaining(username, pageable);
 	}
+	
+	
+
+	@Override
+	public Optional<Customer> findByEmail(String email) {
+		return customerRepository.findByEmail(email);
+	}
+
+
 
 	@Override
 	public List<Order> findAllOrdersByUsername(String username) {

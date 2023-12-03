@@ -1,7 +1,20 @@
 // CartComponent.js
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-const CartComponent = ({ cartItems, removeFromCart, updateQuantity }) => {
+const CartComponent = ({ removeFromCart, updateQuantity }) => {
+
+  const cartItems = useSelector((state) => state.cart.items);
+  const formatPrice = (salePrice) => {
+    // Sử dụng đối tượng Intl.NumberFormat để định dạng tiền tệ
+    const formattedPrice = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(salePrice);
+
+    return formattedPrice;
+  };
+  
   return (
     <form action="/cart" method="post" id="cartformpage" data-gtm-form-interact-id="0">
       <div className="cart-row">
@@ -10,17 +23,16 @@ const CartComponent = ({ cartItems, removeFromCart, updateQuantity }) => {
         </p>
         <div className="table-cart" style={{ border: '2px solid #eae4e8' }}>
           {cartItems.map((item) => (
-            <div key={item.variantId} className="media-line-item line-item" data-variant-id={item.variantId} data-product-id={item.productId}>
+            <div key={item.productId} className="media-line-item line-item" >
               <div className="media-left">
                 <div className="item-img">
                   <a href="#">
-                    <img src={item.imageSrc} alt={item.name} />
+                    <img src={`http://localhost:8080/api/home/image/${item.image}`}/>
                   </a>
                 </div>
                 <div className="item-remove">
                   <a
-                    href="javascript:void(0)"
-                    onClick={() => removeFromCart(item.productId, item.variantId)}
+                    onClick={() => removeFromCart(item.productId)}
                     className="cart"
                   >
                     Xóa
@@ -33,25 +45,25 @@ const CartComponent = ({ cartItems, removeFromCart, updateQuantity }) => {
                     <a href="#">{item.name}</a>
                   </h3>
                   <div className="item--variant">
-                    <span>{item.variant}</span>
+                    <span>{item.supplierName}</span>
                   </div>
                 </div>
                 <div className="item-price">
                   <p>
                     {' '}
-                    <span>{item.price}</span>{' '}
+                    <span>{item.salePrice}</span>{' '}
                   </p>
                 </div>
               </div>
               <div className="media-total">
                 <div className="item-total-price">
                   <div className="price">
-                    <span className="line-item-total">{item.totalPrice}</span>
+                    <span className="line-item-total">{item.salePrice * item.quantity}</span>
                   </div>
                 </div>
                 <div className="item-qty">
                   <div className="qty quantity-partent qty-click clearfix">
-                    <button type="button" className="qtyminus qty-btn" onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}>
+                    <button type="button" className="qtyminus qty-btn" onClick={() => updateQuantity(item.productId, item.quantity - 1)}>
                       -
                     </button>
                     <input
@@ -59,12 +71,12 @@ const CartComponent = ({ cartItems, removeFromCart, updateQuantity }) => {
                       size="4"
                       name={`updates[${item.variantId}]`}
                       min="1"
-                      data-price={item.price}
+                      data-price={item.salePrice}
                       value={item.quantity}
                       readOnly
                       className="tc line-item-qty item-quantity"
                     />
-                    <button type="button" className="qtyplus qty-btn" onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}>
+                    <button type="button" className="qtyplus qty-btn" onClick={() => updateQuantity(item.productId, item.quantity + 1)}>
                       +
                     </button>
                   </div>

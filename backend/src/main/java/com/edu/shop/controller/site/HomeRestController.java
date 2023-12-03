@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +26,7 @@ import com.edu.shop.service.StorageService;
 
 @RestController
 @RequestMapping("/api/home")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3001")
 public class HomeRestController {
 
     @Autowired
@@ -39,13 +41,16 @@ public class HomeRestController {
     @Autowired
     ProductImageService imageService;
 
-//    @GetMapping("/images/{filename:.+}")
-//    public ResponseEntity<Resource> saveFile(@PathVariable String filename){
-//        Resource file = storageService.loadAsResource(filename);
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-//                .body(file);
-//    }
+    
+    @GetMapping("/image/{filename:.+}")
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+        // Gọi service để load file và trả về dưới dạng Resource
+        Resource file = storageService.loadAsResource(filename);
+        // Trả về response với file đã load
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
 
     @GetMapping("")
     public ResponseEntity<List<Product>> home() {

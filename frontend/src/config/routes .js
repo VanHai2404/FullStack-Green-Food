@@ -7,6 +7,9 @@ const routes = {
     Post:'/blogs/news',
     Post_details:'/blogs/details',
     Contact:'/contact',
+    Checkout:'/checkouts',
+    EditCustomer:'/products/details/:productId',
+
   
 };
 export default routes;

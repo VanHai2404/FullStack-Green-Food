@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+
   background: #fff;
   color: #000; // Điều chỉnh màu chữ theo ý muốn
   * {
@@ -20,7 +20,10 @@ body {
 
 
 }
-
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
 .section-p1 {
   padding: 2px 80px;
 }
@@ -66,16 +69,3 @@ h6 {
     padding: 20px;
   }
 }
-// .App{
-//   background: white;
-//     overflow: hidden;
-//     width: 100%;
-//     position: relative;
-//     top: 0;
-//     transition: left .4s ease;
-//     -moz-transition: left .4s ease;
-//     -o-transition: left .4s ease;
-//     -ms-transition: left .4s ease;
-//     -webkit-transition: left .4s ease;
-//     left: 0;
-// }

@@ -498,3 +498,11 @@ p {
     border-radius: 20px;
     margin-top: auto;
 }
+.time-picker-container{
+    display: flex !important;
+}
+:where(.css-dev-only-do-not-override-2q8sxy).ant-picker-range {
+    position: relative;
+    display: inline-flex;
+    margin-left: 4px;
+}

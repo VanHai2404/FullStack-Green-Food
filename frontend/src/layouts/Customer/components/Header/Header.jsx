@@ -1,22 +1,27 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/images/Logo/LOGO.jpg';
 import searchIcon from '../../../../assets/images/Logo/searchIcon.png';
 import config from '../../../../config';
 import { BsTelephoneFill } from 'react-icons/bs';
-import { FaRegHeart, FaRegUser, FaShoppingBasket, FaShoppingCart, FaSortDown } from 'react-icons/fa';
+import { FaRegHeart, FaRegUser, FaShoppingBasket, FaShoppingCart } from 'react-icons/fa';
 import { RiAccountCircleFill, RiLoginCircleLine } from 'react-icons/ri';
 import './Header.css'
-
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../../redux/actions/auth-action';
+import MenuHeaderComponent from '../../../../components/Menu/menuHeader';
 const Header = ({ toggleCart }) => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isAppHeaderVisible, setAppHeaderVisible] = useState(true);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const menuRef = useRef(null);
+    // SỐ ITEM TRONG GIỎ HÀNG 
+    const cartItems = useSelector((state) => state.cart.items);
+    const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-    const handleDropdownToggle = () => {
-        setDropdownOpen(!isDropdownOpen);
-    };
     const handleScroll = () => {
         const scrollPosition = window.scrollY;
         const scrollThreshold = 700; // Độ dài mà bạn muốn người dùng lướt chuột xuống trước khi ẩn app-header
@@ -27,8 +32,27 @@ const Header = ({ toggleCart }) => {
             setAppHeaderVisible(true);
         }
     };
-
+    const customerData = JSON.parse(localStorage.getItem('customer'));
+    const getUsername = () => {
+        if (customerData && customerData.fullname) {
+            return " user: " + customerData.fullname;
+        }
+        return "";
+    };
+    const username = getUsername();
     useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            const scrollThreshold = 700;
+
+            if (scrollPosition > scrollThreshold && isAppHeaderVisible) {
+                setAppHeaderVisible(false);
+            } else if (scrollPosition <= scrollThreshold && !isAppHeaderVisible) {
+                setAppHeaderVisible(true);
+            }
+
+        };
+
         window.addEventListener('scroll', handleScroll);
 
         // Cleanup: remove event listener when component unmounts
@@ -36,7 +60,23 @@ const Header = ({ toggleCart }) => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [isAppHeaderVisible]);
+
+    const handlelogout = () => {
+        dispatch(logout(navigate));
+
+    };
+
+
+
+    const handleDropdownToggle = () => {
+        setDropdownOpen(!isDropdownOpen);
+    };
+
+    const isLoggedIn = !!username; // Check if the username exists
+
     const dropdownClasses = `dropdown-menu dropdown-menu-end dropdown-menu-arrow profile${isDropdownOpen ? '-open' : ''}`;
+
+
     return (
         <header>
             {isAppHeaderVisible && (
@@ -97,34 +137,55 @@ const Header = ({ toggleCart }) => {
                                         </div>
                                         <div className="t5-icons text-center nav-item dropdown">
                                             <FaRegUser aria-expanded={isDropdownOpen} onClick={handleDropdownToggle} />
-                                            <ul className={dropdownClasses} >
-                                                <li>
-                                                    <a className="dropdown-profile d-flex align-items-center" href="users-profile.html">
-                                                        <FaShoppingCart style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                        <span> My Orders</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a className="dropdown-profile d-flex align-items-center" href="login.html">
-                                                        <RiAccountCircleFill style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                        <span>My Account</span>
-                                                    </a>
-                                                </li>
-                                                <Link to={config.routes.Login}>
-                                                <li>
-                                                    <a className="dropdown-profile d-flex align-items-center" href="pages-faq.html">
-                                                        <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                        <span>Login</span>
-                                                    </a>
-                                                </li>
-                                                 </Link>
+                                            <ul className={dropdownClasses}>
+                                                {isLoggedIn ? (
+                                                    <>
+                                                        <li>
+                                                            <a className="dropdown-profile d-flex align-items-center" href="users-profile.html">
+                                                                <FaShoppingCart style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                                                <span> My Orders</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-profile d-flex align-items-center" href="login.html">
+                                                                <RiAccountCircleFill style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                                                <span>My Account</span>
+                                                            </a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a className="dropdown-profile d-flex align-items-center" onClick={handlelogout}>
+                                                                <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                                                <span>Đăng xuất</span>
+                                                            </a>
+                                                        </li>
+
+                                                    </>
+                                                ) : (
+                                                    // Render login link if not logged in
+                                                    <Link to={config.routes.Login}>
+                                                        <li>
+                                                            <a className="dropdown-profile d-flex align-items-center" >
+                                                                <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                                                <span>Đăng nhập</span>
+                                                            </a>
+                                                        </li>
+                                                    </Link>
+                                                )}
                                             </ul>
                                         </div>
                                         <div className="t5-icons text-center">
                                             <FaShoppingBasket id="cart-icon" onClick={toggleCart} />
-                                            <span className="badge rounded-pill badge-notification" style={{ position: 'absolute', fontSize: '.45em', backgroundColor: '#40b87b' }}>3</span>
+                                            {itemCount > 0 && (
+                                                <span className="badge rounded-pill badge-notification" style={{ position: 'absolute', fontSize: '.45em', backgroundColor: '#40b87b' }}>
+                                                    {itemCount}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
+                                </div>
+                                <div className="col-md-2 px-3 pt-3">
+                                    {username}
                                 </div>
                             </div>
                         </div>
@@ -133,45 +194,8 @@ const Header = ({ toggleCart }) => {
             )}
 
             <div className="container-full header-full">
-                <div className="menu-header">
-                    <div className="navbar navbar-light navbar-static-top navbar-expand-md">
-                        <div className="navbar-collapse">
-                            <ul>
-                                <li>TRANG CHỦ</li>
-                                <li className="nav-item dropdown">
-                                    <a className="nav-link" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ color: '#4d4d4d' }}>
-                                        HOA QUẢ <FaSortDown className='fa-caret-down' />
-                                    </a>
-                                    <div className="dropdown-menu dropdown-menu_2" aria-labelledby="navbarDropdown">
-                                        <a className="dropdown-item" href="#">Trái cây nhiệt đới & kỳ lạ</a>
-                                        <a className="dropdown-item" href="#">cam quýt</a>
-                                        <a className="dropdown-item" href="#">Quả hạch</a>
-                                        <a className="dropdown-item" href="#">Táo</a>
-                                        <a className="dropdown-item" href="#">chuối</a>
-                                        <a className="dropdown-item" href="#">Quả nho</a>
-                                        <a className="dropdown-item" href="#">Latin</a>
-                                        <a className="dropdown-item" href="#">dưa</a>
-                                        <a className="dropdown-item" href="#">Xoài</a>
-                                    </div>
-                                </li>
-                                <Link to={config.routes.products_list}>
-                                <li> RAU</li>
-                                </Link>
-        
-                                <li> NƯỚC ÉP &CẮT LÁT  <FaSortDown className='fa-caret-down' /> </li>
-                                <li> GIỎ QUÀ  <FaSortDown className='fa-caret-down' /> </li>
-                                <Link to={config.routes.Post}>
-                                <li> BÀI VIẾT  <FaSortDown className='fa-caret-down' /> </li>
-                                </Link>
-                                <Link to={config.routes.Contact}>
-                                <li> LIÊN HỆ</li>
-                                </Link>
-                                <li> CHÍNH SÁCH </li>
-                                <li> VỀ CHUNG TÔI  <FaSortDown className='fa-caret-down' /></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                {/*  */}
+                <MenuHeaderComponent />
             </div>
         </header>
     );

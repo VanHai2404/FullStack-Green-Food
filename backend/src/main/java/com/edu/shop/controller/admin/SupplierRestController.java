@@ -21,7 +21,7 @@ import com.edu.shop.dto.SupplierDto;
 import com.edu.shop.service.SupplierService;
 
 @RestController
-@RequestMapping("/api/suppliers")
+@RequestMapping("/api/admin/suppliers")
 public class SupplierRestController {
 	@Autowired
 	SupplierService supplierService;
