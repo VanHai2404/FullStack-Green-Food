@@ -26,7 +26,7 @@ public class PostComment implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer commentId;
+	private Long commentId;
 	@Column(columnDefinition = "nvarchar(200) not null")
 	private String detail;
 	@Column(nullable = false)
@@ -35,6 +35,10 @@ public class PostComment implements Serializable {
 	private String images;
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
+    @Column
+    private Integer likeCount;
+    @Column
+    private Integer dislikeCount;
 
 	@Temporal(TemporalType.DATE)
 	private Date updatedDate;

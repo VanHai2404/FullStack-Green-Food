@@ -4,19 +4,24 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
@@ -26,12 +31,12 @@ import lombok.NoArgsConstructor;
 public class Customer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int customerId;
+	private Integer customerId;
 
 	@Column(length = 50)
 	private String username;
-
-	@Column(columnDefinition = "nvarchar(50) not null")
+	
+	@Column(columnDefinition = "nvarchar(100) null")
 	private String fullname;
 
 	@Column(columnDefinition = "nvarchar(100) not null")
@@ -39,9 +44,6 @@ public class Customer implements Serializable {
 
 	@Column(length = 50)
 	private String gender;
-
-	@Column(length = 200, nullable = false)
-	private String password;
 
 	@Column(length = 20)
 	private String phone;
@@ -54,10 +56,16 @@ public class Customer implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	private Date registeredDate;
-
-	@Column(nullable = false)
+	@Column
 	private short status;
-
+	
+	
+	@JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @ToString.Exclude
+    private User user;
+	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<Order> orders;
 
@@ -69,5 +77,7 @@ public class Customer implements Serializable {
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<ProductComment> productComments;
+	
+	
 
 }

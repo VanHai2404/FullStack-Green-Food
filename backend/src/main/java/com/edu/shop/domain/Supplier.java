@@ -29,6 +29,11 @@ public class Supplier implements Serializable {
 	private String name;
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String address;
+
+	@Column(columnDefinition = "nvarchar(100) null")
+	private String Nation;
+	private String logo;
+
 	@Column(length = 13)
 	private String contactNumber;
 

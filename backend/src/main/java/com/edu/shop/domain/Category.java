@@ -27,6 +27,8 @@ public class Category implements Serializable {
 
 	@Column(name = "category_name", length = 100, columnDefinition = "nvarchar(100) not null")
 	private String name;
+	@Column(name = "category_slug", length = 100, columnDefinition = "nvarchar(100)")
+	private String slug;
 
 	@Column(columnDefinition = "nvarchar(200) null")
 	private String description;

@@ -1,12 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import close from '../../../assets/images/Logo/close.png';
 import couponTag from '../../../assets/images/Logo/couponTag.png';
 import redirect from '../../../assets/images/Logo/redirect.svg';
 import truck from '../../../assets/images/Logo/truck.png';
 import {AiOutlineDoubleRight,AiOutlinePlus,AiOutlineMinus } from 'react-icons/ai';
+import { increaseQuantity, decreaseQuantity,removeFromCart } from '../../../redux/actions/cart-action';
+import config from '../../../config';
+import { Link } from 'react-router-dom';
 import './cart.css'
+import { useDispatch, useSelector } from 'react-redux';
 
 const ModelCart = ({toggleCart}) => {
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+
+  const formatPrice = (salePrice) => {
+    // Sử dụng đối tượng Intl.NumberFormat để định dạng tiền tệ
+    const formattedPrice = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(salePrice);
+
+    return formattedPrice;
+  };
+
+  const handleIncrease = (productId) => {
+    dispatch(increaseQuantity(productId));
+  };
+
+  const handleDecrease = (productId) => {
+    dispatch(decreaseQuantity(productId));
+  };
+
+  const handleRemove = (productId) => {
+    dispatch(removeFromCart(productId));
+  };
+
+  const calculateTotal = () => {
+    let total = 0;
+    cartItems.forEach((product) => {
+      total += product.salePrice * product.quantity;
+    });
+    return total;
+  };
+
+
+
   return (
     <div className="miniKartCont" id="cart-container">
       <div style={{ width: '74%', position: 'fixed', height: '100vh', top: 0, left: 0 }}></div>
@@ -52,56 +91,38 @@ const ModelCart = ({toggleCart}) => {
         </div>
     </div>
     {/* SẢN PHẨM TRONG CART START */}
-    <div className="miniKart-product px-4 d-flex py-2">
+    {cartItems.map((product) => (
+    <div key={product.productId}  className="miniKart-product px-4 d-flex py-2">
         <div className="img-wrap">
             <div style={{ height: "100%" }}>
-                <img alt="image of product" className="img-fluid m-auto" style={{ width: "100%", maxHeight: "200px", objectFit: "contain" }} src="https://resources.commerceup.io/?key=https://prod-admin-images.s3.ap-south-1.amazonaws.com/pWVdUiFHtKGqyJxESltt/product/3000157224424.jpg&amp;width=300&amp;resourceKey=pWVdUiFHtKGqyJxESltt" />
+                <img alt={`image of product ${product.productId}`} className="img-fluid m-auto" style={{ width: "100%", maxHeight: "200px", objectFit: "contain" }} 
+               src={`http://localhost:8080/api/home/image/${product.image}`}/>
             </div>
         </div>
         <div className="text-wrap my-auto">
-            <span className="product-off mb-1"> 28% off </span>
-            <h2 className="mb-1">Giỏ ghen tị đỏ - 3000157224424</h2>
+            <span className="product-off mb-1"> {formatPrice(product.discount)}  off </span>
+            <h2 className="mb-1">{product.name}</h2>
             <div className="d-flex pricingDiv align-items-baseline justify-content-between" style={{ borderTop: "none !important", paddingTop: "0px !important" }}>
                 <div className="add-remove d-flex align-items-center">
-                   <AiOutlineMinus id="fa-solid"/>
-                    <span style={{ margin: "0 8px", fontSize: ".9rem" }}>1</span>
-                      <AiOutlinePlus  id="fa-solid"/>
+                   <AiOutlineMinus id="fa-solid" onClick={() => handleDecrease(product.productId)} />
+                    <span style={{ margin: "0 8px", fontSize: ".9rem" }}>{product.quantity}</span>
+                    <AiOutlinePlus id="fa-solid" onClick={() => handleIncrease(product.productId)} />
                    
                 </div>
                 <div className="minikart-pricing">
-                    <span style={{ color: "rgb(115, 183, 125)" }}> 250 VND <span >/</span><span id="priceUnit1" style={{ textTransform: "capitalize" }}>PCS</span>
+                   <span style={{ color: "rgb(115, 183, 125)" }}>
+                      {formatPrice(product.salePrice * product.quantity)} <span>/</span><span id="priceUnit1" style={{ textTransform: "capitalize" }}>{product.unit}</span>
                     </span>
                 </div>
             </div>
         </div>
     </div>
+     ))}
     {/* SẢN PHẨM TRONG CART END */}
-    {/* SẢN PHẨM TRONG CART START */}
-    <div className="miniKart-product px-4 d-flex py-2">
-        <div className="img-wrap">
-            <div style={{ height: "100%" }}>
-                <img alt="image of product" className="img-fluid m-auto" style={{ width: "100%", maxHeight: "200px", objectFit: "contain" }} src="https://resources.commerceup.io/?key=https://prod-admin-images.s3.ap-south-1.amazonaws.com/pWVdUiFHtKGqyJxESltt/product/3000157224424.jpg&amp;width=300&amp;resourceKey=pWVdUiFHtKGqyJxESltt" />
-            </div>
-        </div>
-        <div className="text-wrap my-auto">
-            <h2 className="mb-1">Giỏ ghen tị đỏ - 3000157224424</h2>
-            <div className="d-flex pricingDiv align-items-baseline justify-content-between" style={{ borderTop: "none !important", paddingTop: "0px !important" }}>
-                <div className="add-remove d-flex align-items-center">
-                    <AiOutlineMinus id="fa-solid"/>
-                    <span style={{ margin: "0 8px", fontSize: ".9rem" }}>1</span>
-                    <AiOutlinePlus  id="fa-solid"/>
 
-                </div>
-                <div className="minikart-pricing">
-                    <span style={{ color: "rgb(115, 183, 125)" }}> 250 VND <span >/</span> 
-                    <span id="priceUnit1" style={{ textTransform: "capitalize" }}>PCS</span>
-                    </span>
-                </div>
-            </div>
+
+ 
         </div>
-    </div>
-    {/* SẢN PHẨM TRONG CART END */}
-</div>
 
         {/* Các sản phẩm khác tương tự */}
         <div className="miniKart-coupon px-3 py-2 mb-2 d-flex align-items-center shadow-sm mt-2" tabIndex="0">
@@ -109,10 +130,12 @@ const ModelCart = ({toggleCart}) => {
           ÁP DỤNG PHIẾU GIẢM GIÁ <AiOutlineDoubleRight className='ms-auto'/> 
         </div>
         <div className="minikart_footer px-4 py-4">
-          <button className="btn" style={{ background: 'rgb(115, 183, 125)', color: 'rgb(255, 255, 255)' }}>
-            <a>Proceed to Checkout</a>
-            <a>269 VND.2</a>
+        <Link to={config.routes.Cart}>
+          <button className="btn" style={{ background: 'rgb(115, 183, 125)', color: 'rgb(255, 255, 255)' }} onClick={toggleCart}>
+            <a >Proceed to Checkout</a>
+            <span>{formatPrice(calculateTotal())}</span>
           </button>
+        </Link>
         </div>
       </div>
     </div>

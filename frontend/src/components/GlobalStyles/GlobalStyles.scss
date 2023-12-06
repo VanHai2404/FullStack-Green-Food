@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+
   background: #fff;
   color: #000; // Điều chỉnh màu chữ theo ý muốn
   * {
@@ -20,7 +20,10 @@ body {
 
 
 }
-
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
 .section-p1 {
   padding: 2px 80px;
 }

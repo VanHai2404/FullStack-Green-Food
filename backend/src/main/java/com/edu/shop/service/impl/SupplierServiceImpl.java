@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.edu.shop.domain.Supplier;
 import com.edu.shop.repository.SupplierRepository;
 import com.edu.shop.service.SupplierService;
-
+@Service
 public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	SupplierRepository repository;

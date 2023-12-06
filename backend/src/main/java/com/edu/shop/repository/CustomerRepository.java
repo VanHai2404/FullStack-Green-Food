@@ -18,9 +18,9 @@ import java.util.Set;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	Optional<Customer> findByUsername(String username);
 
-	Optional<Customer> findByEmail(String email);
-
 	Page<Customer> findByUsernameContaining(String username, Pageable pageable);
+	
+	Optional<Customer> findByEmail(String email);
 
 	// @Query("SELECT DISTINCT o FROM Order o JOIN FETCH o.orderDetails WHERE
 	// o.customer.username = :username")

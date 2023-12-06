@@ -1,7 +1,9 @@
 package com.edu.shop.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,32 +14,82 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.edu.shop.domain.Category;
+import com.edu.shop.domain.Customer;
 import com.edu.shop.domain.Product;
+import com.edu.shop.domain.ProductImage;
 import com.edu.shop.repository.ProductRepository;
+import com.edu.shop.service.ProductImageService;
 import com.edu.shop.service.ProductService;
+import com.edu.shop.service.StorageService;
 
 @Service
 public class ProductServiceIml implements ProductService {
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	StorageService storageService;
+	
+	@Autowired
+	ProductImageService imageService;
 
 	@Override
-	public <S extends Product> S save(S entity) {
-
-		Optional<Product> optExist = findById(entity.getProductId());
-		System.out.println("Người Tim :" + optExist);
-
-		if (!optExist.isEmpty()) {
-			if (StringUtils.isEmpty(entity.getImage())) {
-				System.out.println("Update Lấy Lại image----------");
-				entity.setImage(optExist.get().getImage());
-			}
-			entity.setEnterdDate(optExist.get().getEnterdDate());
-		}
-
-		return productRepository.save(entity);
+	public List<Product> findByCategory(Category category) {
+		return productRepository.findByCategory(category);
 	}
+
+    @Override
+	public void uploadImage(Integer productId, MultipartFile[] imageFiles) {
+        Product entity = findById(productId).orElse(null);
+        // Chỉ lấy phần tử đầu tiên từ mảng imageFiles (nếu mảng có ít nhất một phần tử)
+        if (imageFiles != null && imageFiles.length > 0 && !imageFiles[0].isEmpty()) {
+            MultipartFile firstImageFile = imageFiles[0];
+
+            UUID uuid = UUID.randomUUID();
+            String uustring = uuid.toString();
+            entity.setImage(storageService.getStoreFilename(firstImageFile, uustring));
+            storageService.store(firstImageFile, entity.getImage());
+            save(entity);
+        }
+        
+       //    Lưu list các hinh ảnh chỉ tiết
+        for (MultipartFile imageFile : imageFiles) {
+            ProductImage image = new ProductImage();
+            // Xử lý và lưu tệp hình ảnh
+            String fileName = imageFile.getOriginalFilename();
+            UUID uuid = UUID.randomUUID();
+            String uutring = uuid.toString();
+            image.setImageUrl(storageService.getStoreFilename(imageFile, uutring));
+            storageService.store(imageFile, image.getImageUrl());
+            image.setProduct(entity);
+            imageService.save(image);
+        }
+    }
+
+    @Override
+    public <S extends Product> S save(S entity) {
+        Integer productId = entity.getProductId();
+        if (productId != null) {
+            Optional<Product> optExist = findById(productId);
+            System.out.println("Người Tim :" + optExist);
+
+            if (optExist.isPresent()) {
+                if (StringUtils.isEmpty(entity.getImage())) {
+                    System.out.println("Update Lấy Lại image----------");
+                    entity.setImage(optExist.get().getImage());
+                }
+
+    			Date currentDate = new Date();
+    			// Thiết lập giá trị ngày hiện tại cho thuộc tính enterDate của đối tượng entity
+    			entity.setUpdateDate(currentDate);
+            }
+        }
+        return productRepository.save(entity);
+    }
+
 
 	@Override
 	public List<Product> findByNameContaining(String Name) {
