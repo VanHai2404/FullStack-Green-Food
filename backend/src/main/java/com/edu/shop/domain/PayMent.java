@@ -25,14 +25,14 @@ import lombok.NoArgsConstructor;
 public class PayMent implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int paymentId;
+	private Integer paymentId;
 	@Column(nullable = false)
 //	private int orderId;
 //	@Column(nullable = false)
-	private int PayMentMethod;
+	private Integer  PayMentMethod;
 	@Temporal(TemporalType.DATE)
 	private Date PaymentDate;
-	private float amount;
+	private Float amount;
 	@Temporal(TemporalType.DATE)
 	private Date payDate;
 	@Temporal(TemporalType.DATE)

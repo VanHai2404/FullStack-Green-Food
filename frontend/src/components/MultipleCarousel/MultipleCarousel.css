@@ -7,8 +7,9 @@
 #product1 h2 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  line-height: 1.2;
+   line-height: 2rem;
+    font-size: 22px;
+    font-weight: 600;
 }
 
 #product1 a {

@@ -9,8 +9,6 @@ import categoryImage5 from '../../assets/images/LogoCategory/Anh5.gif';
 import categoryImage6 from '../../assets/images/LogoCategory/Anh6.gif';
 // Import các hình ảnh khác cần thiết
 
-
-
 const categories = [
     { name: 'Category 1', image: categoryImage1 },
     { name: 'Category 2', image: categoryImage2 },

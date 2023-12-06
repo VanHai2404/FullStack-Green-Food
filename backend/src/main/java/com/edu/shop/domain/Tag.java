@@ -25,8 +25,8 @@ public class Tag implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long tag_id;
 
-	@Column(nullable = false, unique = true)
-	private String name;
+    @Column(nullable = false)
+    private String name;
 
 	@OneToMany(mappedBy = "tag")
 	private Set<PostTag> postTags;

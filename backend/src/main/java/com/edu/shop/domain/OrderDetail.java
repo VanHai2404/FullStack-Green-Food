@@ -24,8 +24,12 @@ public class OrderDetail implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer orderDetailId;
-//	@Column(nullable = false)
-//	private int orderId;
+	
+	@Column(columnDefinition = "nvarchar(100) null")
+	private String name;
+	
+	private Double discount;
+	
 	@Column(nullable = false)
 	private Integer quantity;
 	@Column(nullable = false)

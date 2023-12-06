@@ -49,10 +49,18 @@ public class Post implements Serializable {
 	private Date createDate;
 	@Temporal(TemporalType.DATE)
 	private Date updateDate;
+    @Column
+    private Integer likeCount;
+    @Column
+    private Integer dislikeCount;
 
 	@ManyToOne
 	@JoinColumn(name = "accountId")
 	private Account account;
+	
+	@ManyToOne
+	@JoinColumn(name = "id")
+	private  PostTag postTag;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private Set<PostComment> postComments;

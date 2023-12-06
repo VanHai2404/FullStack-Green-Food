@@ -18,7 +18,7 @@ public class CategoryDto implements Serializable {
 	@NotEmpty
 	@Min(value = 2)
 	private String name;
-
+	private String slug;
 	private String description;
 
 }
