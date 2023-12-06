@@ -6,9 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.edu.shop.constants.PostStatus;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,8 +45,11 @@ public class Post implements Serializable {
 	private String metaKeywords;
 	@Column(columnDefinition = "nvarchar(200) not null")
 	private String metaDescription;
-	@Column(length = 10)
-	private Boolean status;
+	
+    @Enumerated(EnumType.STRING)
+	private PostStatus status;
+	
+	
 	@Column(length = 10000)
 	private Integer viewCount;
 	@Temporal(TemporalType.DATE)

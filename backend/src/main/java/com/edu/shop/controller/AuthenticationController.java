@@ -17,7 +17,7 @@ import com.edu.shop.auth.AuthenticationRequest;
 import com.edu.shop.auth.AuthenticationRespose;
 import com.edu.shop.domain.Account;
 import com.edu.shop.domain.Customer;
-import com.edu.shop.dto.AccountDTO;
+import com.edu.shop.model.dto.AccountDTO;
 import com.edu.shop.service.AccountService;
 import com.edu.shop.service.AuthenticationService;
 import com.edu.shop.service.CustomerService;

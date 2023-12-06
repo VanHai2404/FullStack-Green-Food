@@ -1,4 +1,4 @@
-.checkoutPage{
+.checkoutPage {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -703,6 +703,7 @@
     border-bottom-color: transparent;
     border-radius: 100%;
 }
+
 .hrv-discount-choose-coupons {
     cursor: pointer;
     display: -webkit-flex;
@@ -712,7 +713,8 @@
     flex-wrap: wrap;
     color: #338dbc;
 }
-.hrv-discount-choose-coupons > div:first-child {
+
+.hrv-discount-choose-coupons>div:first-child {
     flex: 0 0 100%;
     margin-bottom: 10px;
 }
@@ -806,8 +808,43 @@
     /* color: #2b78a0; */
     filter: brightness(1.2);
 }
+
 .checkoutPage .btn:not(.btn-disabled):hover {
     /* background: #286f94; */
     color: white;
     filter: brightness(1.2);
-    }
+}
+
+#section-payment-method {
+    position: relative;
+}
+
+.checkoutPage .radio-wrapper .two-page,
+.checkbox-wrapper .checkbox-label {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    padding: 1.3em;
+    width: auto;
+}
+.checkoutPage .radio-wrapper .radio-content-input {
+    display: flex;
+    align-items: center;
+}
+.checkoutPage .radio-wrapper .payment-method-checkbox {
+    display: flex;
+    align-self: center;
+}
+.checkoutPage .radio-wrapper .radio-content-input .main-img {
+    margin-right: 10px;
+    display: flex;
+    align-self: center;
+    width: 40px;
+    height: 40px;
+}
+.checkoutPage .radio-content-input .content-wrapper {
+    display: grid;
+}
+.checkoutPage .radio-wrapper .radio-content-input .child-img {
+    max-height: 30px;
+}

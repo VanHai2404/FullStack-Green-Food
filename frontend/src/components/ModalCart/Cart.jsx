@@ -2,19 +2,14 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const CartComponent = ({ removeFromCart, updateQuantity }) => {
+const CartComponent = ({ removeFromCart, updateQuantity, onNoteChange }) => {
 
   const cartItems = useSelector((state) => state.cart.items);
-  const formatPrice = (salePrice) => {
-    // Sử dụng đối tượng Intl.NumberFormat để định dạng tiền tệ
-    const formattedPrice = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(salePrice);
 
-    return formattedPrice;
+  const handleNoteChange = (e) => {
+    // Gọi hàm callback để cập nhật giá trị của note trong CartPage.js
+    onNoteChange(e.target.value);
   };
-  
   return (
     <form action="/cart" method="post" id="cartformpage" data-gtm-form-interact-id="0">
       <div className="cart-row">
@@ -27,7 +22,7 @@ const CartComponent = ({ removeFromCart, updateQuantity }) => {
               <div className="media-left">
                 <div className="item-img">
                   <a href="#">
-                    <img src={`http://localhost:8080/api/home/image/${item.image}`}/>
+                    <img src={`http://localhost:8080/api/home/image/${item.image}`} />
                   </a>
                 </div>
                 <div className="item-remove">
@@ -93,7 +88,7 @@ const CartComponent = ({ removeFromCart, updateQuantity }) => {
               <label htmlFor="note" className="note-label">
                 Ghi chú đơn hàng
               </label>
-              <textarea className="form-control" id="note" name="note" rows="5"></textarea>
+              <textarea className="form-control" id="note" name="note" rows="5" onChange={handleNoteChange} ></textarea>
             </div>
           </div>
         </div>

@@ -3,8 +3,12 @@ package com.edu.shop.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.edu.shop.constants.CommentStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,16 +31,22 @@ public class PostComment implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long commentId;
+	
 	@Column(columnDefinition = "nvarchar(200) not null")
 	private String detail;
-	@Column(nullable = false)
-	private Boolean status;
+	
+    @Enumerated(EnumType.STRING)
+	private CommentStatus status;
+    
 	@Column(columnDefinition = "nvarchar(100) not null")
 	private String images;
+	
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
+	
     @Column
     private Integer likeCount;
+    
     @Column
     private Integer dislikeCount;
 

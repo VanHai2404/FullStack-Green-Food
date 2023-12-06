@@ -32,49 +32,36 @@ public class Customer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer customerId;
-
 	@Column(length = 50)
-	private String username;
-	
+	private String username;	
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String fullname;
-
 	@Column(columnDefinition = "nvarchar(100) not null")
 	private String email;
-
 	@Column(length = 50)
 	private String gender;
-
 	@Column(length = 20)
 	private String phone;
-
 	@Column(length = 200)
 	private String image;
-
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
-
 	@Temporal(TemporalType.DATE)
 	private Date registeredDate;
 	@Column
-	private short status;
-	
-	
+	private short status;	
 	@JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     @ToString.Exclude
-    private User user;
-	
+    private User user;	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<Order> orders;
-
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<Address> address;
-
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	
 	private Set<PostComment> comments;
-
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<ProductComment> productComments;
 	

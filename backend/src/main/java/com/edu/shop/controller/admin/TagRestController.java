@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.shop.domain.Tag;
-import com.edu.shop.dto.TagDto;
+import com.edu.shop.model.dto.TagDto;
 import com.edu.shop.service.TagService;
 
 @RestController

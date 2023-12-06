@@ -32,6 +32,7 @@ public class OrderDetail implements Serializable {
 	
 	@Column(nullable = false)
 	private Integer quantity;
+	
 	@Column(nullable = false)
 	private Double unitPrice;
 

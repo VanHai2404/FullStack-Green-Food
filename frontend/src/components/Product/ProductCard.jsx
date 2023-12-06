@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { addToCart ,isInCart} from '../../redux/actions/cart-action';
 import { FaRegHeart, FaShoppingBasket } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from "react-router-dom";
+import config from '../../config';
 import LindaQuants from '../Button/LindaQuants';
 
 const ProductCard = ({ product }) => {
@@ -36,7 +38,9 @@ const ProductCard = ({ product }) => {
         <FaRegHeart />
       </div>
 
-      <img src={`http://localhost:8080/api/home/image/${product.image}`} alt={product.name} />
+      <Link to={`${config.routes.GetProduct.replace(':productId', product.productId)}`}>
+         <img src={`http://localhost:8080/api/home/image/${product.image}`} alt={product.name} />
+        </Link>
       <div className="des">
         <span id="Nation">{product.supplier.nation}</span>
         <h5 className="title">{product.name}</h5>

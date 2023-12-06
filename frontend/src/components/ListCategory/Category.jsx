@@ -38,10 +38,10 @@ const CategoryComponent = () => {
               </div>
               <div className="conten_cate">
                 <h2 className="text-brand-dark text-base h2_cate">
-                  Spring cleaning for home appliance
+                Thực phẩm và trái cây
                 </h2>
                 <p className="text-sm leading-6 p_cate">
-                  Get your clean on supplies.
+                trái cây tười xanh sạch và được nhập mỗi ngày
                 </p>
               </div>
             </div>
@@ -69,10 +69,10 @@ const CategoryComponent = () => {
               </div>
               <div className="conten_cate">
                 <h2 className="text-brand-dark text-base h2_cate">
-                  Your pet choice for fresh healthy food
+                Rau quả
                 </h2>
                 <p className="text-sm leading-6 p_cate">
-                  Get your clean on supplies.
+                Rau quả chất lượng cao được nhập khẩu.
                 </p>
               </div>
             </div>
@@ -100,10 +100,10 @@ const CategoryComponent = () => {
               </div>
               <div className="conten_cate">
                 <h2 className="text-brand-dark text-base h2_cate">
-                  Washing item with discount product
+                 Các thức phẩm chất lượng cao
                 </h2>
                 <p className="text-sm leading-6 p_cate">
-                  Get your clean on supplies.
+                  Được nhập khẩu từ các quốc gia nổi tiếng .
                 </p>
               </div>
             </div>
@@ -131,10 +131,10 @@ const CategoryComponent = () => {
               </div>
               <div className="conten_cate">
                 <h2 className="text-brand-dark text-base h2_cate">
-                  Fresh quality meat item with discount
+                Thực phẩm và trái cây
                 </h2>
                 <p className="text-sm leading-6 p_cate">
-                  Get your clean on supplies.
+                Được nhập khẩu từ các quốc gia nổi tiếng .
                 </p>
               </div>
             </div>

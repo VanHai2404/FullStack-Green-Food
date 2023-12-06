@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.edu.shop.constants.OrderStatus;
 import com.edu.shop.domain.Order;
 import com.edu.shop.service.OrderService;
 
@@ -74,8 +75,24 @@ public class OrderRestController {
         Optional<Order> opt = orderService.findById(orderId);
 
         if (opt.isPresent()) {
-            opt.get().setStatus(selectedStatus);
-            orderService.save(opt.get());
+            Order order = opt.get();
+
+            switch (selectedStatus) {
+                case 2:
+                    order.setStatus(OrderStatus.CONFIRMED);
+                    break;
+                case 3:
+                    order.setStatus(OrderStatus.COMPLETED);
+                    break;
+                case 4:
+                    order.setStatus(OrderStatus.CANCELLED);
+                    break;
+                default:
+                    // Xử lý trạng thái không hợp lệ (nếu cần)
+                    return ResponseEntity.badRequest().body("Trạng thái không hợp lệ: " + selectedStatus);
+            }
+
+            orderService.save(order);
             return ResponseEntity.ok("Đơn hàng đã được cập nhật.");
         }
 
@@ -85,7 +102,7 @@ public class OrderRestController {
     private List<Order> findOrdersByStatus(short status) {
         List<Order> orders = orderService.findAll();
         return orders.stream()
-                .filter(order -> order.getStatus() == status)
+                .filter(order -> order.getStatus() == OrderStatus.COMPLETED)
                 .collect(Collectors.toList());
     }
 }
