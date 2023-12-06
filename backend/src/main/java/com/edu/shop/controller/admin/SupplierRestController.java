@@ -16,8 +16,8 @@ import java.util.List;
 
 import com.edu.shop.domain.Category;
 import com.edu.shop.domain.Supplier;
-import com.edu.shop.dto.CategoryDto;
-import com.edu.shop.dto.SupplierDto;
+import com.edu.shop.model.dto.CategoryDto;
+import com.edu.shop.model.dto.SupplierDto;
 import com.edu.shop.service.SupplierService;
 
 @RestController

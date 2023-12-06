@@ -1,7 +1,7 @@
 package com.edu.shop.controller.admin;
 
 import com.edu.shop.domain.Category;
-import com.edu.shop.dto.CategoryDto;
+import com.edu.shop.model.dto.CategoryDto;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

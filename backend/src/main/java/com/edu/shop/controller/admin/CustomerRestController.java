@@ -31,8 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import com.edu.shop.domain.Customer;
+import com.edu.shop.model.dto.CustomerDto;
+
 import org.springframework.http.HttpHeaders;
-import com.edu.shop.dto.CustomerDto;
+
 import com.edu.shop.service.CustomerService;
 import com.edu.shop.service.StorageService;
 import io.micrometer.common.util.StringUtils;

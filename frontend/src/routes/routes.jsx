@@ -13,6 +13,8 @@ import Post from '../pages/Customer/PostPage/PostPage';
 import PostDetail from '../pages/Customer/PostPage/PostDetail';
 import ContactPage from '../pages/Customer/ContactPage/ContactPage';
 import CheckoutPage from '../pages/Customer/CheckoutPage/CheckoutPage';
+import ProductDetail from '../pages/Customer/ProductDetailPage/ProductDetai';
+import UserProfile from '../pages/Customer/ProfilePage/UserProfile';
 
 
 // Public routes
@@ -26,6 +28,8 @@ const publicRoutes = [
     { path: config.routes.Post_details,component:PostDetail},
     { path: config.routes.Contact,component:ContactPage},
     { path: config.routes.Checkout,component:CheckoutPage ,layout: null},
+    { path: config.routes.GetProduct,component:ProductDetail},
+    {path : config.routes.get}
 
 ];
 

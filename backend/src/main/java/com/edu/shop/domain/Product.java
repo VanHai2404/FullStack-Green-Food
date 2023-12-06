@@ -40,59 +40,40 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer productId;
-
 	@Column(columnDefinition = "nvarchar(100) not null")
 	private String name;
-
 	@Column(nullable = false)
 	private Integer quantity;
-	
 	@Column(nullable = false)
-	private Double salePrice;
-	
+	private Double salePrice;	
 	@Column(nullable = false)
 	private Double importPrice;
-
-
 	@Column(length = 200)
 	private String image;
-
 	@Column(columnDefinition = "nvarchar(max) not null")
-	private String description;
-
-	
-	
+	private String description;	
 	@Column(nullable = true)
-	private Double discount;
-	
+	private Double discount;	
 	@Column(nullable = true)
 	private Double discountType;
-
 	@Temporal(TemporalType.DATE)
 	private Date enterdDate;
-
 	@Temporal(TemporalType.DATE)
 	private Date UpdateDate;
-
 	@Temporal(TemporalType.DATE)
 	private Date hotEndDate;
     @Column
 	private Integer ViewCount;
     @Column
 	private Integer starRating;
-
 	@Column(columnDefinition = "nvarchar(100)")
-	private String metaTitle;
-	
+	private String metaTitle;	
 	@Column(columnDefinition = "nvarchar(100)")
-	private String metaKeywords;
-	
+	private String metaKeywords;	
 	@Column(columnDefinition = "nvarchar(100)")
 	private String metaDescription;
-
 	@Column(nullable = true)
 	private Short status;
-
 	@Enumerated(EnumType.STRING)
 	@Column(length = 4) // Độ dài tối đa của Enum (ví dụ: "GOI", "KG", "CAI")
 	private ProductUnit unit; // Đơn vị sản phẩm, sử dụng Enum ProductUnit

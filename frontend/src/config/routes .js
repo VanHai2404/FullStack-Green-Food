@@ -8,8 +8,8 @@ const routes = {
     Post_details:'/blogs/details',
     Contact:'/contact',
     Checkout:'/checkouts',
-    EditCustomer:'/products/details/:productId',
+    GetProduct:'/products/details/:productId',
+    Profile: '/profile'
 
-  
 };
 export default routes;

@@ -9,6 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import com.edu.shop.domain.Order;
+import com.edu.shop.model.request.CartItemsRequest;
+import com.edu.shop.model.request.InvoiceRequest;
+
+import jakarta.transaction.Transactional;
 
 public interface OrderService {
 
@@ -41,5 +45,7 @@ public interface OrderService {
 	<S extends Order> Optional<S> findOne(Example<S> example);
 
 	<S extends Order> S save(S entity);
+
+	Order createOrder(CartItemsRequest[] cartItemsRequest, InvoiceRequest invoiceRequest);
 
 }

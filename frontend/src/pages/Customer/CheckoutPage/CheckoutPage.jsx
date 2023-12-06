@@ -5,29 +5,24 @@ import './CheckoutPage.css';
 import DiscountCodeModal from './DiscountCodeModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatPrice } from '../../../redux/actions/cart-action';
+import { useNavigate } from 'react-router-dom';
+import PaymentMethod from './PaymentMethod';
+import DeliveryInformation from './DeliveryInformation';
+
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [currentComponent, setCurrentComponent] = useState('PAY');
 
-
+  const [shippingFee, setShippingFee] = useState(1);
   useEffect(() => {
     updateTotalAmount();
+    updateTotalAmountAll();
   }, [cartItems]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  useEffect(() => {
+    updateTotalAmountAll();
+  }, [shippingFee]);
   const [modalVisible, setModalVisible] = useState(false);
   const showModal = () => {
     setModalVisible(true);
@@ -38,11 +33,25 @@ const CheckoutPage = () => {
   };
 
 
-  const [deliveryOption, setDeliveryOption] = useState('giaoTaiNha'); // 'giaoTaiNha' là giả sử mặc định là giao tận nơi
-  const handleDeliveryOptionChange = (e) => {
-    setDeliveryOption(e.target.value);
+  const handlePayment = () => {
+    setCurrentComponent('PAY');
   };
 
+  // Hàm xử lý cập nhật phí vận chuyển
+  const updateShippingFee = (cityCode) => {
+    let newShippingFee = 0;
+
+    if (cityCode === 1 || cityCode === 79) {
+      newShippingFee = 20000;
+    } else if (cityCode === 48) {
+      newShippingFee = 0;
+    } else {
+      newShippingFee = 40000;
+    }
+
+    // Cập nhật state phí vận chuyển
+    setShippingFee(newShippingFee);
+  };
 
   const [totalAmount, setTotalAmount] = useState(0);
   const updateTotalAmount = () => {
@@ -53,27 +62,21 @@ const CheckoutPage = () => {
     setTotalAmount(totalAmount);
   };
 
+  const [totalAmountAll, setTotalAmountAll] = useState(0);
+  const updateTotalAmountAll = () => {
+    const totalAmount = cartItems.reduce((total, item) => {
+      const salePrice = typeof item.salePrice === 'string' ? parseFloat(item.salePrice) : item.salePrice;
+      return total + salePrice * item.quantity;
+    }, 0);
 
-  // 
-  const [userData, setUserData] = useState({
-    fullname: "",
-    email: "",
-    phone: "",
-  });
-  useEffect(() => {
-    // Kiểm tra xem có dữ liệu trong localStorage không
-    const storedUserData = localStorage.getItem("customer");
-
-    if (storedUserData) {
-      // Nếu có dữ liệu, cập nhật state với dữ liệu từ localStorage
-      const parsedUserData = JSON.parse(storedUserData);
-      setUserData({
-        fullname: parsedUserData.fullname || "",
-        email: parsedUserData.email || "",
-        phone: parsedUserData.phone || "",
-      });
+    if (shippingFee !== 1) {
+      console.log("dbewuvfue8wvcbu sfrgc ftgyevhbgiuvng6rnywyvu ")
+      const updatedTotalAmount = totalAmount - shippingFee;
+      setTotalAmountAll(updatedTotalAmount);
+    } else {
+      setTotalAmountAll(totalAmount);
     }
-  }, []); // useEffect chỉ chạy một lần sau khi component được render
+  };
 
 
   return (
@@ -88,12 +91,12 @@ const CheckoutPage = () => {
               <div className="mainCart-detail">
                 <div className="list-pageform-cart main">
                   <div className="main-header">
-                    <a href="#" className="logo">
+                    <a className="logo">
                       <h1 className="logo-text">FPT</h1>
                     </a>
                     <ul className="breadcrumb">
                       <li className="breadcrumb-item">
-                        <a href="#">Giỏ hàng</a>
+                        <a >Giỏ hàng</a>
                       </li>
                       <li className="breadcrumb-item breadcrumb-item-current">
                         Thông tin giao hàng
@@ -102,261 +105,10 @@ const CheckoutPage = () => {
                     </ul>
                   </div>
                   <div className="main-content">
-                    <div className="step">
-                      <div className="step-sections ">
-                        <div className="section">
-                          <div className="section-header">
-                            <h2 className="section-title">Thông tin giao hàng</h2>
-                          </div>
-                          <div className="section-content section-customer-information ">
-                            <p className="section-content-text">
-                              Bạn đã có tài khoản?
-                              <a href="#">Đăng nhập</a>
-                            </p>
-                            <div className="fieldset">
-                              <div className="field field-required">
-                                <div className="field-input-wrapper">
-                                  <label className="field-label" htmlFor="">
-                                    Họ và tên
-                                  </label>
-                                  <input
-                                    placeholder="Họ và tên"
-                                    className="field-input"
-                                    size={30}
-                                    type="text"
-                                    value={userData.fullname}
-                                  />
-                                </div>
-                              </div>
-                              <div className="field field-two-thirds">
-                                <div className="field-input-wrapper">
-                                  <label className="field-label" htmlFor="checkout_user_email">
-                                    Email
-                                  </label>
-                                  <input
-                                    placeholder="email"
-                                    className="field-input"
-                                    size={30}
-                                    type="text"
-                                    value={userData.email}
-                                  />
-                                </div>
-                              </div>
-                              <div className="field field-required field-third">
-                                <div className="field-input-wrapper">
-                                  <label className="field-label" htmlFor="billing_address_phone">
-                                    Số điện thoại
-                                  </label>
-                                  <input
-                                    placeholder="số điện thoại"
-                                    className="field-input"
-                                    size={30}
-                                    type="text"
-                                    value={userData.phone}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="section-content">
-                            <div className="fieldset">
-                              <form
-                                className="field "
-                                acceptCharset="UTF-8"
-                                method="post"
-                              >
-                                <div className="content-box mt0">
-                                  <div className="radio-wrapper content-box-row">
-                                    <label className="radio-label">
-                                      <div className="radio-input">
-                                        <input
-                                          type="radio"
-                                          name="customer_pick_at_location"
-                                          className="input-radio"
-                                          value="giaoTaiNha"
-                                          checked={deliveryOption === 'giaoTaiNha'}
-                                          onChange={handleDeliveryOptionChange}
-                                        />
-                                      </div>
-                                      <span className="radio-label-primary">
-                                        Giao tận nơi
-                                      </span>
-                                    </label>
-                                  </div>
+                    {currentComponent === 'INFORMATION' && <DeliveryInformation onPayment={handlePayment} updateShippingFee={updateShippingFee} />}
+                    {currentComponent === 'PAY' && <PaymentMethod total={totalAmountAll}/>}
+                    {/* NỘI DUNG Ở ĐÂY */}
 
-                                  {deliveryOption === 'giaoTaiNha' && (
-                                    <div className="order-checkout__loading radio-wrapper content-box-row content-box-row-padding content-box-row-secondary ">
-                                      <div className="field field-required  ">
-                                        <div className="field-input-wrapper">
-                                          <label className="field-label">Địa chỉ</label>
-                                          <input
-                                            placeholder="Địa chỉ"
-                                            className="field-input"
-                                            size={30}
-                                            type="text"
-                                            id=""
-                                            name=""
-                                            
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="field field-show-floating-label field-required field-third ">
-                                        <div className="field-input-wrapper field-input-wrapper-select">
-                                          <label
-                                            className="field-label"
-                                            htmlFor="customer_shipping_province"
-                                          >
-                                            {" "}
-                                            Tỉnh / thành{" "}
-                                          </label>
-                                          <select
-                                            className="field-input"
-                                            id="customer_shipping_province"
-                                            name="customer_shipping_province"
-                                          >
-                                            <option
-                                              data-code="null"
-                                              value="null"
-                                              selected=""
-                                            >
-                                              Chọn tỉnh / thành{" "}
-                                            </option>
-                                            <option data-code="HC" value={50}>
-                                              Hồ Chí Minh
-                                            </option>
-                                            <option data-code="HI" value={1}>
-                                              Hà Nội
-                                            </option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <div className="field field-show-floating-label field-required field-third ">
-                                        <div className="field-input-wrapper field-input-wrapper-select">
-                                          <label className="field-label">
-                                            Quận / huyện
-                                          </label>
-                                          <select
-                                            className="field-input"
-                                            id="customer_shipping_district"
-                                            name="customer_shipping_district"
-                                          >
-                                            <option
-                                              data-code="null"
-                                              value="null"
-                                              selected=""
-                                            >
-                                              Chọn quận / huyện
-                                            </option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <div className="field field-show-floating-label field-required  field-third  ">
-                                        <div className="field-input-wrapper field-input-wrapper-select">
-                                          <label className="field-label">
-                                            Phường / xã
-                                          </label>
-                                          <select
-                                            className="field-input"
-                                            id="customer_shipping_ward"
-                                            name="customer_shipping_ward"
-                                          >
-                                            <option
-                                              data-code="null"
-                                              value="null"
-                                              selected=""
-                                            >
-                                              Chọn phường / xã
-                                            </option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <div
-                                        id="div_location_country_not_vietnam"
-                                        className="section-customer-information "
-                                      >
-                                        <div className="field field-two-thirds">
-                                          <div className="field-input-wrapper">
-                                            <label className="field-label">
-                                              Thành phố
-                                            </label>
-                                            <input
-                                              placeholder="Thành phố"
-                                              autoCapitalize="off"
-                                              spellCheck="false"
-                                              className="field-input"
-                                              size={30}
-                                              type="text"
-                                              id="billing_address_city"
-                                              name="billing_address[city]"
-                                              
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="field field-third">
-                                          <div className="field-input-wrapper">
-                                            <label className="field-label">
-                                              Mã bưu chính
-                                            </label>
-                                            <input
-                                              placeholder="Mã bưu chính"
-                                              autoCapitalize="off"
-                                              spellCheck="false"
-                                              className="field-input"
-                                              size={30}
-                                              type="text"
-                                              id="billing_address_zip"
-                                              name="billing_address[zip]"
-                                              
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  <div className="radio-wrapper content-box-row">
-                                    <label className="radio-label">
-                                      <div className="radio-input">
-                                        <input
-                                          type="radio"
-                                          id="customer_pick_at_location_true"
-                                          name="customer_pick_at_location"
-                                          className="input-radio"
-                                          value="nhanTaiCuaHang"
-                                          checked={deliveryOption === 'nhanTaiCuaHang'}
-                                          onChange={handleDeliveryOptionChange}
-                                        />
-                                      </div>
-                                      <span className="radio-label-primary">
-                                        Nhận tại cửa hàng
-                                      </span>
-                                    </label>
-                                  </div>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                          <div id="change_pick_location_or_shipping">
-                            <div className="inventory_location"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="step-footer" id="step-footer-checkout">
-                        <form id="form_next_step" method="post">
-                          <button
-                            type="submit"
-                            className="step-footer-continue-btn btn"
-                          >
-                            <span className="btn-content">
-                              Tiếp tục đến phương thức thanh toán
-                            </span>
-                          </button>
-                        </form>
-                        <a className="step-footer-previous-link" href="#">
-                          Giỏ hàng
-                        </a>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -502,7 +254,7 @@ const CheckoutPage = () => {
                               <i className="btn-redeem-spinner icon-redeem-button-spinner" />
                             </div>
                             <div className="redeem-login-btn">
-                              <a href="#">Đăng nhập</a>
+                              <a >Đăng nhập</a>
                             </div>
                           </div>
                         </div>
@@ -530,10 +282,12 @@ const CheckoutPage = () => {
                                   </span>
                                 </td>
                               </tr>
-                              <tr className="total-line total-line-shipping">
+                              <tr className="total-line total-line-shipping" style={{ color: 'red' }}>
                                 <td className="total-line-name">Phí vận chuyển</td>
                                 <td className="total-line-price">
-                                  <span className="order-summary-emphasis">—</span>
+                                  <span className="order-summary-emphasis" style={{ color: 'red' }}>
+                                    {shippingFee === 1 ? 'Chưa tính phí vận chuyển' : shippingFee <= 0 ? 'Miễn phí' : formatPrice(shippingFee)}
+                                  </span>
                                 </td>
                               </tr>
                             </tbody>
@@ -547,7 +301,7 @@ const CheckoutPage = () => {
                                 <td className="total-line-name payment-due">
                                   <span className="payment-due-currency">VND</span>
                                   <span className="payment-due-price">
-                                    {formatPrice(totalAmount)}
+                                    {formatPrice(totalAmountAll)}
                                   </span>
                                   <span className="checkout_version"></span>
                                 </td>

@@ -24,16 +24,17 @@ public class Address implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer addressId;
+	@Column
+	private Integer code;
+	
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String city;
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String district;
 	@Column(columnDefinition = "nvarchar(100) null")
-	private String village;
+	private String ward;
 	@Column(columnDefinition = "nvarchar(100) null")
-	private String Street;
-	@Column(length = 20)
-	private String Phone;
+	private String streetNumber;
 
 	@ManyToOne
 	@JoinColumn(name = "customerId")

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.edu.shop.domain.Account;
-import com.edu.shop.dto.AccountDTO;
+import com.edu.shop.model.dto.AccountDTO;
 import com.edu.shop.repository.AccountReposttory;
 import com.edu.shop.service.AccountService;
 

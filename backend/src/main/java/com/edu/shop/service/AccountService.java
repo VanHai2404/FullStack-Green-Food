@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import com.edu.shop.domain.Account;
-import com.edu.shop.dto.AccountDTO;
+import com.edu.shop.model.dto.AccountDTO;
 
 public interface AccountService {
 

@@ -5,12 +5,13 @@ import CartComponent from '../../../components/ModalCart/Cart';
 import bike from '../../../assets/images/Logo/bike.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { createInvoice } from '../../../redux/actions/Invoice-action';
+import { updateCartData } from '../../../redux/actions/order-action';
 import { Radio, DatePicker, TimePicker, Button } from 'antd'; // Thêm Button từ Ant Design
 import { updateCartItemQuantity, removeFromCart } from '../../../redux/actions/cart-action';
 const { RangePicker } = TimePicker;
 
 const CartPage = () => {
+
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const CartPage = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [deliveryOption, setDeliveryOption] = useState('timeNow');
   const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [note, setNote] = useState('');
 
   const handleDeliveryOptionChange = (option) => {
     setDeliveryOption(option);
@@ -25,6 +28,10 @@ const CartPage = () => {
 
   const handleTimeChange = (time, timeString) => {
     setSelectedTime(timeString);
+  };
+  const handleDateChange = (date, dateString) => {
+    setSelectedDate(dateString);
+    console.log(date, dateString); // You can replace this with your logic
   };
 
   useEffect(() => {
@@ -42,6 +49,10 @@ const CartPage = () => {
       dispatch(updateCartItemQuantity(productId, newQuantity));
     }
   };
+  const handleNoteChange = (newNote) => {
+    setNote(newNote);
+  };
+
 
   const updateTotalAmount = () => {
     const totalAmount = cartItems.reduce((total, item) => {
@@ -52,6 +63,8 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
+    // Lưu thông tin vào Redux store
+    dispatch(updateCartData({ note, deliveryDate: { date: selectedDate, time: selectedTime } }));
     navigate("/checkouts");
   };
 
@@ -83,7 +96,7 @@ const CartPage = () => {
                       Giỏ hàng của bạn
                     </h1>
                     <div className="list-pageform-cart">
-                      <CartComponent removeFromCart={removeFromCart} updateQuantity={updateQuantity} />
+                      <CartComponent removeFromCart={removeFromCart} updateQuantity={updateQuantity}  onNoteChange={handleNoteChange} />
                     </div>
                   </div>
                 </div>
@@ -109,7 +122,7 @@ const CartPage = () => {
                         </div>
                         {deliveryOption === 'timeDate' && (
                           <div className="time-picker-container">
-                            <DatePicker />
+                            <DatePicker onChange={handleDateChange}  />
                             <RangePicker format="HH:mm" onChange={handleTimeChange} />
                           </div>
                         )}

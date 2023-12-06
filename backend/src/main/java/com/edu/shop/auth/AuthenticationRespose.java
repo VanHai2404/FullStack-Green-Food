@@ -3,7 +3,7 @@ package com.edu.shop.auth;
 import java.util.Collection;
 
 import com.edu.shop.domain.Account;
-import com.edu.shop.dto.CustomerDto;
+import com.edu.shop.model.dto.CustomerDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

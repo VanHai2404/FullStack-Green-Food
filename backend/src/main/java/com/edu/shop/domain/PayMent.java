@@ -3,8 +3,13 @@ package com.edu.shop.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.edu.shop.constants.PaymentMethod;
+import com.edu.shop.constants.PaymentStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,24 +28,25 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "payments")
 public class PayMent implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer paymentId;
-	@Column(nullable = false)
-//	private int orderId;
-//	@Column(nullable = false)
-	private Integer  PayMentMethod;
-	@Temporal(TemporalType.DATE)
-	private Date PaymentDate;
-	private Float amount;
-	@Temporal(TemporalType.DATE)
-	private Date payDate;
-	@Temporal(TemporalType.DATE)
-	private Date Timestamp;
-	private Integer Status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer paymentId;
 
-	@OneToOne
-	@JoinColumn(name = "orderId")
-	private Order order;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
+    private Double amount;
+
+    @Temporal(TemporalType.DATE)
+    private Date payDate;
+
+    private Long timestamp;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    @OneToOne
+    @JoinColumn(name = "orderId")
+    private Order order;
 }
+
