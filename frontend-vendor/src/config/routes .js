@@ -2,6 +2,7 @@ const routes = {
     Dashboard: '/admin',
     Login: '/alogin',
     AddProduct:'/admin/products/create',
+    EditProduct:'/admin/products/edit/:productId',
     ListProduct:'/admin/products',
     AddCatrgory:'/admin/categories/create',
     EditCatrgory: '/admin/categories/edit/:categoryId',
@@ -13,7 +14,9 @@ const routes = {
     ListSupplier:'/admin/suppliers',
     EditSupplier:'/admin/customer/edit/:supplierId',
     TagPost :'/admin/post',
-    ListOrder:'/order/list',
+    AddPost : '/admin/post/add',
+    ListOrder:'/admin/order/list',
+    Bill:'/admin/order',
     Forbidden:'/403',
 
 };

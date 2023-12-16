@@ -1,11 +1,10 @@
 // src/components/AddProducts/AddProducts.jsx
 import React from 'react';
 import '../ProductPage/AddProducts.css';
-import { BsSearch }from 'react-icons/bs';
-import TableListSupplier from '../../../components/Supplier/List';
+import AddPostForm from '../../../components/Post/AddForm';
 
 
-const ListSupplier = () => {
+const AddPost = () => {
     return (
         <div>
             <div className="row">
@@ -13,7 +12,7 @@ const ListSupplier = () => {
                     <div className="page-title-box d-flex align-items-center justify-content-between">
                         <h4 className="mb-0">
                             <font style={{ verticalAlign: "inherit" }}>
-                                <font style={{ verticalAlign: "inherit" }}>Các Nhà cung Cấp</font>
+                                <font style={{ verticalAlign: "inherit" }}>Tạo Bài viết</font>
                             </font>
                         </h4>
                         <div className="page-title-right">
@@ -23,7 +22,7 @@ const ListSupplier = () => {
                                         <a className="" href="#" target="_self">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                Nhà cung Cấp
+                                                Bài Viết
                                                 </font>
                                             </font>
                                         </a>
@@ -32,7 +31,7 @@ const ListSupplier = () => {
                                         <span aria-current="location">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                    Danh sách
+                                                    Thêm Mới
                                                 </font>
                                             </font>
                                         </span>
@@ -45,22 +44,22 @@ const ListSupplier = () => {
             </div>
             <div className="card">
                 <div className="card-body">
-                  
-                    {/* Phần Table  */}
-                    <TableListSupplier/>
-
-
-
+                    <AddPostForm/>
+          
                   
 
 
+
+                    {/*  */}
+
+                    {/*  */}
 
                 </div>
 
             </div>
-            {/* Thêm các phần khác cho trang AddProducts tại đây */}
+            {/* Thêm các phần khác cho trang AddPost tại đây */}
         </div>
     );
 };
 
-export default ListSupplier;
+export default AddPost;

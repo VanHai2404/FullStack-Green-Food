@@ -33,7 +33,6 @@ export const fetchByProduct =(productId)=>{
         dispatch({type: FETCH_PRODUCT_BY_ID_REQUEST});
         try {
           const response = await ProductService.get(productId);
-          console.log('DATA ACTION PRODUCT : ',response.data)
           dispatch({
             type:FETCH_PRODUCT_BY_ID_SUCCESS,
             payload:response.data

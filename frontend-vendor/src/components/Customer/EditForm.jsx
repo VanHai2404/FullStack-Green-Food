@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { updateCustomer, addImageCustomer, fetchByCustomer } from '../../redux/actions/customer-action';
+import { Spin } from 'antd'; // Import Spin from Ant Design
 
 const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCustomer,addImageCustomer}) => {
     const { customerId } = useParams();
@@ -31,11 +32,6 @@ const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCu
             setCustomerDto(customer);
         }
     }, [customer]);
-
-    if (loading) {
-        console.log(customer);
-        return <p>Loading...</p>;
-    }
 
     if (error) {
         return <p>Error: {error}</p>;
@@ -86,8 +82,8 @@ const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCu
 
 
     return (
-        <>
-            {/* Multi Columns Form */}
+  
+           <Spin spinning={loading} size="large" tip="Loading...">
             <form className="row g-3 needs-validation" onSubmit={handleSubmit} noValidate="">
                 <div className="row g-3">
                     <div className="col-md-6">
@@ -266,13 +262,15 @@ const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCu
                         className="rizzui-button inline-flex font-medium items-center justify-center active:enabled:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-50 transition-colors duration-200 px-4 py-2 text-sm h-10 rounded-md border border-transparent focus-visible:ring-offset-2 bg-gray-900 hover:enabled::bg-gray-800 active:enabled:bg-gray-1000 focus-visible:ring-gray-900/30 text-gray-0 w-full @xl:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
                         type="submit">
                         <font >
-                            <font >Tạo sản phẩm</font>
+                            <font >Cập nhật</font>
                         </font>
                     </button>
                 </div>
 
             </form >
-        </>
+            </Spin>
+
+
 
     );
 };

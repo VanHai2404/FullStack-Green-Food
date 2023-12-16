@@ -9,16 +9,17 @@ import {
     return async (dispatch) => {
       dispatch({ type: FETCH_SUPPLIERS_REQUEST });
       try {
-        const response = await SupplierService.getAll(); // Add 'await' here
+        const response = await SupplierService.getAllSuppliers(); // Add 'await' here
         dispatch({
           type: FETCH_SUPPLIERS_SUCCESS,
-          payload: response.data,
+          payload: response,
         });
       } catch (error) {
-        dispatch({
-          type: FETCH_SUPPLIERS_FAILURE,
-          payload: error.message,
-        });
+        // dispatch({
+        //   type: FETCH_SUPPLIERS_FAILURE,
+        //   payload: error.message,
+        // });
+        console.log(error);
       }
     };
   };

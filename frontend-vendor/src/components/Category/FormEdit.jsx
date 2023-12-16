@@ -1,73 +1,71 @@
-import React, { useState,useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import CKEditorComponent from '../CKEditor/CKEditor';
 import CategoryService from '../../services/CategoryService';
 import { toast } from 'react-toastify';
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import config from '../../config';
+
 const FormEdit = () => {
-    let navigate = useNavigate();
+  let navigate = useNavigate();
+  const { categoryId } = useParams();
 
+  const [category, setCategory] = useState({
+    name: '',
+    slug: '',
+    description: '',
+  });
 
-    const { categoryId } = useParams();
+  const { name, slug, description } = category;
 
-    const [category, setCategory] = useState({
-        name: "",
-        slug: "",
-        description: "",
-        
-    });
-    const {
-        name,
-        slug,
-        description,
-    } = category;
+  const handleInputChange = (e) => {
+    if (e.target && e.target.name !== undefined && e.target.value !== undefined) {
+      setCategory({
+        ...category,
+        [e.target.name]: e.target.value,
+      });
+    } else {
+      // Handle CKEditor change
+      setCategory({
+        ...category,
+        description: e,
+      });
+    }
+  };
 
-
-    const handleInputChange = (e) => {
-        if (e.target && e.target.name !== undefined && e.target.value !== undefined) {
-            setCategory({
-                ...category,
-                [e.target.name]: e.target.value,
-            });
-        } else {
-            // Handle CKEditor change
-            setCategory({
-                ...category,
-                description: e,
-            });
-        }
-    };
-    // lòad dữ liệu vào form 
-    useEffect(() => {
-        loadUser();
-      }, []);
-
-
-      
-    
-
-    const handleUpadteCategory = async (e) => {
-        e.preventDefault();
-        try {
-            console.log("Mô Tả", category.categoryId);
-             await CategoryService.update(category);
-            toast.success('Chỉnh sửa Danh Muc Thanh Công', { position: toast.POSITION.TOP_RIGHT });
-            navigate(config.routes.ListCategory);
-            console.log("Chỉnh Sửa Danh Muc Thanh Công")
-
-        } catch (error) {
-            toast.error('Xảy ra lỗi khi Chỉnh sửa Danh Muc', { position: toast.POSITION.TOP_RIGHT });
-            console.error('Error saving category:', error);
-        }
-    };
-
-
+  useEffect(() => {
     const loadUser = async () => {
-        const result =await CategoryService.get(categoryId)
+      try {
+        console.log('Fetching data for categoryId:', categoryId);
+        const result = await CategoryService.get(categoryId);
+        console.log('Loaded category:', result.data);
         setCategory(result.data);
-      };
-    
+      } catch (error) {
+        console.error('Error loading category:', error);
+      }
+    };
+
+    loadUser(); // Call the function directly inside useEffect
+
+    return () => {
+      // Cleanup or additional logic on unmount
+    };
+  }, [categoryId]);
+
+  const handleUpadteCategory = async (e) => {
+    e.preventDefault();
+    try {
+      console.log('Mô Tả', category.categoryId);
+      await CategoryService.update(category);
+      toast.success('Chỉnh sửa Danh Muc Thanh Công', { position: toast.POSITION.TOP_RIGHT });
+      navigate(config.routes.ListCategory);
+      console.log('Chỉnh Sửa Danh Muc Thanh Công');
+    } catch (error) {
+      toast.error('Xảy ra lỗi khi Chỉnh sửa Danh Muc', { position: toast.POSITION.TOP_RIGHT });
+      console.error('Error saving category:', error);
+    }
+  };
+
     
 
     return (

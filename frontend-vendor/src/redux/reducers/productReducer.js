@@ -32,7 +32,7 @@ import {
         return {
           ...state,
           loading: false,
-          products: action.payload.products,
+          products: action.payload,
           error: ''
         };
       case FETCH_PRODUCTS_FAILURE:
@@ -134,11 +134,9 @@ import {
             loading: true,
           };
         case FETCH_PRODUCT_BY_ID_SUCCESS:
-          
-          // console.log("DATA GET PRODUCT : ", action.payload);
           return {
             ...state,
-            loading: false,
+             loading: false,
              product: action.payload, // hoặc là trích xuất thông tin Sản phẩm  cụ thể
             error: '',  // Reset error về rỗng khi thành công
           };

@@ -1,47 +1,90 @@
-import axiosAdmin from './axiosAdmin';
+import axiosAdmin from "./axiosAdmin";
 
 const PostService = {
-  getAll() {
-    const url = '/posts';
-    return axiosAdmin.get(url);
+
+  // Lấy danh sách tất cả bài đăng
+  getAllPosts: async () => {
+
+    try {
+      const response = await axiosAdmin.get(`/posts`);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách bài đăng:', error);
+      throw error; // Re-throw lỗi để cho component gọi API xử lý
+    }
   },
 
-  get(id) {
-    const url = `/posts/${id}`;
-    return axiosAdmin.get(url);
+  // Lấy chi tiết một bài đăng theo ID
+  getPostById: async (postId) => {
+    try {
+      const response = await axiosAdmin.get(`/posts/${postId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Lỗi khi lấy bài đăng có ID ${postId}:`, error);
+      throw error;
+    }
   },
 
-  add(data) {
-    const url = '/posts';
-    return axiosAdmin.post(url, data);
+  // Tạo một bài đăng mới
+  createPost: async (postData) => {
+    try {
+      const response = await axiosAdmin.post(`/posts`, postData);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi khi tạo bài đăng mới:', error);
+      throw error;
+    }
   },
+  addImageCustomer: async (postId, imageFile) => {
+    try {
+      const formData = new FormData();
+      formData.append('postId', postId);
+      formData.append('imageFile', imageFile);
 
-  addImage(id, imageFile) {
-    console.log("RES Image", imageFile);
-    const formData = new FormData();
-    formData.append('productId', id);
-    for (let i = 0; i < imageFile.length; i++) {
-        formData.append('imageFile', imageFile[i]);
+      const response = await axiosAdmin.post('/posts/upload-image', formData, {
+        
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+
+      });
+      return response.data;
+
+    } catch (error) {
+      console.error('Lỗi khi Luu ảnh:', error);
+      throw error;
+
     }
 
-    const url = '/posts/upload-image';
-    const headers = {
-        'Content-Type': 'multipart/form-data',
-    };
-    console.log("formData---------",formData);
-    return axiosAdmin.post(url, formData, { headers });
-},
-
-
-  update(data) {
-    const url = `/posts/${data.Id}`;
-    return axiosAdmin.put(url, data);
   },
 
-  remove(id) {
-    const url = `/posts/${id}`;
-    return axiosAdmin.delete(url);
+  // Cập nhật một bài đăng theo ID
+  updatePost: async (postId, postData) => {
+    try {
+      const response = await axiosAdmin.put(`/posts/${postId}`, postData);
+      return response.data;
+    } catch (error) {
+      console.error(`Lỗi khi cập nhật bài đăng có ID ${postId}:`, error);
+      throw error;
+    }
   },
+
+  // Xóa một bài đăng theo ID
+  deletePost: async (postId) => {
+    try {
+      const response = await axiosAdmin.delete(`/posts/${postId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Lỗi khi xóa bài đăng có ID ${postId}:`, error);
+      throw error;
+    }
+  },
+
+
+
+
+
+
 };
 
 export default PostService;

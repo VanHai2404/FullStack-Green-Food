@@ -1,193 +1,199 @@
-// TableListProduct.js
-
 import React, { useState, useEffect } from 'react';
-
+import { Table, Space, Pagination, Select, Spin, Modal } from 'antd';
 import { AiOutlineStar, AiFillStar, AiFillDelete } from 'react-icons/ai';
 import { MdEdit } from 'react-icons/md';
 import { GrView } from 'react-icons/gr';
-import PaginationRounded from '../Pagination/PaginationRounded';
-import Logo from '../../assets/images/Logo/LogoUser.png';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts } from '../../redux/actions/product-action';
+import { deleteProduct, fetchProducts } from '../../redux/actions/product-action';
+import { Link, NavLink } from 'react-router-dom';
+import config from '../../config';
+const { Option } = Select;
 
 const TableListProduct = () => {
     const dispatch = useDispatch();
+    const [pageSize, setPageSize] = useState(3); // Số items trên mỗi trang mặc định
     const { products = [], loading } = useSelector((state) => state.products);
 
+    // Hàm fetchData để lấy dữ liệu sản phẩm
+    const fetchData = async () => {
+        await dispatch(fetchProducts());
+    };
+
+    // Hàm xử lý khi xóa sản phẩm
+    const handleDelete = async (productId) => {
+        try {
+            await dispatch(deleteProduct(productId)); 
+
+            // Làm mới dữ liệu sau khi xóa thành công
+            fetchData();
+        } catch (error) {
+            console.error(`Lỗi khi xóa sản phẩm có ID ${productId}:`, error);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            await dispatch(fetchProducts());
-        };
+        // Gọi fetchData khi component được mount để lấy dữ liệu sản phẩm
         fetchData();
     }, [dispatch]);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+
+    const handleLinkClick = (productId) => {
+        window.location.href = "/admin/products/edit/" + productId;
+    };
+    const columns = [
+        {
+            title: 'Sản phẩm',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text, record) => (
+                <Space size="middle">
+                    <img
+                        src={`http://localhost:8080/api/admin/customers/${record.image}`}
+                        alt={record.name}
+                        title={record.name}
+                        loading="lazy"
+                        width={48}
+                        height={48}
+                        className="rizzui-avatar-img inline-flex items-center justify-center flex-shrink-0 object-cover rounded-lg"
+                        style={{ width: 48, height: 48, backgroundColor: "rgb(255, 71, 148)" }}
+                    />
+                    <div className="grid gap-0.5">
+                        <p className="font-lexend text-sm font-medium text-gray-900 dark:text-gray-700">
+                            {record.name}
+                        </p>
+                        <p className="text-[13px] text-gray-500"> {record.name}</p>
+                    </div>
+                </Space>
+            ),
+        },
+        {
+            title: 'Lướt Xem',
+            dataIndex: 'viewCount',
+            key: 'viewCount',
+        },
+        {
+            title: 'Số Lượng',
+            dataIndex: 'quantity',
+            key: 'quantity',
+        },
+        {
+            title: 'GIÁ',
+            dataIndex: 'salePrice',
+            key: 'salePrice',
+        },
+        {
+            title: 'Thường Hiểu',
+            dataIndex: 'commonUnderstanding',
+            key: 'commonUnderstanding',
+            render: (text, record) => (
+                <span>{record.supplier ? record.supplier.nation : ''}</span>
+            ),
+        },
+        {
+            title: 'XẾP HẠNG',
+            dataIndex: 'rating',
+            key: 'rating',
+            render: (text, record) => (
+                <div className="flex items-center">
+                    <span className="me-1 shrink-0">0</span>
+                    <AiOutlineStar style={{ color: "gold" }} />
+                    <AiOutlineStar style={{ color: "gold" }} />
+                    <AiOutlineStar style={{ color: "gold" }} />
+                    <AiOutlineStar style={{ color: "gold" }} />
+                    <AiOutlineStar style={{ color: "gold" }} />
+                    <span className="ms-1 shrink-0">(0)</span>
+                </div>
+            ),
+        },
+        {
+            title: 'TRẠNG THÁI',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text) => {
+                switch (text) {
+                    case 1:
+                        return 'ACTIVE';
+                    case 2:
+                        return 'INACTIVE';
+                    case 3:
+                        return 'Out of Stock';
+                    default:
+                        return '';
+                }
+            },
+        },
+        {
+            title: 'HÀNH ĐỘNG',
+            dataIndex: 'action',
+            key: 'action',
+            render: (text, record) => (
+                <div className="flex items-center">
+                    <Link to={"/admin/products/edit/" + record.productId} className="flex items-center" onClick={() => handleLinkClick(record.productId)}>
+                        <a href="#" style={{ paddingLeft: "10px" }}>
+                            <button className="borderBTN inline-flex h-7 w-7 items-center"> <MdEdit /> </button>
+                        </a>
+                    </Link>
+                    <a href="#" style={{ paddingLeft: "10px" }}>
+                        <button className="borderBTN inline-flex h-7 w-7 items-center" onClick={() => showDeleteConfirm(record.productId, record.name)}> <AiFillDelete /> </button>
+                    </a>
+                </div>
+            ),
+        },
+    ];
+
+
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: products.length,
+    });
+
+    const handleChangePage = (page, pageSize) => {
+        setPagination({
+            ...pagination,
+            current: page,
+            pageSize: pageSize,
+        });
+    };
+    // Delete confirmation modal
+    const showDeleteConfirm = (productId, name) => {
+        Modal.confirm({
+            title: 'Xác nhận xóa',
+            content: (
+                <p>{`Bạn có chắc chắn muốn xóa Sản phẩm "`}<strong style={{ color: 'red' }}>{name}</strong>{'"?'}</p>
+            ),
+            onOk() {
+                handleDelete(productId);
+            },
+            onCancel() {
+                // Do nothing on cancel
+            },
+            okText: 'Xóa',
+            cancelText: 'Hủy',
+        });
+    };
+
+
 
 
     return (
-        <div>
-            <table style={{ marginBottom: "10px" }}>
-                <thead className="thead-cell">
-                    <tr>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="ps-3.5">
-                                <input type="checkbox" name="" id="" className="bg-transparent check-input" />
+        <Spin spinning={loading} size="large" tip="Loading...">
+            <div>
+                <Table
+                    columns={columns}
+                    dataSource={products}
+                    pagination={{
+                        total: products.length,
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                        defaultPageSize: pageSize,
+                        pageSizeOptions: ['3', '5', '10', '20'], // Các tùy chọn cho số lượng items trên mỗi trang
+                        showSizeChanger: true,
+                        onChange: handleChangePage,
+                    }}
 
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>Sản phẩm</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>Lướt Xem</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>Số Lượng</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>GIÁ</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>Thường Hiểu</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>XẾP HẠNG</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>TRẠNG THÁI</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center opacity-0">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>HÀNH ĐỘNG</font>
-                                </font>
-                            </div>
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map(product => (
-                        <tr key={product.productId}>
-                            <td className="td-table-cell">
-                                <div className="inline-flex ps-3 5">
-                                    <input type="checkbox" name="" id="" className="bg-transparent check-input" />
-                                </div>
-                            </td>
-                            <td className="td-table-cell">
-                                <div className="flex items-center gap-3">
-                                    <img
-                                        src={`http://localhost:8080/api/admin/customers/${product.image}`}
-                                        alt={product.name}
-                                        title={product.name}
-                                        loading="lazy"
-                                        width={48}
-                                        height={48}
-                                        className="rizzui-avatar-img inline-flex items-center justify-center flex-shrink-0 object-cover rounded-lg"
-                                        style={{ width: 48, height: 48, backgroundColor: "rgb(255, 71, 148)" }}
-                                    />
-                                    <div className="grid gap-0.5">
-                                        <p className="font-lexend text-sm font-medium text-gray-900 dark:text-gray-700">
-                                            {product.name}
-                                        </p>
-                                        <p className="text-[13px] text-gray-500"> {product.name}</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm">{product.viewCount
-                                    !== null ? product.viewCount : "0"}</p>
-                            </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm"> {product.quantity}</p>
-                            </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm"> {product.salePrice}</p>
-                            </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm"> {product.supplier.nation}</p>
-                            </td>
-                            <td className="td-table-cell">
-                                <div className="flex items-center">
-                                    <span className="me-1 shrink-0">0</span>
-                                    <AiOutlineStar style={{ color: "gold" }} />
-                                    <AiOutlineStar style={{ color: "gold" }} />
-                                    <AiOutlineStar style={{ color: "gold" }} />
-                                    <AiOutlineStar style={{ color: "gold" }} />
-                                    <AiOutlineStar style={{ color: "gold" }} />
-
-                                    <span className="ms-1 shrink-0">(0)</span>
-                                </div>
-                            </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm"> {product.status}</p>
-                            </td>
-                            <td className="td-table-cell">
-                                <div className="flex items-center">
-                                    <a href="#" style={{ paddingLeft: "10px" }}>
-                                        <button className="borderBTN inline-flex h-7 w-7 items-center"> <MdEdit /> </button>
-                                    </a>
-                                    <a href="#" style={{ paddingLeft: "10px" }}>
-                                        <button className="borderBTN inline-flex h-7 w-7 items-center"> <GrView /> </button>
-                                    </a>
-                                    <a href="#" style={{ paddingLeft: "10px" }}>
-                                        <button className="borderBTN inline-flex h-7 w-7 items-center"> <AiFillDelete /> </button>
-                                    </a>
-                                </div>
-                            </td>
-
-
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="table-pagination flex items-center ustify-center justify-between mt-5 xs:mt-6 sm:mt-7">
-                <div className="hidden items-center sm:flex">
-                    <select className="form-select" aria-label="Default select example">
-                        <option selected>Hàng trên mỗi trang</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-
-                </div>
-                <div >
-                    <PaginationRounded />
-                </div>
-
+                />
             </div>
-
-        </div>
+        </Spin>
     );
 };
 
