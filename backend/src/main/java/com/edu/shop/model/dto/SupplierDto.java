@@ -13,9 +13,13 @@ public class SupplierDto {
 	private Long supplierId;
 
 	private String name;
-
+	
+	private String nation;
+	
 	private String address;
 
 	private String contactNumber;
+	
+	private String description;
 
 }

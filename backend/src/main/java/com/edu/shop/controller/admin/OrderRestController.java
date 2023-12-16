@@ -3,10 +3,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +44,64 @@ public class OrderRestController {
         List<Order> orders = findOrdersByStatus(CONFIRMED);
         return ResponseEntity.ok(orders);
     }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrders(@PathVariable Integer orderId) {
+        Optional<Order> orders = orderService.findById(orderId);
+        return ResponseEntity.ok(orders.get());
+    }
+    
+    
+    @GetMapping("")
+    public ResponseEntity<List<Order>> getOrderId() {
+        List<Order> orders = orderService.findAll();
+        return ResponseEntity.ok(orders);
+    }
+    
+    @GetMapping("/status") // lấy hóa đơn theo 2 trang thái
+    public ResponseEntity<List<Order>> getOrderStatus() {
+        List<Order> list = new ArrayList<>();
+
+        List<Order> orders1 = orderService.findByStatus(OrderStatus.WAITING);
+        list.addAll(orders1);
+
+        List<Order> orders2 = orderService.findByStatus(OrderStatus.CONFIRMED);
+        list.addAll(orders2);
+        return ResponseEntity.ok(list);
+    }
+
+    
+    
+    @PostMapping("/update-status/{orderId}")
+    public ResponseEntity<?> updateOrderStatus(
+            @PathVariable Integer orderId,
+            @RequestParam String newStatus) {
+        try {
+            // Gọi service để cập nhật trạng thái đơn hàng với orderId và newStatus
+            orderService.updateOrderStatus(orderId, newStatus);
+            return ResponseEntity.ok("Cập nhật trạng thái đơn hàng thành công");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi khi cập nhật trạng thái đơn hàng");
+        }
+    }
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity<String> cancelOrder(
+    	    @PathVariable("orderId") Integer orderId,
+            @RequestParam("reason") String reason
+        
+    ) {
+        try {
+            orderService.cancelOrder(orderId, reason);
+            return new ResponseEntity<>("Đã hủy đơn hàng thành công", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Đã xảy ra lỗi khi xử lý yêu cầu", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("/page")
     public ResponseEntity<List<Order>> getAllOrders(@RequestParam("page") Optional<Integer> page,

@@ -1,8 +1,11 @@
 package com.edu.shop.service.impl;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,9 @@ public class UserServiceImpl  implements UserService{
 	@Autowired
 	private RoleRespository roleRespository;
 	
+	   @Autowired
+	 private JavaMailSender javaMailSender;
+	
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -41,7 +47,25 @@ public class UserServiceImpl  implements UserService{
 		
 	
 	}
+	
+	
+	  @Override
+	public String sendVerificationEmail(String  email) {
+	        SimpleMailMessage mailMessage = new SimpleMailMessage();
+	        String VerificationCode = generateVerificationCode();
+	        mailMessage.setTo(email);
+	        mailMessage.setSubject("Mã xác nhận");
+	        mailMessage.setText("Mã xác minh của bạn là: " + VerificationCode);
+	        javaMailSender.send(mailMessage);
+	        return VerificationCode;
+	    }
+	  
+	  private String generateVerificationCode() {
+	        return UUID.randomUUID().toString().substring(0, 5).toUpperCase();
+	    }
 
+	  
+	  
 	@Override
 	public void addToUser(String username, String roleName) {
 		System.out.println("username: "+username +"ROLE: "+roleName);

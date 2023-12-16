@@ -2,6 +2,7 @@ package com.edu.shop.controller.admin;
 
 import java.util.*;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.shop.constants.CommentStatus;
+import com.edu.shop.domain.Customer;
 import com.edu.shop.domain.Product;
 import com.edu.shop.domain.ProductComment;
+import com.edu.shop.model.dto.ProductCommentDto;
+import com.edu.shop.model.request.ProductCommentRequest;
+import com.edu.shop.service.CustomerService;
 import com.edu.shop.service.ProductCommentService;
 import com.edu.shop.service.ProductService;
 
@@ -28,6 +34,10 @@ public class ProductCommentRestController {
 	    private ProductCommentService productCommentService;
 	    @Autowired
 	    ProductService productService;
+	    
+	    @Autowired
+	    CustomerService customerService;
+	    
 
 	    // Get all product comments
 	    @GetMapping
@@ -38,7 +48,7 @@ public class ProductCommentRestController {
 
 	    // Get product comments by status
 	    @GetMapping("/by-status/{status}")
-	    public ResponseEntity<List<ProductComment>> getProductCommentsByStatus(@PathVariable Boolean status) {
+	    public ResponseEntity<List<ProductComment>> getProductCommentsByStatus(@PathVariable String status) {
 	        List<ProductComment> productComments = productCommentService.findByStatus(status);
 	        return new ResponseEntity<>(productComments, HttpStatus.OK);
 	    }
@@ -57,13 +67,35 @@ public class ProductCommentRestController {
 	        }
 	    }
 
-	    // Add a new product comment
 	    @PostMapping
-	    public ResponseEntity<ProductComment> addProductComment(@RequestBody ProductComment productComment) {
+	    public ResponseEntity<ProductComment> addProductComment(@RequestBody ProductCommentRequest commentRequest ) {
+	        ProductComment productComment = new ProductComment();
+
+	        Optional<Customer> optionalCustomer = customerService.findById(commentRequest.getCustomerId());
+	        if (optionalCustomer.isPresent()) {
+	            productComment.setCustomer(optionalCustomer.get());
+	        } else {
+	            // Xử lý trường hợp customer không tồn tại (ví dụ: trả về ResponseEntity không hợp lệ)
+	            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	        }
+	        Optional<Product> optionalProduct = productService.findById(commentRequest.getProductId());
+	        if (optionalProduct.isPresent()) {
+	            productComment.setProduct(optionalProduct.get());
+	        } else {
+	            // Xử lý trường hợp product không tồn tại (ví dụ: trả về ResponseEntity không hợp lệ)
+	            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	        }
+	        productComment.setStatus(CommentStatus.PENDING);
+	        productComment.setStarRating(commentRequest.getStarRating());
+	        productComment.setDetail(commentRequest.getDetail());
+	        Date date = new Date();
+	        productComment.setCreateDate(date);
 	        ProductComment savedProductComment = productCommentService.save(productComment);
 	        return new ResponseEntity<>(savedProductComment, HttpStatus.CREATED);
 	    }
 
+	    
+	    
 	    // Update an existing product comment
 	    @PutMapping("/{commentId}")
 	    public ResponseEntity<ProductComment> updateProductComment(

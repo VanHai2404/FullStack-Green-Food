@@ -8,10 +8,17 @@ import config from '../../../../config';
 import { BsTelephoneFill } from 'react-icons/bs';
 import { FaRegHeart, FaRegUser, FaShoppingBasket, FaShoppingCart } from 'react-icons/fa';
 import { RiAccountCircleFill, RiLoginCircleLine } from 'react-icons/ri';
+import { AutoComplete, Input, Select } from 'antd';
+import ProductService from '../../../../services/ProductService';
 import './Header.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../../redux/actions/auth-action';
 import MenuHeaderComponent from '../../../../components/Menu/menuHeader';
+
+
+const { Option } = Select;
+
+
 const Header = ({ toggleCart }) => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isAppHeaderVisible, setAppHeaderVisible] = useState(true);
@@ -76,6 +83,24 @@ const Header = ({ toggleCart }) => {
 
     const dropdownClasses = `dropdown-menu dropdown-menu-end dropdown-menu-arrow profile${isDropdownOpen ? '-open' : ''}`;
 
+    const [options, setOptions] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    const handleSearch = async (value) => {
+        try {
+            const response = await ProductService.finby(value); // Sử dụng hàm finby từ axiosUser
+            console.log(response.data)
+            setOptions(response.data); // Gán dữ liệu từ API vào state options
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const onSelect = (value, option) => {
+        // Xử lý khi một option được chọn
+        console.log('onSelect', value, option);
+        setSelectedProduct(option);
+    };
 
     return (
         <header>
@@ -84,9 +109,10 @@ const Header = ({ toggleCart }) => {
                     <div className="content-header row">
                         <div className="col-lg-2 col-md-2 col-sm-3">
                             <div className="logo_sec">
-                                <a href="/">
+
+                                <Link to={config.routes.home}>
                                     <img src={Logo} alt="Logo" />
-                                </a>
+                                </Link>
                             </div>
                         </div>
                         <div className="col-md-10">
@@ -95,12 +121,26 @@ const Header = ({ toggleCart }) => {
                                     <div className="search_sec">
                                         <div className="autocomplete-container">
                                             <div className="input-container">
-                                                <input
-                                                    type="text"
-                                                    autoComplete="off"
-                                                    placeholder="Search"
-                                                    className="ng-untouched ng-pristine ng-valid"
-                                                />
+                                                <AutoComplete
+                                                    style={{ width: '100%' }}
+                                                    onSearch={handleSearch}
+                                                    onSelect={onSelect}
+                                                    optionLabelProp="label"
+                                                >
+                                                    <Input.Search placeholder="Search" enterButton />
+                                                    <Select> 
+                                                    {options.map((option) => (
+                                                        
+                                                        <Option key={option.productId} value={option.name} label={option.name}>
+                                                            <div className="search-option">
+                                                                <img src={option.image} alt={option.name} />
+                                                                <span>{option.name}</span>
+                                                            </div>
+                                                        </Option>
+                                                        
+                                                    ))}
+                                                    </Select>
+                                                </AutoComplete>
                                                 <div className="x">
                                                     <img src={searchIcon} alt="search icon" style={{ width: '20px', paddingBottom: '10px' }} />
                                                 </div>
@@ -146,12 +186,14 @@ const Header = ({ toggleCart }) => {
                                                                 <span> My Orders</span>
                                                             </a>
                                                         </li>
-                                                        <li>
-                                                            <a className="dropdown-profile d-flex align-items-center" href="login.html">
-                                                                <RiAccountCircleFill style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                                <span>My Account</span>
-                                                            </a>
-                                                        </li>
+                                                        <Link to={config.routes.Profile}>
+                                                            <li>
+                                                                <a className="dropdown-profile d-flex align-items-center" href="login.html">
+                                                                    <RiAccountCircleFill style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                                                    <span>My Account</span>
+                                                                </a>
+                                                            </li>
+                                                        </Link>
 
                                                         <li>
                                                             <a className="dropdown-profile d-flex align-items-center" onClick={handlelogout}>

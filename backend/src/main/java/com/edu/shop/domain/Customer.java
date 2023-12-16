@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,36 +34,50 @@ public class Customer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer customerId;
+
 	@Column(length = 50)
-	private String username;	
+	private String username;
+	
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String fullname;
+
 	@Column(columnDefinition = "nvarchar(100) not null")
 	private String email;
+
 	@Column(length = 50)
 	private String gender;
+
 	@Column(length = 20)
 	private String phone;
+
 	@Column(length = 200)
 	private String image;
+
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
+
 	@Temporal(TemporalType.DATE)
 	private Date registeredDate;
 	@Column
-	private short status;	
-	@JsonIgnore
+	private short status;
+	
+	
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     @ToString.Exclude
-    private User user;	
+    @JsonBackReference
+    private User user;
+	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	@JsonBackReference
 	private Set<Order> orders;
+
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<Address> address;
+
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-	
 	private Set<PostComment> comments;
+
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<ProductComment> productComments;
 	

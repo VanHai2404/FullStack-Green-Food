@@ -13,7 +13,7 @@ const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [currentComponent, setCurrentComponent] = useState('PAY');
+  const [currentComponent, setCurrentComponent] = useState('INFORMATION');
 
   const [shippingFee, setShippingFee] = useState(1);
   useEffect(() => {
@@ -34,6 +34,7 @@ const CheckoutPage = () => {
 
 
   const handlePayment = () => {
+    updateTotalAmountAll();
     setCurrentComponent('PAY');
   };
 
@@ -48,7 +49,6 @@ const CheckoutPage = () => {
     } else {
       newShippingFee = 40000;
     }
-
     // Cập nhật state phí vận chuyển
     setShippingFee(newShippingFee);
   };
@@ -76,7 +76,9 @@ const CheckoutPage = () => {
     } else {
       setTotalAmountAll(totalAmount);
     }
+
   };
+
 
 
   return (
@@ -106,7 +108,7 @@ const CheckoutPage = () => {
                   </div>
                   <div className="main-content">
                     {currentComponent === 'INFORMATION' && <DeliveryInformation onPayment={handlePayment} updateShippingFee={updateShippingFee} />}
-                    {currentComponent === 'PAY' && <PaymentMethod total={totalAmountAll}/>}
+                    {currentComponent === 'PAY' && <PaymentMethod total={totalAmountAll} />}
                     {/* NỘI DUNG Ở ĐÂY */}
 
                   </div>

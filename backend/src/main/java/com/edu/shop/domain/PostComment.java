@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.edu.shop.constants.CommentStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,9 +56,11 @@ public class PostComment implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "postId")
+	@JsonBackReference
 	private Post post;
 
 	@ManyToOne
 	@JoinColumn(name = "customerId")
+	@JsonBackReference
 	private Customer customer;
 }

@@ -2,20 +2,27 @@ package com.edu.shop.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.edu.shop.domain.Post;
 import com.edu.shop.domain.Supplier;
 import com.edu.shop.repository.SupplierRepository;
+import com.edu.shop.service.StorageService;
 import com.edu.shop.service.SupplierService;
 @Service
 public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	SupplierRepository repository;
+	
+	@Autowired
+	StorageService storageService;
 
 	@Override
 	public List<Supplier> findByNameContaining(String Name) {
@@ -90,6 +97,23 @@ public class SupplierServiceImpl implements SupplierService {
 	@Override
 	public void deleteAll() {
 		repository.deleteAll();
+	}
+	
+	
+	
+	@Override
+	public void uploadImage(Long id,  MultipartFile imageFile) {
+		Optional<Supplier> optional = findById(id);
+		Supplier entity = optional.get();
+		if (imageFile != null && !imageFile.isEmpty()) {
+			UUID uuid = UUID.randomUUID();
+			String uustring = uuid.toString();
+			entity.setLogo(storageService.getStoreFilename(imageFile, uustring));
+			storageService.store(imageFile, entity.getLogo());
+			save(entity);
+	
+		
+	}
 	}
 
 }

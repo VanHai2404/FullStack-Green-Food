@@ -12,9 +12,10 @@ public class InvoiceRequest {
     private String fullName;
     private String email;
     private String phone;
+    private String note;
     private Double amont;
     
-    
+    private Integer addressId;
 	private Integer code;
     private String city;
     private String district;

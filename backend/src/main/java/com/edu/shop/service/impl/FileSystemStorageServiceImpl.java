@@ -64,19 +64,24 @@ public class FileSystemStorageServiceImpl implements StorageService {
 	
 	@Override
 	public Resource loadAsResource(String fileName) {
-		try {
-			Path file =load(fileName);
-			Resource resource = new UrlResource(file.toUri());
-			if(resource.exists() || resource.isReadable()) {
-				return resource;
-			}
-			throw new StorageFileNotFoundException("Couid not read file :"+fileName);	
+	    if (fileName == null) {
+	        throw new IllegalArgumentException("File name cannot be null");
+	    }
 
-		} catch (Exception e) {
-			throw new StorageFileNotFoundException("Couid not read file :"+fileName);	
-		}
-		
+	    try {
+	        Path file = load(fileName);
+	        Resource resource = new UrlResource(file.toUri());
+
+	        if (resource.exists() && resource.isReadable()) {
+	            return resource;
+	        } else {
+	            throw new StorageFileNotFoundException("Could not read file: " + fileName);
+	        }
+	    } catch (Exception e) {
+	        throw new StorageFileNotFoundException("Could not read file: " + e);
+	    }
 	}
+
 	@Override
 	public Path load(String flleName) {
 		return rootLocation.resolve(flleName);

@@ -1,59 +1,77 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ShopByLineFilter from './ShopByLineFilter';
+import ByLineFilterSupplier from './ByLineFilterSupplier';
+import SupplierService from '../../services/SupplierService';
+import CategoryService from '../../services/CategoryService';
+import PriceFilter from './PriceFilter';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const ProductFilter  = () => {
-    const ListCategories = [
-        { id: 1, title: "Bulk Buy" },
-        { id: 2, title: "Bulk Fruits" },
-        { id: 3, title: "Bulk Vegetables" },
-        { id: 4, title: "Potatoes & Yams" },
-        { id: 5, title: "Bulk Fruits" }
-      ];
+const ProductFilter  = ({
+  selectedCategories,
+  selectedSuppliers,
+  onCategoryCheckboxChange,
+  onSupplierCheckboxChange,
+  onPriceFilterChange
+}) => {
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const CategoriesData = await CategoryService.getAll();
+        setCategories(CategoriesData.data);
+        console.log(CategoriesData.data);
+      } catch (error) {
+
+        console.error('Error loading Categories:', error);
+        toast.error('Lỗi khi tải thông tin Loại Sản Phẩm !', { position: toast.POSITION.TOP_RIGHT });
+      }
+    };
+    const fetchSuppliers = async () => {
+      try {
+        const SuppliersData = await SupplierService.getAll();
+        setSuppliers(SuppliersData.data);
+        console.log(SuppliersData.data);
+      } catch (error) {
+
+        console.error('Error loading Categories:', error);
+        toast.error('Lỗi khi tải thông tin Nhà sản xuất !', { position: toast.POSITION.TOP_RIGHT });
+      }
+    };
+    fetchSuppliers();
+
+    fetchCategories();
+  }, []);
+
+
+   
       const LineList = [
-        { id: 1, title: "30571071113" },
-        { id: 2, title: "Chiquita" },
-        { id: 3, title: "Sebastiano" },
-        { id: 4, title: "Vegetable Souk Fruits" },
-        { id: 5, title: "Vegetable Souk Vegetables" },
-        { id: 6, title: "Zespri" }
+        { categoryId: 1, name: "30571071113" },
+        { categoryId: 2, name: "Chiquita" },
+        { categoryId: 3, name: "Sebastiano" },
+        { categoryId: 4, name: "Vegetable Souk Fruits" },
+        { categoryId: 5, name: "Vegetable Souk Vegetables" },
+        { categoryId: 6, name: "Zespri" }
       ];
 
-      const OriginList = [
-        { id: 1, title: "Australia" },
-        { id: 2, title: "Brazil" },
-        { id: 3, title: "China" },
-        { id: 4, title: "Ecuador" },
-        { id: 5, title: "Egypt" },
-        { id: 6, title: "India" },
-        { id: 7, title: "Iran" },
-        { id: 8, title: "Vietnam" },
-        { id: 9, title: "Mexico" },
-        { id: 10, title: "New Zealand" },
-        { id: 11, title: "Vietnam" },
-        { id: 12, title: "Spain" },
-        { id: 13, title: "Syria" },
-        { id: 14, title: "Turkey" },
-        { id: 15, title: "United Arab Emirates" },
-        { id: 16, title: "United States" },
-        { id: 17, title: "Vietnam" },
-        { id: 18, title: "Yemen" }
-      ];
 
   return (
     <ul style={{ borderTop: "1px solid #d7d7d7" }} className="nav_filterT2">
-        <ShopByLineFilter title ="Categories" List={ListCategories} value={1}/>
+        <ShopByLineFilter title ="Categories"
+        onCheckboxChange={onCategoryCheckboxChange}
+        selectedItems={selectedCategories}
+        List={categories} value={1}/>
         <ShopByLineFilter title="SHOP BY LINE" List={LineList} value={0}/>
-        <ShopByLineFilter title ="Origin"List ={OriginList} value={0}/>
+        
+        <ByLineFilterSupplier title ="Origin" List ={suppliers} 
+        onCheckboxChange={onSupplierCheckboxChange}
+        selectedItems={selectedSuppliers}
+        value={1}/>
 
-
-      <div className="filter_heading">PRICE RANGE</div>
-      <div className="price-filter d-flex no-gutters w-100 align-items-center justify-content-between">
-        <input type="number" placeholder="" className="form-control ng-valid ng-dirty ng-touched" />
-        <p className="mb-0">TO</p>
-        <input type="number" className="form-control" />
-        <p className="mb-0" style={{ cursor: "pointer" }}>GO</p>
-      </div>
+        <PriceFilter onFilterChange={onPriceFilterChange} />
     </ul>
 
   );

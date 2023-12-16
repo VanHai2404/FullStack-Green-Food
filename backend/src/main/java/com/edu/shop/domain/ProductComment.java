@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.edu.shop.constants.CommentStatus;
 import com.edu.shop.constants.PostStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,8 +38,10 @@ public class ProductComment implements Serializable {
 	private String detail;
     @Enumerated(EnumType.STRING)
 	private CommentStatus status;
-	@Column(columnDefinition = "nvarchar(100) not null")
-	private String images;
+    
+	@Column
+	private Integer starRating;
+	   
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
@@ -51,5 +54,6 @@ public class ProductComment implements Serializable {
 	
 	@ManyToOne
     @JoinColumn(name = "productId") // Name of the foreign key column in the ProductComment table
+	 @JsonBackReference
     private Product product;
 }

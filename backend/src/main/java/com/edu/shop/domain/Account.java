@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
@@ -73,9 +75,11 @@ public class Account implements Serializable {
 
 	@ToString.Exclude
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private Set<Product> products;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	@JsonBackReference
 	private Set<Post> posts;
 
 	@Override

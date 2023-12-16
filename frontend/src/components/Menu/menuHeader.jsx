@@ -137,25 +137,25 @@ const MenuHeaderComponent = () => {
                         <div className="navbar-collapse">
                             <ul>
                                 <li>TRANG CHỦ</li>
-                                <li className="nav-item dropdown">
+                                {/* <li className="nav-item dropdown">
                                     <Dropdown overlay={menu} placement="bottomLeft">
                                         <a className="nav-link" style={{ color: '#4d4d4d' }}>
                                             HOA QUẢ <AiOutlineDown className='fa-caret-down' />
                                         </a>
                                     </Dropdown>
-                                </li>
+                                </li> */}
                                 <Link to={config.routes.products_list}>
-                                    <li> RAU</li>
+                                    <li> CỬA HÀNG</li>
                                 </Link>
                      
-
+{/* 
                                 <li className="nav-item dropdown">
                                     <Dropdown overlay={NuocEp} placement="bottomLeft">
                                         <a className="nav-link" style={{ color: '#4d4d4d' }}>
                                         NƯỚC ÉP &CẮT LÁT <AiOutlineDown className='fa-caret-down' />
                                         </a>
                                     </Dropdown>
-                                </li>
+                                </li> */}
 
 
                                 <li className="nav-item dropdown">

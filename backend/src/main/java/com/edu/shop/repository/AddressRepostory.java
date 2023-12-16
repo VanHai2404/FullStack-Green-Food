@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.edu.shop.domain.Address;
 
 @Repository
-public interface AddressRepostory extends JpaRepository<Address, Long>{
-    // Custom query method to find addresses by customer ID
-    List<Address> findByCustomerId(Integer customerId);
+public interface AddressRepostory extends JpaRepository<Address, Integer> {
+    List<Address> findByCustomer_CustomerId(Integer customerId);
 }
+

@@ -116,8 +116,8 @@ public class ProductRestController {
 	    }
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Product> getProductById(@PathVariable Integer productId) {
+	@GetMapping("/{productId}")
+	public ResponseEntity<Product> getProductById(@PathVariable("productId")Integer productId) {
 		Optional<Product> opt = productService.findById(productId);
 		if (opt.isPresent()) {
 			Product entity = opt.get();
@@ -230,32 +230,18 @@ public class ProductRestController {
 		}
 	}
 
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> list(
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "5") int size) {
-        try {
-            Pageable pageable = PageRequest.of(page, size, Sort.by("productId"));
+	@GetMapping
+	public ResponseEntity<List<Product>> listAll() {
+	    try {
+	        List<Product> productList = productService.findAll();
+	        return new ResponseEntity<>(productList, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 
-            Page<Product> resultPage;
-            if (search != null && !search.trim().isEmpty()) {
-                resultPage = productService.findByNameContaining(search, pageable);
-            } else {
-                resultPage = productService.findAll(pageable);
-            }
-            Map<String, Object> response = new HashMap<>();
-            response.put("products", resultPage.getContent());
-            response.put("currentPage", resultPage.getNumber());
-            response.put("totalItems", resultPage.getTotalElements());
-            response.put("totalPages", resultPage.getTotalPages());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 	
-    @GetMapping("/{filename:.+}")
+    @GetMapping("/images/{filename:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         // Gọi service để load file và trả về dưới dạng Resource
         Resource file = storageService.loadAsResource(filename);

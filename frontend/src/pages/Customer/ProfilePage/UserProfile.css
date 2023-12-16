@@ -30,15 +30,15 @@
     margin-bottom: 40px;
 }
 
-ul>li>a {
+/* ul>li>a {
     font-size: 17px;
     padding: 12px 15px;
     margin-top: 7px;
-}
+} */
 
-.student-profile-content {
+/* .student-profile-content {
     padding: 25px 0 30px 14px;
-}
+} */
 
 .tab-pane {
     display: none;
@@ -161,7 +161,9 @@ a:hover{
     background-repeat: no-repeat;
     background-size: cover;
     min-height: 250px;
+    background-image: url("/src/assets/images/products/course-slider.6525fdc5.png");
 }
+
 .student-profile-setting-author-img {
     border-radius: 50%;
     display: inline-block;
@@ -173,7 +175,7 @@ a:hover{
     border-radius: 50%;
     object-fit: cover;
     margin-top: -75px;
-    border: 5px solid #fff;
+    border: 5px solid #b9afaf;
 }
 img, svg {
     vertical-align: middle;
@@ -336,4 +338,78 @@ input[type="radio"]+label:after {
 
 .mb-25 {
     margin-bottom: 25px;
+}
+.gap-A{
+    gap: 1.25rem;
+}
+.grid-cols-2L{
+
+    grid-template-columns: repeat(2,minmax(0,1fr));
+}
+.auto-rows-auto {
+    grid-auto-rows: auto;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border-width: 0;
+}
+.border-brand {
+    --tw-border-opacity: 1;
+    border-color: rgb(2 178 144/var(--tw-border-opacity));
+}
+.border-2 {
+    border-width: 2px;
+}
+
+.rounded-md {
+    border-radius: 0.375rem;
+}
+.min-h-\[112px\] {
+    min-height: 112px;
+}
+.h-full {
+    height: 100%;
+}
+.mdL {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
+}
+.LT {
+    
+    position: absolute;
+    right: 0.75rem;
+}
+.border-border-base{
+    border: 3px solid #e3e3e3;
+}
+/* styles.css */
+.relative {
+    position: relative;
+}
+.absolute-top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    transition: 0.3s; /* Add transition for smooth effect */
+
+  }
+  .absolute-top-right:hover {
+   padding: 8px;
+    border-radius: 50%;
+    background-color: #699c47;
+    border: 2px solid #699c47; /* Set your desired border color */
+  }
+  .is {
+    margin-bottom: 5px;
+    padding-top: 5px;
+    margin-right: 0.5rem;
 }

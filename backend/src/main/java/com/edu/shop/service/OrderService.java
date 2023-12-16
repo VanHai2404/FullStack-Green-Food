@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.edu.shop.constants.OrderStatus;
+import com.edu.shop.domain.Customer;
 import com.edu.shop.domain.Order;
 import com.edu.shop.model.request.CartItemsRequest;
 import com.edu.shop.model.request.InvoiceRequest;
@@ -47,5 +49,13 @@ public interface OrderService {
 	<S extends Order> S save(S entity);
 
 	Order createOrder(CartItemsRequest[] cartItemsRequest, InvoiceRequest invoiceRequest);
+
+	List<Order> findByStatus(OrderStatus status);
+
+	List<Order> findByCustomer(Customer customer);
+
+	void cancelOrder(Integer orderId, String reason) throws RuntimeException;
+
+	void updateOrderStatus(Integer orderId, String newStatus) throws RuntimeException;
 
 }

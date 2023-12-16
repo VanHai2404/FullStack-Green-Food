@@ -37,36 +37,36 @@ const DiscountCodeModal = ({ visible, onCancel }) => {
         </Button>,
       ]}
     >
-      <Input style={{marginBottom:20}}
+      <Input style={{ marginBottom: 20 }}
         placeholder="Tìm kiếm mã giảm giá"
         prefix={<SearchOutlined />}
         onChange={(e) => setSearchText(e.target.value)}
         onPressEnter={() => handleSearch(searchText)}
       />
-       <List
-      dataSource={discounts}
-      renderItem={(item) => (
-        <List.Item style={{ border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 0 8px rgba(0, 0, 0, 0.1)', marginBottom: '5px' ,padding:0 }}>
-          <Space align="center" style={{ width: '100%', padding: '2px' }}>
-            <div style={{ flex: '0 0 auto' }}>
-              <img src={`https://placekitten.com/50/50?image=${item.logo}`} alt={item.name} style={{ marginRight: 16 ,borderRadius: '5px'}} width={"100%"} />
-            </div>
-            <div style={{ flex: '1 1 auto' }}>
-              <strong>{item.name}</strong>
-              <br />
-              {item.code}
-              <br />
-              <p style={{color:"red",fontSize:10}}>Ngày hết hạn: {item.expiresIn}  </p>
-            </div>
-            <div style={{ paddingLeft: 180, marginLeft: 'auto' }}>
-              <Button type="primary" onClick={() => handleApply(item.code)}>
-                {item.applied ? 'Loại bỏ' : 'Áp dụng'}
-              </Button>
-            </div>
-          </Space>
-        </List.Item>
-      )}
-    />
+      <List
+        dataSource={discounts}
+        renderItem={(item) => (
+          <List.Item style={{ border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 0 8px rgba(0, 0, 0, 0.1)', marginBottom: '5px', padding: 0 }}>
+            <Space align="center" style={{ width: '100%', padding: '2px' }}>
+              <div style={{ flex: '0 0 auto' }}>
+                <img src={`https://placekitten.com/50/50?image=${item.logo}`} alt={item.name} style={{ marginRight: 16, borderRadius: '5px' }} width={"100%"} />
+              </div>
+              <div style={{ flex: '1 1 auto' }}>
+                <strong>{item.name}</strong>
+                <br />
+                {item.code}
+                <br />
+                <p style={{ color: "red", fontSize: 10 }}>Ngày hết hạn: {item.expiresIn}  </p>
+              </div>
+              <div style={{ paddingLeft: 180, marginLeft: 'auto' }}>
+                <Button type="primary" onClick={() => handleApply(item.code)}>
+                  {item.applied ? 'Loại bỏ' : 'Áp dụng'}
+                </Button>
+              </div>
+            </Space>
+          </List.Item>
+        )}
+      />
     </Modal>
   );
 };

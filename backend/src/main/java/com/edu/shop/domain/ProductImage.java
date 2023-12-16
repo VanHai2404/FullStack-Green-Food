@@ -1,16 +1,15 @@
 package com.edu.shop.domain;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,9 +33,20 @@ public class ProductImage implements Serializable {
 	@Column(nullable = false)
 	private String imageUrl;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "productId")
+	@JsonBackReference
 	private Product product;
 
 	// Các getter và setter
+	
+	@Override
+	public String toString() {
+	    return "ProductImage{" +
+	            "imageId=" + imageId +
+	            ", imageUrl='" + imageUrl + '\'' +
+	            ", otherFields=..." + // 
+	            '}';
+	}
+
 }

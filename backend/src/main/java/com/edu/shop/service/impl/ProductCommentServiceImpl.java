@@ -21,7 +21,7 @@ public class ProductCommentServiceImpl implements ProductCommentService  {
 	ProductCommentRepository productCommentRepository;
 
 	@Override
-	public List<ProductComment> findByStatus(Boolean status) {
+	public List<ProductComment> findByStatus(String status) {
 		return productCommentRepository.findByStatus(status);
 	}
 	

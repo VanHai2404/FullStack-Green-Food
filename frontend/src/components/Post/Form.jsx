@@ -22,7 +22,7 @@ const FormInfo = () => {
             >
                 <input type="hidden" name="form_type" defaultValue="new_comment" />
                 <input type="hidden" name="utf8" defaultValue="✓" />
-                <div className="contact-form">
+                <div className="post-form">
                     <p className="contact-name">
                         <input
                             className=""

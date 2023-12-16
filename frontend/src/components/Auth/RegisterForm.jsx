@@ -14,7 +14,7 @@ const RegisterForm = () => {
                 <label htmlFor="#" className="icon-field">
                     <FaUserShield/>
                 </label>
-                <input required=""type="password" defaultValue="" name="#" id="#" placeholder="Nhập số điện thoại" className="text"/>
+                <input required=""type="email" defaultValue="" name="#" id="#" placeholder="Nhập số Email" className="text"/>
             </div>
             <div className="clearfix custommer_account_action">
                 <div className="action_bottom"

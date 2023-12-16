@@ -27,23 +27,29 @@ public class AddressServiceImpl implements AddressService{
 	}
 
 	@Override
-	public Optional<Address> findById(Long id) {
+	public Optional<Address> findById(Integer id) {
 		return addressRepostory.findById(id);
 	}
 
 	@Override
-	public void deleteById(Long id) {
+	public void deleteById(Integer id) {
 		addressRepostory.deleteById(id);
+	}
+	
+
+	@Override
+	public boolean existsById(Integer id) {
+		return addressRepostory.existsById(id);
 	}
 
 	@Override
-	public Address getById(Long id) {
+	public Address getById(Integer id) {
 		return addressRepostory.getById(id);
 	}
 
 	@Override
-	public List<Address> findByCustomerId(Integer customerId) {
-		return addressRepostory.findByCustomerId(customerId);
+	public List<Address> findByCustomer_CustomerId(Integer customerId) {
+		return addressRepostory.findByCustomer_CustomerId(customerId);
 	}
 
 	@Override

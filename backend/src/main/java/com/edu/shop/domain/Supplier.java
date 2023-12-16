@@ -3,6 +3,10 @@ package com.edu.shop.domain;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,12 +36,17 @@ public class Supplier implements Serializable {
 
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String Nation;
+	
 	private String logo;
 
 	@Column(length = 13)
 	private String contactNumber;
+	
+	@Column(columnDefinition = "nvarchar(500) null")
+	private String description;
 
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
+	@JsonBackReference
 	private Set<Product> products;
 
 	// Constructors, getters, and setters

@@ -314,7 +314,7 @@ var {
     padding: 0;
     border: 0;
     outline: 0;
-    vertical-align: top;
+    /* vertical-align: top; */
 }
 
 .widget--list a {
@@ -660,11 +660,11 @@ var {
     font-weight: 500;
     font-family: Jost;
     padding: 40px 0; }
-  .reply-comment .contact-form .contact-name {
+  .reply-comment .post-form .contact-name {
     width: 50%;
     float: left;
     padding-right: 10px; }
-    .reply-comment .contact-form .contact-name input {
+    .reply-comment .post-form .contact-name input {
       width: 100%;
       border: 1px solid #d6d6d6;
       color: #000;
@@ -672,15 +672,15 @@ var {
       padding: 11px 0 11px 23px;
       font-size: 14px;
       font-family: Jost; }
-      .reply-comment .contact-form .contact-name input::placeholder {
+      .reply-comment .post-form .contact-name input::placeholder {
         font-size: 14px;
         font-family: Jost;
         color: #999999; }
-  .reply-comment .contact-form .contact-email {
+  .reply-comment .post-form .contact-email {
     width: 50%;
     float: left;
     padding-left: 10px; }
-    .reply-comment .contact-form .contact-email input {
+    .reply-comment .post-form .contact-email input {
       width: 100%;
       border: 1px solid #d6d6d6;
       color: #000;
@@ -688,14 +688,14 @@ var {
       padding: 11px 0 11px 23px;
       font-size: 14px;
       font-family: Jost; }
-      .reply-comment .contact-form .contact-email input::placeholder {
+      .reply-comment .post-form .contact-email input::placeholder {
         font-size: 14px;
         font-family: Jost;
         color: #999999; }
-  .reply-comment .contact-form .contact-message {
+  .reply-comment .post-form .contact-message {
     clear: both;
     margin-top: 10px; }
-    .reply-comment .contact-form .contact-message textarea {
+    .reply-comment .post-form .contact-message textarea {
       width: 100%;
       border: 1px solid #d6d6d6;
       color: #000;
@@ -704,11 +704,11 @@ var {
       font-size: 14px;
       font-family: Jost;
       padding-top: 18px; }
-      .reply-comment .contact-form .contact-message textarea::placeholder {
+      .reply-comment .post-form .contact-message textarea::placeholder {
         font-size: 14px;
         font-family: Jost;
         color: #999999; }
-  .reply-comment .contact-form .contact-submit input {
+  .reply-comment .post-form .contact-submit input {
     width: 100%;
     background: #000;
     padding: 15px 0;
@@ -720,10 +720,10 @@ var {
     font-weight: 600;
     border-radius: 0;
     transition: .3s; }
-  .reply-comment .contact-form .contact-submit:hover input {
+  .reply-comment .post-form .contact-submit:hover input {
     background: #5ba616;
     transition: .3s; }
-    .reply-comment .contact-form .contact-message {
+    .reply-comment .post-form .contact-message {
         clear: both;
         margin-top: 10px;
         padding-top: 10px;
