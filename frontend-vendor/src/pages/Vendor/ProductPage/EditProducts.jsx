@@ -1,11 +1,9 @@
 // src/components/AddProducts/AddProducts.jsx
 import React from 'react';
-import '../ProductPage/AddProducts.css';
-import { BsSearch }from 'react-icons/bs';
-import TableListSupplier from '../../../components/Supplier/List';
+import './AddProducts.css';
+import EditProductForm from '../../../components/Product/FormEdit';
 
-
-const ListSupplier = () => {
+const EditProducts = () => {
     return (
         <div>
             <div className="row">
@@ -13,7 +11,7 @@ const ListSupplier = () => {
                     <div className="page-title-box d-flex align-items-center justify-content-between">
                         <h4 className="mb-0">
                             <font style={{ verticalAlign: "inherit" }}>
-                                <font style={{ verticalAlign: "inherit" }}>Các Nhà cung Cấp</font>
+                                <font style={{ verticalAlign: "inherit" }}>Chỉnh sửa một sản phẩm</font>
                             </font>
                         </h4>
                         <div className="page-title-right">
@@ -23,7 +21,7 @@ const ListSupplier = () => {
                                         <a className="" href="#" target="_self">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                Nhà cung Cấp
+                                                    Sản phẩm
                                                 </font>
                                             </font>
                                         </a>
@@ -32,7 +30,7 @@ const ListSupplier = () => {
                                         <span aria-current="location">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                    Danh sách
+                                                    Chỉnh sửa sản phẩm
                                                 </font>
                                             </font>
                                         </span>
@@ -45,22 +43,21 @@ const ListSupplier = () => {
             </div>
             <div className="card">
                 <div className="card-body">
-                  
-                    {/* Phần Table  */}
-                    <TableListSupplier/>
-
-
-
+                      <EditProductForm/>
                   
 
 
+
+                    {/*  */}
+
+                    {/*  */}
 
                 </div>
 
             </div>
-            {/* Thêm các phần khác cho trang AddProducts tại đây */}
+            {/* Thêm các phần khác cho trang EditProducts tại đây */}
         </div>
     );
 };
 
-export default ListSupplier;
+export default EditProducts;

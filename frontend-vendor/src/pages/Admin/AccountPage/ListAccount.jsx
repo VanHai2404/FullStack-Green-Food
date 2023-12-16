@@ -2,10 +2,9 @@
 import React from 'react';
 import '../ProductPage/AddProducts.css';
 import { BsSearch }from 'react-icons/bs';
+import TableListAccount from '../../../components/Account/TableListAccount';
 
-import ListAllOrder from '../../../components/Order/ListAllOrder';
-
-const ListPageOrder = () => {
+const ListAccount = () => {
     return (
         <div>
             <div className="row">
@@ -13,7 +12,7 @@ const ListPageOrder = () => {
                     <div className="page-title-box d-flex align-items-center justify-content-between">
                         <h4 className="mb-0">
                             <font style={{ verticalAlign: "inherit" }}>
-                                <font style={{ verticalAlign: "inherit" }}>Các Hóa Đơn</font>
+                                <font style={{ verticalAlign: "inherit" }}>Các Nhân Viên</font>
                             </font>
                         </h4>
                         <div className="page-title-right">
@@ -23,7 +22,7 @@ const ListPageOrder = () => {
                                         <a className="" href="#" target="_self">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                  Hóa Đơn
+                                                   Nhân Viên
                                                 </font>
                                             </font>
                                         </a>
@@ -32,7 +31,7 @@ const ListPageOrder = () => {
                                         <span aria-current="location">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                    Các Hóa Đơn
+                                                    Các Nhân Viên
                                                 </font>
                                             </font>
                                         </span>
@@ -85,7 +84,7 @@ const ListPageOrder = () => {
 
 
 
-                    <ListAllOrder />
+                    <TableListAccount />
 
 
 
@@ -97,4 +96,4 @@ const ListPageOrder = () => {
     );
 };
 
-export default ListPageOrder;
+export default ListAccount;

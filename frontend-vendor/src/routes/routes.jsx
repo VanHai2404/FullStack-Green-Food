@@ -15,10 +15,14 @@ import Login from '../pages/Vendor/LoginPage/LoginPage';
 import EditCategory from '../pages/Vendor/CategoryPage/EditCategory';
 import AddSupplier from '../pages/Vendor/SupplierPage/AddSupplier';
 import ListSupplier from '../pages/Vendor/SupplierPage/ListSupplier';
+import EditSupplier from '../pages/Vendor/SupplierPage/EditSupplier';
 import ListTag from '../pages/Vendor/PostPage/Tag';
-import EditCustomerForm from '../components/Customer/EditForm';
+import EditCustomer from '../pages/Vendor/CustomerPage/EditCustomer';
 import ForbiddenPage from '../pages/Vendor/ErrorPage/ForbiddenPage';
 import ListPageOrder from '../pages/Vendor/PageOrder/ListPage';
+import ListBilPage from '../pages/Vendor/BillPage/ListBilPage';
+import AddPost from '../pages/Vendor/PostPage/AddPost';
+import EditProducts from '../pages/Vendor/ProductPage/EditProducts';
 
 
 // Public routes
@@ -29,19 +33,24 @@ const publicRoutes = [
     
     { path: config.routes.AddProduct, component: AddProducts },
     { path: config.routes.ListProduct, component: ListProducts },
+    { path: config.routes.EditProduct,component:EditProducts},
 
     { path: config.routes.AddCatrgory, component: AddCategory },
     { path: config.routes.EditCatrgory, component: EditCategory },
     { path: config.routes.ListCategory, component: ListCategory },
 
     { path: config.routes.AddCustomer, component: AddCustomer },
-    { path: config.routes.EditCustomer, component: EditCustomerForm },
+    { path: config.routes.EditCustomer, component: EditCustomer },
     { path: config.routes.ListCustomer, component: ListCustomer },
 
     { path: config.routes.AddSupplier, component: AddSupplier },
     { path: config.routes.ListSupplier, component: ListSupplier },
+    { path: config.routes.EditSupplier, component: EditSupplier },
+    
     { path: config.routes.TagPost,component: ListTag},
+    { path: config.routes.AddPost,component: AddPost},
     {path:config.routes.ListOrder,component: ListPageOrder},
+    {path:config.routes.Bill,component: ListBilPage},
 
 ];
 

@@ -27,26 +27,30 @@ const SidebarMenu = () => {
   const products = [
     { to: config.routes.ListProduct, title: 'Danh Sách Sản Phẩm' },
     { to: config.routes.AddProduct, title: 'Tạo Sản Phẩm' },
-    { to: '3456', title: 'Thông Tin Chi Tiết SP' },
+    { to: config.routes.AddProduct, title: 'Quản lý Bình Luận' }
 
   ];
   const Invoice = [
+    { href: '#', title: 'Hóa Đơn Chơ Xác Nhận' },
     { to: config.routes.ListOrder, title: 'Danh Sách Hóa Đơn' },
-    { href: '#', title: 'Tạo Hóa Đơn' },
     { href: '#', title: 'Thông Tin Chi Tiết' },
-
   ];
   const Blog = [
     { href: '#', title: 'Danh Sách Bài Viết' },
     {to: config.routes.TagPost, title: 'Tags' },
     { href: '#', title: 'Danh Mục Bài Viết' },
-    { href: '#', title: 'Tạo Bài Viết' },
+    {to: config.routes.AddPost, title: 'Tạo Bài Viết' },
 
   ];
   const Customer = [
     { to: config.routes.ListCustomer, title: 'Danh Sách Khách Hàng' },
-    { href: '#', title: 'Tags' },
     { to: config.routes.AddCustomer, title: 'Tạo Khách Hàng' },
+
+  ];
+  const Account = [
+    { to: config.routes.ListCustomer, title: 'Danh Sách Tài Khoản' },
+    { to: config.routes.AddCustomer, title: ' Tạo Tài Khoản' },
+    { to: config.routes.AddCustomer, title: ' Cấp Quyền cho tài khoản' },
 
   ];
 
@@ -67,7 +71,7 @@ const SidebarMenu = () => {
             <img src={Logo} alt="" height={20} />
           </span>
         </a>
-        <a aria-current="page" href="#" className="router-link-active router-link-exact-active logo logo-light" >
+        <a aria-current="page" href="/admin/" className="router-link-active router-link-exact-active logo logo-light" >
           <span className="logo-sm">
             <img
               src={Logo_sm}
@@ -109,17 +113,14 @@ const SidebarMenu = () => {
                       {/**/}
                       {/**/}
                       <li className="mm-active">
-                        {/**/}
-                        <a href="#"
-                          className="router-link-active router-link-exact-active side-nav-link-ref active"
-                        >
-                          <i className="uil-home-alt" />
+                      <Link to={config.routes.Dashboard} className="side-nav-link-ref">
+                      <i className="uil-home-alt" />
                           <span>Trang tổng quan</span>
                           <span className="badge rounded-pill bg-primary float-end">
                             01
                           </span>
-                        </a>
-                        {/**/}
+                        </Link>
+
                       </li>
                       <li className="menu-title">Menu</li>
                       {/**/}
@@ -130,9 +131,6 @@ const SidebarMenu = () => {
                           <span>Lịch sự kiện</span>
                         </Link>
                       </li>
-
-
-                      {/**/}
                       <li>
                         {/**/}
                         <a
@@ -228,29 +226,6 @@ const SidebarMenu = () => {
                           {/**/}
                           <span>Đánh giá</span>
                         </a>
-                        {/**/}
-                        <ul className="sub-menu mm-collapse" aria-expanded="false">
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/invoices/list"
-                              className="side-nav-link-ref"
-                            >
-                              Danh sách hóa đơn
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/invoices/detail"
-                              className="side-nav-link-ref"
-                            >
-                              Chi tiết hóa đơn
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                        </ul>
                       </li>
 
                       {/**/}
@@ -299,66 +274,12 @@ const SidebarMenu = () => {
                         </ul>
                       </li>
                       <li className="menu-title">Pages</li>
-                      {/**/}
-                      {/**/}
-                      <li>
-                        <a
-                          href="#"
-                          className="is-parent has-arrow"
-                          aria-expanded="false"
-                        >
-                          <i className="uil-user-circle" />
-                          {/**/}
-                          <span>Authentication</span>
-                        </a>
-                        {/**/}
-                        <ul className="sub-menu mm-collapse" aria-expanded="false">
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/auth/login-1"
-                              className="side-nav-link-ref"
-                            >
-                              Login
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/auth/register-1"
-                              className="side-nav-link-ref"
-                            >
-                              Register
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/auth/recoverpwd"
-                              className="side-nav-link-ref"
-                            >
-                              Recover Password
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/auth/lock-screen"
-                              className="side-nav-link-ref"
-                            >
-                              Lock screen
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                        </ul>
-                      </li>
+
+                      <NavItem title="Xác thực" icon={RiCustomerService2Fill} links={Account} />
+
                       {/**/}
                       <li className="menu-title">Cài Đặt</li>
-                      {/**/}
-                      {/**/}
+                 
                       <li>
                         <a
                           href="#"
@@ -369,199 +290,7 @@ const SidebarMenu = () => {
                           {/**/}
                           <span>Cài Đặt 1</span>
                         </a>
-                        {/**/}
-                        <ul className="sub-menu mm-collapse" aria-expanded="false">
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/alerts"
-                              className="side-nav-link-ref"
-                            >
-                              Alerts
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/buttons"
-                              className="side-nav-link-ref"
-                            >
-                              Buttons
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/cards"
-                              className="side-nav-link-ref"
-                            >
-                              Cards
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/carousel"
-                              className="side-nav-link-ref"
-                            >
-                              Carousel
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/dropdown"
-                              className="side-nav-link-ref"
-                            >
-                              Dropdowns
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/grid"
-                              className="side-nav-link-ref"
-                            >
-                              Grid
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/images"
-                              className="side-nav-link-ref"
-                            >
-                              Images
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/lightbox"
-                              className="side-nav-link-ref"
-                            >
-                              Lightbox
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/modals"
-                              className="side-nav-link-ref"
-                            >
-                              Modals
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/rangeslider"
-                              className="side-nav-link-ref"
-                            >
-                              Range Slider
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/progressbar"
-                              className="side-nav-link-ref"
-                            >
-                              Progress Bars
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/placeholder"
-                              className="side-nav-link-ref"
-                            >
-                              Placeholder
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/sweet-alert"
-                              className="side-nav-link-ref"
-                            >
-                              Sweet Alert
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/tabs-accordions"
-                              className="side-nav-link-ref"
-                            >
-                              Tabs &amp; Accordions
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/typography"
-                              className="side-nav-link-ref"
-                            >
-                              Typography
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/video"
-                              className="side-nav-link-ref"
-                            >
-                              Video
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/general"
-                              className="side-nav-link-ref"
-                            >
-                              General
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/colors"
-                              className="side-nav-link-ref"
-                            >
-                              Colors
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ui/rating"
-                              className="side-nav-link-ref"
-                            >
-                              Rating
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                        </ul>
+                     
                       </li>
                       {/**/}
                       <li>
@@ -576,89 +305,7 @@ const SidebarMenu = () => {
                           </span>
                           <span>Cài Đặt 2</span>
                         </a>
-                        {/**/}
-                        <ul className="sub-menu mm-collapse" aria-expanded="false">
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/elements"
-                              className="side-nav-link-ref"
-                            >
-                              Elements
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/validation"
-                              className="side-nav-link-ref"
-                            >
-                              Validation
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/advanced"
-                              className="side-nav-link-ref"
-                            >
-                              Advanced
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/editor"
-                              className="side-nav-link-ref"
-                            >
-                              Editor
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/upload"
-                              className="side-nav-link-ref"
-                            >
-                              File Upload
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/repeater"
-                              className="side-nav-link-ref"
-                            >
-                              Repeater
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/wizard"
-                              className="side-nav-link-ref"
-                            >
-                              Wizard
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/form/mask"
-                              className="side-nav-link-ref"
-                            >
-                              Mask
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                        </ul>
+                   
                       </li>
                       {/**/}
 

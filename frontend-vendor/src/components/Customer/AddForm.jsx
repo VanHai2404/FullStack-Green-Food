@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { addCustomer ,addImageCustomer } from '../../redux/actions/customer-action';
+import { addCustomer, addImageCustomer } from '../../redux/actions/customer-action';
 
 const AddCustomerForm = () => {
     const dispatch = useDispatch();
+    const [errors, setErrors] = useState({});
     const [customerDto, setCustomerDto] = useState({
         customerId: "",
         username: "",
@@ -29,6 +30,13 @@ const AddCustomerForm = () => {
             ...prevDto,
             [name]: newValue,
         }));
+
+        // Xóa lỗi khi người dùng bắt đầu gõ lại
+
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: undefined,
+        }));
     };
 
     const handleCheckboxChange = (value) => {
@@ -40,22 +48,88 @@ const AddCustomerForm = () => {
     //   
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Validate the form
+        const validationErrors = validateForm(customerDto);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+        console.log('Error adding customer:', customerDto);
         try {
             const customerId = await dispatch(addCustomer(customerDto));
 
-            // Thêm bất kỳ hành động nào khác sau khi thêm khách hàng thành công
-            console.log('Thêm khách hàng thành công, ID:', customerId);
-
-            // Nếu có hình ảnh, gửi hình ảnh sau khi đã lưu thông tin khách hàng
             if (customerDto.imageFile) {
                 await dispatch(addImageCustomer(customerId, customerDto.imageFile));
-                console.log('Lưu ảnh thành công');
             }
         } catch (error) {
-            console.error('Lỗi khi thêm khách hàng:', error);
+            console.error('Error adding customer:', error);
         }
     };
 
+    const validateForm = (data) => {
+        const errors = {};
+
+        // Ví dụ về kiểm tra, bạn cần điều chỉnh theo yêu cầu cụ thể của mình
+        if (!data.username) {
+            errors.username = 'Vui lòng nhập tên đăng nhập';
+        }
+
+        if (!data.fullname) {
+            errors.fullname = 'Vui lòng nhập họ và tên';
+        }
+
+        if (!data.email) {
+            errors.email = 'Vui lòng nhập địa chỉ email';
+        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+            errors.email = 'Địa chỉ email không hợp lệ';
+        }
+
+        if (!data.phone) {
+            errors.phone = 'Vui lòng nhập số điện thoại';
+        } else if (!/^\d{10}$/.test(data.phone)) {
+            errors.phone = 'Số điện thoại không hợp lệ';
+        }
+
+        if (!data.dateOfBirth) {
+            errors.dateOfBirth = 'Vui lòng nhập ngày sinh';
+        } else {
+            const currentDate = new Date();
+            const inputDate = new Date(data.dateOfBirth);
+
+            if (inputDate >= currentDate) {
+                errors.dateOfBirth = 'Ngày sinh phải ở quá khứ';
+            }
+            // Thêm các kiểm tra khác nếu cần
+        }
+
+        if (!data.password) {
+            errors.password = 'Vui lòng nhập mật khẩu';
+        } else if (data.password.length < 6) {
+            errors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+        }
+
+        return errors;
+    };
+
+    const handleResetForm = () => {
+        const initialCustomerDto = {
+            customerId: "",
+            username: "",
+            fullname: "",
+            email: "",
+            gender: "",
+            password: "",
+            phone: "",
+            imageFile: null,
+            image: null,
+            dateOfBirth: "",
+            registeredDate: "",
+            status: ""
+        };
+        setCustomerDto(initialCustomerDto);
+        setErrors({});
+    };
 
 
     return (
@@ -70,12 +144,15 @@ const AddCustomerForm = () => {
                             </label>
                             <input
                                 type="text"
-                                className="form-control form-add form-add"
+                                className={`form-control form-add form-add ${errors.username ? 'is-invalid' : ''}`}
+
                                 name="username"
                                 value={customerDto.username}
                                 onChange={handleChange}
                                 required=""
                             />
+                            {errors.username && <div className="invalid-feedback">{errors.username}</div>}
+
                         </div>
                         <div className="col pt-4">
                             <label htmlFor="inputEmail5" className="form-label">
@@ -83,12 +160,14 @@ const AddCustomerForm = () => {
                             </label>
                             <input
                                 type="text"
-                                className="form-control form-add form-add"
+                                className={`form-control form-add form-add ${errors.fullname ? 'is-invalid' : ''}`}
                                 name="fullname"
                                 value={customerDto.fullname}
                                 onChange={handleChange}
                                 required=""
                             />
+                            {errors.fullname && <div className="invalid-feedback">{errors.fullname}</div>}
+
                         </div>
                         <div className="col pt-4">
                             <label htmlFor="inputEmail5" className="form-label">
@@ -96,12 +175,13 @@ const AddCustomerForm = () => {
                             </label>
                             <input
                                 type="email"
-                                className="form-control form-add form-add"
+                                className={`form-control form-add form-add ${errors.email ? 'is-invalid' : ''}`}
                                 name="email"
                                 value={customerDto.email}
                                 onChange={handleChange}
                                 required=""
                             />
+                            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -135,23 +215,15 @@ const AddCustomerForm = () => {
                     </label>
                     <input
                         type="password"
-                        className="form-control form-add form-add"
+                        className={`form-control form-add form-add ${errors.password ? 'is-invalid' : ''}`}
                         name="password"
                         value={customerDto.password}
                         onChange={handleChange}
                         required=""
                     />
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                 </div>
-                <div className="col-md-6">
-                    <label htmlFor="inputState" className="form-label">
-                        Nhập lại Mật khẩu
-                    </label>
-                    <input
-                        type="password"
-                        className="form-control form-add form-add"
 
-                    />
-                </div>
                 {/*  */}
                 <div className="col-md-6">
                     <label htmlFor="inputState" className="form-label">
@@ -159,12 +231,13 @@ const AddCustomerForm = () => {
                     </label>
                     <input
                         type="number"
-                        className="form-control form-add form-add"
+                        className={`form-control form-add form-add ${errors.phone ? 'is-invalid' : ''}`}
                         name="phone"
                         value={customerDto.phone}
                         onChange={handleChange}
                         required=""
                     />
+                    {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                 </div>
                 <div className="col-md-6">
                     <label htmlFor="inputState" className="form-label">
@@ -172,13 +245,15 @@ const AddCustomerForm = () => {
                     </label>
                     <input
                         type="date"
-                        className="form-control form-add form-add"
+                        className={`form-control form-add form-add ${errors.dateOfBirth ? 'is-invalid' : ''}`}
                         name="dateOfBirth"
                         value={customerDto.dateOfBirth}
                         onChange={handleChange}
                         required=""
 
                     />
+                    {errors.dateOfBirth && <div className="invalid-feedback">{errors.dateOfBirth}</div>}
+
                 </div>
                 <div className="col-12 " style={{ display: "flex" }}>
                     <div className="form-check form-check-inline" style={{ paddingRight: "40px" }}>
@@ -222,41 +297,20 @@ const AddCustomerForm = () => {
                     </div>
                 </div>
 
-                <div className="col-12">
-                    <div className="form-floating mb-3">
-
-                        <textarea
-                            className="form-control form-add"
-                            placeholder="Leave a comment here"
-                            id="floatingTextarea"
-                            style={{ height: 100 }}
-                            required=""
-                            defaultValue={""}
-                        />
-                        <label htmlFor="floatingTextarea">Nhập mô Tả</label>
-                    </div>
-                </div>
-
-                {/* End Multi Columns Form */}
-
-
-
                 {/* button */}
                 <div className="sticky bottom-0 left-0 right-0 -mb-8 flex items-center justify-end gap-4 border-t bg-white px-4 py-4">
                     <button
                         className="rizzui-button inline-flex font-medium items-center justify-center active:enabled:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-50 transition-colors duration-200 px-4 py-2 text-sm h-10 rounded-md bg-transparent border focus-visible:ring-offset-2 border-gray-300 hover:enabled:border-gray-1000 focus-visible:enabled:border-gray-1000 focus-visible:ring-gray-900/30 w-full @xl:w-auto"
                         type="button"
-
+                        onClick={handleResetForm}
                     >
-                        <font >
-                            <font >Lưu dưới dạng bản nháp</font>
-                        </font>
+                        <span>Làm mới Form</span>
                     </button>
                     <button
                         className="rizzui-button inline-flex font-medium items-center justify-center active:enabled:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-50 transition-colors duration-200 px-4 py-2 text-sm h-10 rounded-md border border-transparent focus-visible:ring-offset-2 bg-gray-900 hover:enabled::bg-gray-800 active:enabled:bg-gray-1000 focus-visible:ring-gray-900/30 text-gray-0 w-full @xl:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
                         type="submit">
                         <font >
-                            <font >Tạo sản phẩm</font>
+                            <font >Tạo Khách hàng</font>
                         </font>
                     </button>
                 </div>

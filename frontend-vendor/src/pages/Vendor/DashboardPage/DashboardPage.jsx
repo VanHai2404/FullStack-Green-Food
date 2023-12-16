@@ -1,6 +1,8 @@
 // DashboardPage.js
 
 import React, { useEffect } from 'react';
+import ColumnPlot from './ColumnPlot';
+import PieChart from './PieChart';
 import './DashboardPage.css'
 
 const DashboardPage = () => {
@@ -124,123 +126,16 @@ const DashboardPage = () => {
       <div className="col-xl-8">
         <div className="card">
           <div className="card-body">
-            <h4 className="card-title mb-4">Sales Analytics</h4>
+            <h4 className="card-title mb-4">Doanh thu trong năm</h4>
+            <ColumnPlot/>
           </div>
         </div>
       </div>
       <div className="col-xl-4">
-        <div className="card bg-primary">
-          <div
-            className="card-body"
-            style={{ backgroundColor: "rgb(100, 102, 250)" }}
-          >
-            <div className="row align-items-center">
-              <div className="col-sm-8">
-                <p className="text-white font-size-18">
-                  {" "}
-                  Enhance your <b>Campaign</b>
-                  for better outreach{" "}
-                </p>
-                <div className="mt-4">
-                  <a
-                    href="#"
-                    className="btn btn-success waves-effect waves-light"
-                  >
-                    Upgrade Account!
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="card">
           <div className="card-body">
-            <h4 className="card-title mb-4">Top Selling Products</h4>
-            <div className="row align-items-center no-gutters mt-3">
-              <div className="col-sm-3">
-                <p className="text-truncate mt-1 mb-0">Desktops </p>
-              </div>
-              <div className="col-sm-9">
-                <div className="progress mt-1" style={{ height: 6 }}>
-                  <div
-                    className="progress-bar bg-primary"
-                    role="progressbar"
-                    aria-valuenow={52}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    style={{ width: "52%" }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row align-items-center no-gutters mt-3">
-              <div className="col-sm-3">
-                <p className="text-truncate mt-1 mb-0">iPhones </p>
-              </div>
-              <div className="col-sm-9">
-                <div className="progress mt-1" style={{ height: 6 }}>
-                  <div
-                    className="progress-bar bg-info"
-                    role="progressbar"
-                    aria-valuenow={45}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    style={{ width: "45%" }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row align-items-center no-gutters mt-3">
-              <div className="col-sm-3">
-                <p className="text-truncate mt-1 mb-0">Android </p>
-              </div>
-              <div className="col-sm-9">
-                <div className="progress mt-1" style={{ height: 6 }}>
-                  <div
-                    className="progress-bar bg-success"
-                    role="progressbar"
-                    aria-valuenow={48}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    style={{ width: "48%" }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row align-items-center no-gutters mt-3">
-              <div className="col-sm-3">
-                <p className="text-truncate mt-1 mb-0">Tablets </p>
-              </div>
-              <div className="col-sm-9">
-                <div className="progress mt-1" style={{ height: 6 }}>
-                  <div
-                    className="progress-bar bg-warning"
-                    role="progressbar"
-                    aria-valuenow={78}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    style={{ width: "78%" }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row align-items-center no-gutters mt-3">
-              <div className="col-sm-3">
-                <p className="text-truncate mt-1 mb-0">Cables </p>
-              </div>
-              <div className="col-sm-9">
-                <div className="progress mt-1" style={{ height: 6 }}>
-                  <div
-                    className="progress-bar bg-purple"
-                    role="progressbar"
-                    aria-valuenow={63}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    style={{ width: "63%" }}
-                  />
-                </div>
-              </div>
-            </div>
+            <h4 className="card-title mb-4">Top Loại sản phẩm</h4>
+            <PieChart/>
           </div>
         </div>
       </div>
@@ -249,7 +144,8 @@ const DashboardPage = () => {
       <div className="col-xl-12">
         <div className="card">
           <div className="card-body">
-            <h4 className="card-title mb-4">Top Users</h4>
+            <h4 className="card-title mb-4">Đơn Hàng Chở Xác Nhận</h4>
+          
           </div>
         </div>
       </div>

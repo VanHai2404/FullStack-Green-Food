@@ -150,3 +150,10 @@ strong {
     user-select: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+:where(.css-dev-only-do-not-override-2q8sxy).ant-col-16 {
+    --ant-display: block;
+    display: block;
+    display: var(--ant-display);
+    flex: 0 0 66.66666666666666%;
+     max-width: 100%; 
+}

@@ -7,12 +7,13 @@ import { fetchCategories } from '../../redux/actions/category-action';
 import { fetchSuppliers } from '../../redux/actions/supplier-action';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProduct, addImageProduct } from '../../redux/actions/product-action';
-
+import { toast } from 'react-toastify';
 
 const AddProductForm = () => {
     const dispatch = useDispatch();
     const categories = useSelector((state) => state.category.categories);
     const suppliers = useSelector((state) => state.supplier.getAll);
+    const [errors, setErrors] = useState({});
     const [product, setProduct] = useState({
         productId: '',
         name: '',
@@ -44,17 +45,25 @@ const AddProductForm = () => {
     const handleFileChange = (event) => {
         const files = event.target.files;
         const selectedImagesArray = Array.from(files);
-
-        // Log to check the selected images
         console.log("Selected Images:", selectedImagesArray);
-
-        // Add newly selected images to the existing array
         setSelectedImages((prevImages) => [...prevImages, ...selectedImagesArray]);
-        // Cập nhật product.imageFile
-        // setProduct((prevProduct) => ({
-        //     ...prevProduct,
-        //     imageFile: [...prevProduct.imageFile, ...selectedImagesArray],
-        // }));
+    };
+
+    const handleChange = (e) => {
+        const { name, value, type, files } = e.target;
+        // Xử lý trường input là file hoặc các trường thông tin khác
+        const newValue = type === 'file' ? files[0] : value;
+
+        setProduct((prevDto) => ({
+            ...prevDto,
+            [name]: newValue,
+        }));
+
+        // Xóa lỗi khi người dùng bắt đầu gõ lại
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: undefined,
+        }));
     };
 
     const handleImageDelete = (index) => {
@@ -91,29 +100,107 @@ const AddProductForm = () => {
     const handleUploadClick = () => {
         fileInputRef.current.click();
     };
-
-
-
     const handleSubmitProduct = async (event) => {
         event.preventDefault();
+        
+        // Validate the form
+        const validationErrors = validateForm(product);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            toast.error('Vui lòng Nhập lại dữ liệu!', { position: toast.POSITION.TOP_RIGHT });
+            return;
+        }
+    
+        if (!hasSelectedImages) {
+            toast.error('Vui lòng chọn hình ảnh sản phẩm!', { position: toast.POSITION.TOP_RIGHT });
+            return;
+        }
+    
         try {
-            const productId = await dispatch(addProduct(product))
-       
-            // Thêm bất kỳ hành động nào khác sau khi thêm khách hàng thành công
+            const productId = await dispatch(addProduct(product));
+    
+            // hành động nào khác sau khi thêm sản phẩm thành công
             console.log('Thêm sản phẩm thành công, ID:', productId);
-            // Nếu có hình ảnh, gửi hình ảnh sau khi đã lưu thông tin khách hàng
-            if (selectedImages) {
-                await dispatch(addImageProduct(productId, selectedImages));
-
-            }
+            // Gửi hình ảnh sau khi đã lưu thông tin sản phẩm
+            await dispatch(addImageProduct(productId, selectedImages));
         } catch (error) {
-            console.error('Lỗi khi thêm Product:', error);
+            console.error('Lỗi khi thêm sản phẩm:', error);
+        } finally {
+            // Reset form or perform any other necessary actions
+            Rest();
+        }
+        console.log("FORM",product)
+    };
+    const hasSelectedImages = selectedImages.length > 0;
+    const validateForm = () => {
+        const errors = {};
+        if (!product.name) {
+            errors.name = 'Vui lòng nhập tên sản phẩm';
         }
 
-        console.log("PRODUCT FROM : ", product)
-        Rest();
-    }
-    const hasSelectedImages = selectedImages.length > 0;
+        if (!product.metaKeywords) {
+            errors.metaKeywords = 'Vui lòng nhập metaKey words';
+        }
+
+        if (!product.metaTitle) {
+            errors.metaTitle = 'Vui lòng nhập meta Title';
+        }
+
+        if (!product.metaDescription) {
+            errors.metaDescription = 'Vui lòng nhập meta Description';
+        }
+
+        if (!product.hotEndDate) {
+            errors.hotEndDate = 'Vui lòng nhập ngày hết hạn hot';
+        } else {
+            const currentDate = new Date();
+            const inputDate = new Date(product.hotEndDate);
+
+            if (inputDate <= currentDate) {
+                errors.hotEndDate = 'Ngày hết hạn hot phải ở tương lai';
+            }
+        }
+
+        if (!product.status) {
+            errors.status = 'Vui lòng chọn trạng thái';
+        }
+        if (!product.categoryId) {
+            errors.categoryId = 'Vui lòng chọn Loại sản phẩm';
+        }
+
+        if (!product.supplierId) {
+            errors.supplierId = 'Vui lòng chọn nhà sản xuất';
+        }
+
+        if (!product.unit) {
+            errors.unit = 'Vui lòng chọn đơn vị sản phẩm';
+        }
+
+        if (!product.quantity || isNaN(product.quantity) || product.quantity <= 0) {
+            errors.quantity = 'Vui lòng nhập số lượng sản phẩm hợp lệ';
+        }
+
+        if (!product.importPrice || isNaN(product.importPrice) || product.importPrice <= 0) {
+            errors.importPrice = 'Vui lòng nhập giá nhập hợp lệ';
+        }
+
+        if (!product.salePrice || isNaN(product.salePrice) || product.salePrice <= 0) {
+            errors.salePrice = 'Vui lòng nhập giá bán hợp lệ';
+        }
+
+        if (!product.discount || isNaN(product.discount) || product.discount < 0 || product.discount > 100) {
+            errors.discount = 'Vui lòng nhập giảm giá hợp lệ';
+        }
+
+        if (!product.discountType) {
+            errors.discountType = 'Vui lòng chọn đơn vị giảm giá';
+        }
+
+        
+        return errors;
+    };
+
+
 
     return (
         <form action=""  >
@@ -132,18 +219,25 @@ const AddProductForm = () => {
                             <div className="form-outline">
                                 <span className='form-label'>Tiêu đề</span>
                                 <input type="text"
+                                    name='name'
                                     value={product.name}
-                                    onChange={(e) => setProduct({ ...product, name: e.target.value })}
-                                    className="form-control form-add" placeholder="Tiêu đề sản phẩm" />
+                                    onChange={handleChange}
+                                    className={`form-control form-add ${errors.name ? 'is-invalid' : ''}`}
+
+                                    placeholder="Tiêu đề sản phẩm" />
+                                {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Hot(Ngày Kết Thúc)</span>
-                                <input type="date" className="form-control form-add"
+                                <input type="date" className={`form-control form-add ${errors.hotEndDate ? 'is-invalid' : ''}`}
+
                                     value={product.hotEndDate}
-                                    onChange={(e) => setProduct({ ...product, hotEndDate: e.target.value })}
+                                    name='hotEndDate'
+                                    onChange={handleChange}
                                     placeholder="Mã sản phẩm" />
+                                {errors.hotEndDate && <div className="invalid-feedback">{errors.hotEndDate}</div>}
                             </div>
                         </div>
                     </div>
@@ -154,9 +248,10 @@ const AddProductForm = () => {
                                 <Select
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
+                                    name='categoryId'
                                     value={product.categoryId}
-                                    onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
-                                    className="form-control form-add"
+                                    onChange={handleChange}
+                                    className={`form-control form-add ${errors.categoryId ? 'is-invalid' : ''}`}
                                     displayEmpty >
                                     <MenuItem value="" disabled>
                                         Lựa chọn
@@ -167,6 +262,8 @@ const AddProductForm = () => {
                                         </MenuItem>
                                     ))}
                                 </Select>
+                                {errors.categoryId && <div className="invalid-feedback">{errors.categoryId}</div>}
+
                             </div>
                         </div>
                         <div className="col">
@@ -176,10 +273,12 @@ const AddProductForm = () => {
                                     <Select
                                         labelId="demo-select-small-label"
                                         id="demo-select-small"
+                                        name='status'
                                         value={product.status}
-                                        onChange={(e) => setProduct({ ...product, status: e.target.value })}
+                                        onChange={handleChange}
                                         label="Age"
-                                        className="form-control form-add"
+                                        className={`form-control form-add ${errors.status ? 'is-invalid' : ''}`}
+
                                         displayEmpty >
                                         <MenuItem value="" disabled>
                                             Lựa chọn
@@ -188,6 +287,7 @@ const AddProductForm = () => {
                                         <MenuItem value={2}>Sắp ra mắt</MenuItem>
                                         <MenuItem value={3}>Chỉ có sẵn ngoại tuyến.</MenuItem>
                                     </Select>
+                                    {errors.status && <div className="invalid-feedback">{errors.status}</div>}
                                 </div>
                             </div>
                         </div>
@@ -199,9 +299,11 @@ const AddProductForm = () => {
                                 <Select
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
+                                    name='supplierId'
                                     value={product.supplierId}
-                                    onChange={(e) => setProduct({ ...product, supplierId: e.target.value })}
-                                    className="form-control form-add"
+                                    onChange={handleChange}
+                                    className={`form-control form-add ${errors.supplierId ? 'is-invalid' : ''}`}
+
                                     displayEmpty >
                                     <MenuItem value="" disabled>
                                         Lựa chọn
@@ -212,6 +314,8 @@ const AddProductForm = () => {
                                         </MenuItem>
                                     ))}
                                 </Select>
+                                {errors.supplierId && <div className="invalid-feedback">{errors.supplierId}</div>}
+
                             </div>
                         </div>
                         <div className="col">
@@ -220,10 +324,12 @@ const AddProductForm = () => {
                                 <Select
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
+                                    name='unit'
                                     value={product.unit}
-                                    onChange={(e) => setProduct({ ...product, unit: e.target.value })}
+                                    onChange={handleChange}
                                     label="Age"
-                                    className="form-control form-add"
+                                    className={`form-control form-add ${errors.unit ? 'is-invalid' : ''}`}
+
                                     displayEmpty >
                                     <MenuItem value="" disabled>
                                         Lựa chọn
@@ -233,6 +339,8 @@ const AddProductForm = () => {
                                     <MenuItem value="CAI">Cái</MenuItem>
                                     <MenuItem value="HOP">Hộp</MenuItem>
                                 </Select>
+                                {errors.unit && <div className="invalid-feedback">{errors.unit}</div>}
+
                             </div>
                         </div>
                     </div>
@@ -240,19 +348,25 @@ const AddProductForm = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Số Lương</span>
-                                <input type="number" className="form-control form-add"
+                                <input type="number" className={`form-control form-add ${errors.quantity ? 'is-invalid' : ''}`}
+
+                                    name='quantity'
                                     value={product.quantity}
-                                    onChange={(e) => setProduct({ ...product, quantity: e.target.value })}
+                                    onChange={handleChange}
                                     placeholder="Số Lương sản phẩm" />
+                                {errors.quantity && <div className="invalid-feedback">{errors.quantity}</div>}
+
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Hot(Ngày Kết Thúc)</span>
                                 <input type="date"
+                                    name='hotEndDate'
                                     value={product.hotEndDate}
-                                    onChange={(e) => setProduct({ ...product, hotEndDate: e.target.value })}
-                                    className="form-control form-add" placeholder="Mã sản phẩm" />
+                                    onChange={handleChange}
+                                    className={`form-control form-add ${errors.name ? 'is-invalid' : ''}`}
+                                    placeholder="Mã sản phẩm" />
                             </div>
                         </div>
                     </div>
@@ -358,19 +472,26 @@ const AddProductForm = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Giá Nhập</span>
-                                <input type="number" className="form-control form-add"
+                                <input type="number" className={`form-control form-add ${errors.importPrice ? 'is-invalid' : ''}`}
+
+                                    name='importPrice'
                                     value={product.importPrice}
-                                    onChange={(e) => setProduct({ ...product, importPrice: e.target.value })}
+                                    onChange={handleChange}
                                     placeholder="Nhập Giá nhập" />
+                                {errors.importPrice && <div className="invalid-feedback">{errors.importPrice}</div>}
+
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Giá Bán</span>
-                                <input type="number" className="form-control form-add"
+                                <input type="number" className={`form-control form-add ${errors.salePrice ? 'is-invalid' : ''}`}
+
+                                    name='salePrice'
                                     value={product.salePrice}
-                                    onChange={(e) => setProduct({ ...product, salePrice: e.target.value })}
+                                    onChange={handleChange}
                                     placeholder="Nhập Giá Bán" />
+                                {errors.salePrice && <div className="invalid-feedback">{errors.salePrice}</div>}
                             </div>
                         </div>
                     </div>
@@ -378,10 +499,13 @@ const AddProductForm = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Giảm Giá</span>
-                                <input type="number" className="form-control form-add"
+                                <input type="number" className={`form-control form-add ${errors.discount ? 'is-invalid' : ''}`}
+
+                                    name='discount'
                                     value={product.discount}
-                                    onChange={(e) => setProduct({ ...product, discount: e.target.value })}
+                                    onChange={handleChange}
                                     placeholder="Nhập Nhập Giám Giá" />
+                                {errors.discount && <div className="invalid-feedback">{errors.discount}</div>}
                             </div>
                         </div>
                         <div className="col">
@@ -390,10 +514,12 @@ const AddProductForm = () => {
                                 <Select
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
+                                    name='discountType'
                                     value={product.discountType}
-                                    onChange={(e) => setProduct({ ...product, discountType: e.target.value })}
+                                    onChange={handleChange}
                                     label="Age"
-                                    className="form-control form-add"
+                                    className={`form-control form-add ${errors.name ? 'is-invalid' : ''}`}
+
 
                                     displayEmpty
 
@@ -425,19 +551,25 @@ const AddProductForm = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Tiêu đề meta</span>
-                                <input type="text" className="form-control form-add"
+                                <input type="text" className={`form-control form-add ${errors.metaTitle ? 'is-invalid' : ''}`}
+
+                                    name='metaTitle'
                                     value={product.metaTitle}
-                                    onChange={(e) => setProduct({ ...product, metaTitle: e.target.value })}
+                                    onChange={handleChange}
                                     placeholder="Nhập tiêu đề Meta của bạn" />
+                                {errors.metaTitle && <div className="invalid-feedback">{errors.metaTitle}</div>}
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Từ khóa meta</span>
-                                <input type="text" className="form-control form-add"
+                                <input type="text" className={`form-control form-add ${errors.metaKeywords ? 'is-invalid' : ''}`}
+
+                                    name='metaKeywords'
                                     value={product.metaKeywords}
-                                    onChange={(e) => setProduct({ ...product, metaKeywords: e.target.value })}
+                                    onChange={handleChange}
                                     placeholder="Nhập Từ Khóa Meta của bạn" />
+                                {errors.metaKeywords && <div className="invalid-feedback">{errors.metaKeywords}</div>}
                             </div>
                         </div>
                     </div>
@@ -445,10 +577,12 @@ const AddProductForm = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Mô tả Meta</span>
-                                <textarea className="form-control" id="metadescription"
+                                <textarea className={`form-control ${errors.metaDescription ? 'is-invalid' : ''}`} id="metadescription"
+                                    name='metaDescription'
                                     value={product.metaDescription}
-                                    onChange={(e) => setProduct({ ...product, metaDescription: e.target.value })}
+                                    onChange={handleChange}
                                     rows="4" placeholder="Nhập mô tả Meta của bạn" ></textarea>
+                                {errors.metaDescription && <div className="invalid-feedback">{errors.metaDescription}</div>}
                             </div>
                         </div>
 
@@ -466,7 +600,7 @@ const AddProductForm = () => {
 
                 >
                     <font >
-                        <font >Lưu dưới dạng bản nháp</font>
+                        <font >Làm Mới form</font>
                     </font>
                 </button>
                 <button

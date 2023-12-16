@@ -1,37 +1,90 @@
-import axiosAdmin from './axiosAdmin';
+import axiosAdmin from "./axiosAdmin";
 
 const SupplierService = {
-  getAll() {
-    const url = '/suppliers';
-    return axiosAdmin.get(url);
+
+  // Lấy danh sách tất cả bài đăng
+  getAllSuppliers: async () => {
+
+    try {
+      const response = await axiosAdmin.get(`/suppliers`);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách bài đăng:', error);
+      throw error; // Re-throw lỗi để cho component gọi API xử lý
+    }
   },
 
-  get(id) {
-    const url = `/suppliers/${id}`;
-    return axiosAdmin.get(url);
+  // Lấy chi tiết một bài đăng theo ID
+  getSupplierById: async (id) => {
+    try {
+      const response = await axiosAdmin.get(`/suppliers/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Lỗi khi lấy bài đăng có ID ${id}:`, error);
+      throw error;
+    }
   },
 
-  add(data) {
-    const url = '/suppliers';
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    return axiosAdmin.post(url, data, { headers });
+  // Tạo một bài đăng mới
+  createSupplier: async (postData) => {
+    try {
+      const response = await axiosAdmin.post(`/suppliers`, postData);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi khi tạo bài đăng mới:', error);
+      throw error;
+    }
+  },
+  addImageCustomer: async (id, imageFile) => {
+    try {
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('imageFile', imageFile.originFileObj);      
+
+      const response = await axiosAdmin.post('/suppliers/upload-image', formData, {
+        
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+
+      });
+      return response.data;
+
+    } catch (error) {
+      console.error('Lỗi khi Luu ảnh:', error);
+      throw error;
+
+    }
+
   },
 
-  update(data) {
-    console.log("TAG_ID",data.supplier.supplierId);
-    const url = `/suppliers/${data.supplier.supplierId}`;
-    const headers = {
-        'Content-Type': 'application/json',
-      };
-    return axiosAdmin.put(url, data.supplier,{ headers });
+  // Cập nhật một bài đăng theo ID
+  updateSupplier: async (id, postData) => {
+    try {
+      const response = await axiosAdmin.put(`/suppliers/${id}`, postData);
+      return response.data;
+    } catch (error) {
+      console.error(`Lỗi khi cập nhật bài đăng có ID ${id}:`, error);
+      throw error;
+    }
   },
 
-  remove(id) {
-    const url = `/suppliers/${id}`;
-    return axiosAdmin.delete(url);
+  // Xóa một bài đăng theo ID
+  deleteSupplier: async (id) => {
+    try {
+      const response = await axiosAdmin.delete(`/suppliers/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Lỗi khi xóa bài đăng có ID ${id}:`, error);
+      throw error;
+    }
   },
+
+
+
+
+
+
 };
 
 export default SupplierService;

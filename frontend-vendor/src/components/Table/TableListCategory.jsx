@@ -1,169 +1,124 @@
-// TableListCategory.js
-
 import React, { useState, useEffect } from 'react';
-import './TableList.css';
+import { Link } from 'react-router-dom';
 import { AiFillDelete } from 'react-icons/ai';
 import { MdEdit } from 'react-icons/md';
 import { GrView } from 'react-icons/gr';
+import { Table, Space, Pagination ,Modal  } from 'antd';
 import CategoryService from '../../services/CategoryService';
-import PaginationRounded from '../Pagination/PaginationRounded';
-import { Link, useParams } from "react-router-dom";
-import config from '../../config';
-import Logo from '../../assets/images/Logo/LogoUser.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import config from '../../config';
 
 const TableListCategory = () => {
-    const [categories, setCategories] = useState([]);
-    useEffect(() => {
-        loadCategory();
+  const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(3); // Set your desired page size
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedCategoryName, setSelectedCategoryName] = useState('');
 
-    }, []); // Chạy chỉ một lần khi component được render
+  useEffect(() => {
+    loadCategory();
+  }, []);
 
-    const loadCategory = async () => {
-        try {
-            const response = await CategoryService.getAll();
-            console.log('Danh sách các danh mục:', response.data);
-            setCategories(response.data);
-            // Xử lý dữ liệu tại đây
-        } catch (error) {
-            console.error('Lỗi khi lấy danh sách danh mục:', error);
-        }
-    };
+  const loadCategory = async () => {
+    try {
+      const response = await CategoryService.getAll();
+      console.log('Danh sách các danh mục:', response.data);
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách danh mục:', error);
+    }
+  };
 
-    const deleteCategory = async (id) => {
-        try {
-            // await CategoryService.remove(id);
-            loadCategory();
-            toast.success('Xóa Danh Muc Thanh Công', { position: toast.POSITION.TOP_RIGHT });
+  const deleteCategory = async (categoryId) => {
+    try {
+      // await CategoryService.remove(id);
+      loadCategory();
+      toast.success('Xóa Danh Mục Thành Công', { position: toast.POSITION.TOP_RIGHT });
+    } catch (error) {
+      toast.error('Xảy ra lỗi khi Xóa Danh Mục', { position: toast.POSITION.TOP_RIGHT });
+    }
+  };
+  const showDeleteModal = (categoryId, categoryName) => {
+    setSelectedCategoryId(categoryId);
+    setSelectedCategoryName(categoryName);
+    setDeleteModalVisible(true);
+  };
 
-        } catch (error) {
-            toast.error('Xảy ra lỗi khi Xóa Danh Muc', { position: toast.POSITION.TOP_RIGHT });
-        }
+  const hideDeleteModal = () => {
+    setSelectedCategoryId(null);
+    setSelectedCategoryName('');
+    setDeleteModalVisible(false);
+  };
 
-    };
+  const columns = [
+    {
+      title: 'Tên Danh Mục',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Slug',
+      dataIndex: 'slug',
+      key: 'slug',
+    },
+    {
+      title: 'Số Sản Phẩm',
+      dataIndex: 'productCount',
+      key: 'productCount',
+    },
+    {
+      title: 'Hành Động',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <Link to={`${config.routes.EditCatrgory.replace(':categoryId', record.categoryId)}`}>
+            <MdEdit />
+          </Link>
+          <a href="#">
+            <GrView />
+          </a>
+          <a href="#" onClick={() => showDeleteModal(record.categoryId, record.name)}>
+            <AiFillDelete />
+          </a>
+        </Space>
+      ),
+    },
+  ];
 
-    return (
-        <div>
-            <table style={{ marginBottom: "10px" }}>
-                <thead className="thead-cell">
-                    <tr style={{ width: "100%" }}>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="ps-3.5">
-                                <input type="checkbox" name="" id="" className="bg-transparent check-input" />
+  const onPageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
 
-                            </div>
-                        </th>
-                        {/* <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>	HÌNH ẢNH</font>
-                                </font>
-                            </div>
-                        </th> */}
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>TÊN DANH MỤC</font>
-                                </font>
-                            </div>
-                        </th>
-                     
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>Slug</font>
-                                </font>
-                            </div>
-                        </th>
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>Số Sản Phẩm</font>
-                                </font>
-                            </div>
-                        </th>
-
-                        <th className='rc-table-cell' scope="col">
-                            <div className="flex items-center opacity-0">
-                                <font style={{ verticalAlign: "inherit" }}>
-                                    <font style={{ verticalAlign: "inherit" }}>HÀNH ĐỘNG</font>
-                                </font>
-                            </div>
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    {categories.map(category => (
-                        <tr key={category.id}>
-                            <td className="td-table-cell">
-                                <div className="inline-flex ps-3 5">
-                                    <input type="checkbox" name="" id="" className="bg-transparent check-input" />
-                                </div>
-                            </td>
-                            {/* <td className="td-table-cell">
-                                <div className="flex items-center gap-3">
-                                    <img
-                                        src=""
-                                        alt="Ảnh Category"
-                                        title="Ảnh Category"
-                                        loading="lazy"
-                                        width={48}
-                                        height={48}
-                                        className="rizzui-avatar-img inline-flex items-center justify-center flex-shrink-0 object-cover rounded-lg"
-                                        style={{ width: 48, height: 48, backgroundColor: "rgb(255, 71, 148)" }}
-                                    />
-                                </div>
-                            </td> */}
-                            <td className="td-table-cell">
-                                <p className="text-sm">{category.name}</p>
-                            </td>
-                           
-                            <td className="td-table-cell">
-                                <p className="text-sm">{category.slug}</p>
-                            </td>
-                            <td className="td-table-cell">
-                                <p className="text-sm">null</p>
-                            </td>
-
-                            <td className="td-table-cell">
-                                <div className="flex items-center">
-                                    <Link to={`${config.routes.EditCatrgory.replace(':categoryId', category.categoryId)}`}>
-                                        <button className="borderBTN inline-flex h-7 w-7 items-center"> <MdEdit /> </button>
-                                    </Link>
+  return (
+    <div>
+      <Table
+        columns={columns}
+        dataSource={categories}
+        pagination={{
+          total: categories.length,
+          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+          defaultPageSize: pageSize,
+          pageSizeOptions: ['3', '5', '10', '20'], // Các tùy chọn cho số lượng items trên mỗi trang
+          showSizeChanger: true,
+          onChange: onPageChange,
+        }}
+        rowKey="categoryId"
+      />
 
 
-
-                                    <a href="#" style={{ paddingLeft: "10px" }}>
-                                        <button className="borderBTN inline-flex h-7 w-7 items-center"> <GrView /> </button>
-                                    </a>
-                                    <a href="#" style={{ paddingLeft: "10px" }} onClick={() => deleteCategory(category.categoryId)}>
-                                        <button className="borderBTN inline-flex h-7 w-7 items-center"> <AiFillDelete /> </button>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="table-pagination flex items-center ustify-center justify-between mt-5 xs:mt-6 sm:mt-7">
-                <div className="hidden items-center sm:flex">
-                    <select className="form-select" defaultValue="Hàng trên mỗi trang">
-                        <option value="1">Hàng trên mỗi trang</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-
-                </div>
-                <div >
-                    <PaginationRounded />
-                </div>
-
-            </div>
-
-        </div>
-    );
+        {/* Delete Confirmation Modal */}
+        <Modal
+        title="Xác nhận xóa"
+        visible={deleteModalVisible}
+        onOk={() => deleteCategory(selectedCategoryId)}
+        onCancel={hideDeleteModal}
+      >
+        <p>Bạn có chắc chắn muốn xóa danh mục " <strong style={{color:'red'}}>{selectedCategoryName} </strong>"?</p>
+      </Modal>
+    </div>
+  );
 };
 
 export default TableListCategory;

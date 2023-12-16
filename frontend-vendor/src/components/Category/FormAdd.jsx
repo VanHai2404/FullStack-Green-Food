@@ -1,51 +1,73 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import CKEditorComponent from '../CKEditor/CKEditor';
-import { addCategory } from '../../redux/actions/category-action'; 
-// import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { addCategory } from '../../redux/actions/category-action';
+
 const FormCategory = () => {
     const dispatch = useDispatch();
+
     const [categoryDto, setCategoryDto] = useState({
         name: "",
         slug: "",
         description: "",
-
     });
 
-    const {
-        name,
-        slug,
-        description,
-      } = categoryDto;
+    const [validation, setValidation] = useState({
+        name: { isValid: true, message: "" },
+        slug: { isValid: true, message: "" },
+        description: { isValid: true, message: "" },
+    });
 
-      const handleChange = (e) => {
-        if (e.target && e.target.name !== undefined && e.target.value !== undefined) {
-          setCategoryDto({
+    const { name, slug, description } = categoryDto;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCategoryDto({
             ...categoryDto,
-            [e.target.name]: e.target.value,
-          });
-        } else {
-          // Handle CKEditor change
-          setCategoryDto({
-            ...categoryDto,
-            description: e.target.value,
-          });
-        }
-      };
-      
+            [name]: value,
+        });
+    };
+
     const handleSaveCategory = async (e) => {
         e.preventDefault();
-        dispatch(addCategory(categoryDto));
-         // Reset form after successful submission
-     setCategoryDto({
-        name: "",
-        slug: "",
-        description: "",
-      });
 
-      
+        // Validate inputs
+        const isNameValid = name.trim() !== "";
+        const isSlugValid = slug.trim() !== "";
+        const isDescriptionValid = description.trim() !== "";
+
+
+        setValidation({
+            name: { isValid: isNameValid, message: isNameValid ? "" : "Tên là bắt buộc" },
+            slug: { isValid: isSlugValid, message: isSlugValid ? "" : "Slug là bắt buộc" },
+            description: { isValid: isDescriptionValid, message: isDescriptionValid ? "" : "Description là bắt buộc" },
+        });
+
+        // Check if all validations passed
+        if (isNameValid && isSlugValid && isDescriptionValid) {
+            dispatch(addCategory(categoryDto));
+
+            // Reset form after successful submission
+
+            resetForm();
+        }
     };
+    const resetForm = () => {
+        setCategoryDto({
+            name: "",
+            slug: "",
+            description: "",
+        });
+
+        // Reset validation state
+        setValidation({
+            name: { isValid: true, message: "" },
+            slug: { isValid: true, message: "" },
+            description: { isValid: true, message: "" },
+        });
+    };
+
+
     return (
         <form action="">
             <div className="row">
@@ -62,13 +84,29 @@ const FormCategory = () => {
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Tiêu đề</span>
-                                <input type="text" name="name" className="form-control form-add" placeholder="Tiêu đề danh mục" value={name} onChange={handleChange} />
+                                <input
+                                    type="text"
+                                    name="name"
+                                    className={`form-control form-add ${!validation.name.isValid ? 'is-invalid' : ''}`}
+                                    placeholder="Tiêu đề danh mục"
+                                    value={name}
+                                    onChange={handleChange}
+                                />
+                                {!validation.name.isValid && <div className="invalid-feedback">{validation.name.message}</div>}
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <span className='form-label'>Slug</span>
-                                <input type="text" name="slug" className="form-control form-add" placeholder="Slug danh mục" value={slug} onChange={handleChange} />
+                                <input
+                                    type="text"
+                                    name="slug"
+                                    className={`form-control form-add ${!validation.slug.isValid ? 'is-invalid' : ''}`}
+                                    placeholder="Slug danh mục"
+                                    value={slug}
+                                    onChange={handleChange}
+                                />
+                                {!validation.slug.isValid && <div className="invalid-feedback">{validation.slug.message}</div>}
                             </div>
                         </div>
                     </div>
@@ -76,10 +114,13 @@ const FormCategory = () => {
                     <div className="row mb-4">
                         <div className="form-outline mb-4">
                             <span className='form-label'>Mô tả Danh mục</span>
-                            <CKEditorComponent name="description" value={description} onChange={handleChange} />
+                            <CKEditorComponent
+                                name="description"
+                                value={description}
+                                onChange={handleChange}
+                            />
+                            {!validation.description.isValid && <div className="invalid-feedback">{validation.description.message}</div>}
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -88,11 +129,9 @@ const FormCategory = () => {
                 <button
                     className="rizzui-button inline-flex font-medium items-center justify-center active:enabled:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-50 transition-colors duration-200 px-4 py-2 text-sm h-10 rounded-md bg-transparent border focus-visible:ring-offset-2 border-gray-300 hover:enabled:border-gray-1000 focus-visible:enabled:border-gray-1000 focus-visible:ring-gray-900/30 w-full @xl:w-auto"
                     type="button"
-
+                    onClick={resetForm}
                 >
-                    <font >
-                        <font >Lưu dưới dạng bản nháp</font>
-                    </font>
+                    <span>Reset Form</span>
                 </button>
                 <button
                     className="rizzui-button inline-flex font-medium items-center justify-center active:enabled:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-50 transition-colors duration-200 px-4 py-2 text-sm h-10 rounded-md border border-transparent focus-visible:ring-offset-2 bg-gray-900 hover:enabled::bg-gray-800 active:enabled:bg-gray-1000 focus-visible:ring-gray-900/30 text-gray-0 w-full @xl:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
