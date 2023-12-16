@@ -182,7 +182,7 @@ header {
   }
   
   .header-full {
-    background: rgb(250, 250, 250);
+    /* background: rgb(250, 250, 250); */
     margin-bottom: 10px;
     height: 50px;
     display: flex;
@@ -213,7 +213,7 @@ header {
   .navbar-collapse ul li {
     display: inline-block;
     /* Hiển thị các mục danh sách trên cùng một hàng */
-    margin-right: 50px;
+    margin-right: 100px;
     /* Khoảng cách giữa các mục danh sách */
     font-size: 12px;
     font-family: inherit;

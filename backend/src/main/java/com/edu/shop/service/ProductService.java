@@ -72,6 +72,16 @@ public interface ProductService {
 	
 	List<Product> findByCategory(Category category);
 
+	List<Product> findByPriceRange(Double minPrice, Double maxPrice);
+
+	List<Product> findByCategory_CategoryId(Long categoryId);
+
+	List<Product> findBySupplier_SupplierIdIn(List<Long> supplierIds);
+
+	List<Product> findBySupplier_SupplierId(Long supplierId);
+
+	List<Product> findByCategory_SlugIn(List<String> categorySlugs);
+
 	
 
 }

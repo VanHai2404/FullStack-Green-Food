@@ -1,26 +1,72 @@
 // src/components/DeliveryInformation.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createOrder } from '../../../services/InvoiceService';
+import config from '../../../config';
+import { useNavigate } from 'react-router-dom';
 
-const PaymentMethod = ( {total} ) => {
+const PaymentMethod = ({ total }) => {
+    const navigate = useNavigate();
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+    const cartItems = useSelector((state) => state.cart.items);
+    const cartData = useSelector(state => state.order.cartData);
+    const addressData = useSelector(state => state.order.addresstData.selectedAddress);
+console.log("TÔNG TIỀN PHẢI TRẢ ",total);
+    const customerData = JSON.parse(localStorage.getItem('customer'));
+    const [invoiceRequest, setInvoiceRequest] = useState({
+        payMentMethod: null,
+        fullName: customerData.fullname,
+        email: customerData.email,
+        phone: customerData.phone,
+        note: cartData.note,
+        amont: total,
+        addressId: addressData.addressId,
+        code: addressData.code,
+        city: addressData.city,
+        district: addressData.district,
+        ward: addressData.ward,
+        streetNumber: addressData.streetNumber,
+        // Các thông tin khác của đơn hàng
+    });
+    useEffect(() => {
+        // Update invoiceRequest whenever selectedPaymentMethod changes
+        setInvoiceRequest(prevInvoiceRequest => ({
+            ...prevInvoiceRequest,
+            payMentMethod: parseInt(selectedPaymentMethod)
+        }));
+    }, [selectedPaymentMethod]);
 
-
-    const handlePayment = () => {
-        if (selectedPaymentMethod !== null) {
-          console.log('Selected payment method:', selectedPaymentMethod);
-          console.log('Total:', total);
-          // Further logic based on the selected payment method
+    const handlePayment = async () => {
+        console.log("selectedPaymentMethod--", selectedPaymentMethod);
+        if (invoiceRequest.payMentMethod !== null) {
+         
+            try {
+                const response = await createOrder(invoiceRequest, cartItems);
+                // Xử lý dữ liệu trả về từ API (response)
+                if (invoiceRequest.payMentMethod === 1) {
+                    navigate(`${config.routes.CompleteOrder}/${response.id}`);
+                    // Xử lý khi thanh toán tiền mặt
+                    console.log('Order ID:', response.id);
+                } else if (invoiceRequest.payMentMethod === 2) {
+                    // Xử lý khi thanh toán qua VNPay
+                    console.log('Payment URL:', response);
+                  //Redirect người dùng đến URL để thanh toán
+                  window.location.href = response.url;
+                }
+            } catch (error) {
+                console.error('Error creating invoice:', error);
+            }
         } else {
             toast.error('Vui long chọn phường thức thành toán !', { position: toast.POSITION.TOP_RIGHT });
 
         }
-      };
-      
-  const handlePaymentMethodChange = (paymentMethodId) => {
-    setSelectedPaymentMethod(paymentMethodId);
-  };
+    };
+    const handlePaymentMethodChange = (paymentMethodId) => {
+        setSelectedPaymentMethod(paymentMethodId);
+    };
+    
     return (
         <div className="step">
             <div className="step-sections " step={2}>
@@ -41,7 +87,8 @@ const PaymentMethod = ( {total} ) => {
                                             className="input-radio"
                                             name="payment_method_id"
                                             type="radio"
-                                            onChange={() => handlePaymentMethodChange(1)}
+                                            value="1"
+                                           onChange={(e) => handlePaymentMethodChange(e.target.value)}
                                         />
                                     </div>
                                     <div className="radio-content-input">
@@ -65,7 +112,8 @@ const PaymentMethod = ( {total} ) => {
                                             className="input-radio"
                                             name="payment_method_id"
                                             type="radio"
-                                            onChange={() => handlePaymentMethodChange(2)}                                       
+                                            value="2"
+                                            onChange={(e) => handlePaymentMethodChange(e.target.value)}
                                         />
                                     </div>
                                     <div className="radio-content-input">
@@ -91,15 +139,15 @@ const PaymentMethod = ( {total} ) => {
                 </div>
             </div>
             <div className="step-footer" id="step-footer-checkout">
-                    <button
-                        type="submit"
-                        className="step-footer-continue-btn btn"
-                        onClick={() => handlePayment()}
-                       
-                    >
-                        <span className="btn-content">Hoàn tất đơn hàng</span>
-                        <i className="btn-spinner icon icon-button-spinner" />
-                    </button>
+                <button
+                    type="submit"
+                    className="step-footer-continue-btn btn"
+                    onClick={() => handlePayment()}
+
+                >
+                    <span className="btn-content">Hoàn tất đơn hàng</span>
+                    <i className="btn-spinner icon icon-button-spinner" />
+                </button>
                 <a className="step-footer-previous-link" href="/cart">
                     Giỏ hàng
                 </a>

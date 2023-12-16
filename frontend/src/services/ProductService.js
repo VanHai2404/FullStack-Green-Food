@@ -10,11 +10,18 @@ const ProductService = {
       const url = `/home/${id}`;
       return axiosUser.get(url);
     },
-    finby(name){
-        const url = `/home/seacrh/${name}`;
+    finby: (name) => {
+      const url = `/home/searchByName?name=${name}`;
       return axiosUser.get(url);
-
-    }
+    },
+    async filterProducts(params) {
+      try {
+        const response = await axiosUser.get('/home/products/filter', { params });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
   
   };
   

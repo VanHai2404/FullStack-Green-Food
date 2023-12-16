@@ -13,7 +13,9 @@ public class AddressDTO {
 	private Integer addressId;
 	
 	private Integer code;
-
+	
+	private String name;
+	
 	private String city;
 
 	private String district;

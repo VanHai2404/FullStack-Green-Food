@@ -1,47 +1,114 @@
 import React, { useEffect, useState } from 'react';
 import './ProductDetai.css';
 import { FaRegHeart, FaShoppingBasket, FaFacebookF, FaWhatsapp, FaRegStar } from 'react-icons/fa';
+import { Tabs, Form, Input, Button, Rate, Row, Col, notification, Empty,Spin } from 'antd';
 import { FaCircle } from "react-icons/fa6";
 import { fetchProductDetail } from '../../../redux/actions/product-aciton';
 import { useParams } from "react-router-dom";
-import config from '../../../config';
+import ProductCommentService from '../../../services/ProductCommentService';
 import { formatPrice } from '../../../redux/actions/cart-action';
+import { toast } from 'react-toastify';
+const { TabPane } = Tabs;
+const { TextArea } = Input;
 
 const ProductDetail = () => {
+  const [form] = Form.useForm();
   const { productId } = useParams();
+    const [loading, setLoading] = useState(true);
   const [productDetail, setProductDetail] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null); // Chuyển khai báo state vào đầu component
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [valueRate, setValueRate] = useState(null);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    const getProductDetail = async () => {
+    const fetchData = async () => {
       try {
         const result = await fetchProductDetail(productId);
         setProductDetail(result);
         if (result && result.images.length > 0) {
           setSelectedImage(result.images[0]);
         }
+        setLoading(false);
       } catch (error) {
-        // Xử lý lỗi
+        setLoading(false);
+        // Handle error
       }
     };
 
-    getProductDetail();
+    fetchData();
   }, [productId]);
 
-  console.log("SAN PHẨM : ", productDetail);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productComments = await ProductCommentService.getProductCommentsByProduct(productId);
+        setComments(productComments);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
+    fetchData();
+  }, [productId]);
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("customer");
+
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      form.setFieldsValue({
+        customerId: parsedUserData.customerId || "",
+        username: parsedUserData.username || "",
+        fullname: parsedUserData.fullname || "",
+        email: parsedUserData.email || "",
+      });
+    }
+  }, [form]);
+
 
   if (!productDetail) {
     return <p>Loading...</p>;
   }
 
   const { images } = productDetail;
-
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
 
+  const desc = ['kinh khủng', 'xấu', 'Bình thường', 'Tốt', 'tuyệt vời'];
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const commentRequest = {
+        customerId: values.customerId,
+        starRating: values.rating,
+        fullname: values.fullname,
+        detail: values.message,
+        email: values.email,
+        productId: productId,
+      };
+      console.log("THÔNG TIN", commentRequest);
+
+      await ProductCommentService.addProductComment(commentRequest);
+
+      notification.success({
+        message: 'Đã gửi bình luận thành công!',
+      });
+      // Fetch the updated list of comments after adding a new comment
+      const updatedComments = await ProductCommentService.getProductCommentsByProduct(productId);
+      setComments(updatedComments);
+      form.resetFields();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error('Lỗi khi bình luận sản phẩm !', { position: toast.POSITION.TOP_RIGHT });
+      console.error('Error submitting comment:', error);
+    }
+  };
+  const productDescription = productDetail.product.description;
 
   return (
+    <Spin spinning={loading} size="large" tip="Loading...">
     <main style={{ backgroundColor: "rgb(255, 255, 255)", minHeight: "100vh" }}>
       <div className="pdp-t3">
         <div className="container-fluid ">
@@ -281,8 +348,178 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <section className="py-4 mt-3"></section>
+
+      <div className="w-full comment-Tabs">
+        <div className="form-mains">
+          <div className="form-details">
+            <div className="form">
+              <div className="tab-content">
+
+                <Tabs defaultActiveKey="1" type="card">
+                  <TabPane tab="Product Details" key="1">
+                    {/* Nội dung của tab Product Details */}
+                    <div className="tab-pane fade show active">
+                      <div className="form-detail">
+                        <div className="content">
+
+                          <div dangerouslySetInnerHTML={{ __html: productDescription }} />
+
+                        </div>
+                        {/* <div className="table-detail">
+                          <h3>Nutrition Facts</h3>
+                          <div className="border rounded border-border-four">
+                            <table className="table-bordered">
+                              <thead>
+                                <tr className="border-b border-border-four">
+                                  <th className="th1">
+                                    Amount per serving <br />
+                                    <span className="">Calories</span>
+                                  </th>
+                                  <th className="px-4 py-3 text-end fs-1">70</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr className="font-normal border-b border-border-four last:border-b-0">
+                                  <td className="px-4 py-3 lg:px-5 xl:px-6 ">Total Fat 5g</td>
+                                  <td className="w-24 px-4 py-3 text-end">6%</td>
+                                </tr>
+                                <tr className="font-normal border-b border-border-four last:border-b-0">
+                                  <td className="px-4 py-3 lg:px-5 xl:px-6 ">Cholesterol 185mg</td>
+                                  <td className="w-24 px-4 py-3 text-end">62%</td>
+                                </tr>
+                                <tr className="font-normal border-b border-border-four last:border-b-0">
+                                  <td className="px-4 py-3 lg:px-5 xl:px-6    ">Sodium 70mg</td>
+                                  <td className="w-24 px-4 py-3 text-end">49%</td>
+                                </tr>
+                                <tr className="font-normal border-b border-border-four last:border-b-0">
+                                  <td className="px-4 py-3 lg:px-5 xl:px-6 ">
+                                    Total Carbohydrate 0g
+                                  </td>
+                                  <td className="w-24 px-4 py-3 text-end">18%</td>
+                                </tr>
+                                <tr className="font-normal border-b border-border-four last:border-b-0">
+                                  <td className="px-4 py-3 lg:px-5 xl:px-6 ">Protein 6g</td>
+                                  <td className="w-25 px-4 py-3 text-end">35%</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div> */}
+                      </div>
+                    </div>
+                  </TabPane>
+                  <TabPane tab="Review Rating" key="2">
+                    {/* Nội dung của tab Review Rating */}
+                    <div className="tab-pane fade show active">
+                      <div className="comment row">
+                        <div className="limitHeight pt-2 col-7">
+                          <div className="scroll-container">
+                            {comments.length > 0 ? (
+                              comments.map((comment) => (
+                                <div key={comment.commentId} className="comment-card row">
+                                  <div className="image col-2">
+                                    {/* Thêm logic để hiển thị hình ảnh người bình luận */}
+                                    <img src={`http://localhost:8080/api/home/image/${comment.customer.image}`} alt={comment.customer.image} />
+                                  </div>
+                                  <div className="content-comment col-10">
+                                    <div className="star">
+                                      <Rate value={comment.starRating} disabled />
+                                    </div>
+                                    <h3>{comment.customer.fullname}</h3>
+                                    <p>{comment.detail}</p>
+                                    <p className="font-monospace lh-1 " style={{ color: 'rgb(64, 184, 123)' }}>
+                                      Ngày: {comment.createDate}
+                                    </p>
+                                    <div className="author">
+                                      By <span>{comment.customer.fullname}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <Empty description="Không có bình luận" />
+                            )}
+                          </div>
+                        </div>
+                        <div className="evaluate col-5">
+                          <h3 className="text-brand-dark fs-6 text-15px mb-2">Viết đánh giá của bạn</h3>
+                          <p className="text-brand-muted text-sm leading-7 lg:leading-[27px] lg:text-15px">
+                            Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu*
+                          </p>
+                          <Form form={form} onFinish={handleSubmit}>
+                            <div className="evaluate-form">
+                              <Form.Item
+                                label="customerId *"
+                                name="customerId"
+                                rules={[{ required: true, message: 'Please enter your name!' }]}
+                                style={{ display: 'none' }}
+                              >
+                                <Input placeholder="Enter your name" />
+                              </Form.Item>
+
+                              <div className="review">
+                                <Form.Item
+                                  label="Đánh giá của bạn *"
+                                  name="rating"
+                                  rules={[{ required: true, message: 'Please rate your experience!' }]}
+                                >
+                                  <Rate tooltips={desc} />
+                  
+                                </Form.Item>
+                              </div>
+                              <Form.Item
+                                label="Name *"
+                                name="fullname"
+                                rules={[{ required: true, message: 'Please enter your name!' }]}
+                              >
+                                <Input placeholder="Enter your name" />
+                              </Form.Item>
+                              <Form.Item
+                                label="Message *"
+                                name="message"
+                                rules={[{ required: true, message: 'Please enter your message!' }]}
+                              >
+                                <TextArea placeholder="Enter your message" maxLength={250} rows={3} />
+                              </Form.Item>
+
+                              <Form.Item
+                                label="Email *"
+                                name="email"
+                                rules={[
+                                  { required: true, message: 'Please enter your email!' },
+                                  { type: 'email', message: 'Please enter a valid email!' },
+                                ]}
+                              >
+                                <Input placeholder="Enter your email" />
+                              </Form.Item>
+                              <div className="pt-3" style={{ height: '3rem' }}>
+                                <Button
+                                  className="btn btn-success"
+                                  style={{ height: 56, width: 126, fontSize: '1.25rem', fontWeight: 600 }}
+                                  type="primary"
+                                  htmlType="submit"
+                                >
+                                  Submit
+                                </Button>
+                              </div>
+                            </div>
+                          </Form>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                  </TabPane>
+                </Tabs>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
+    </Spin>
   );
 };
 

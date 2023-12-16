@@ -10,6 +10,8 @@ public interface UserService {
 	Role saveRole (Role role);
 	
 	void addToUser(String username , String roleName);
+
+	String sendVerificationEmail(String  email);
 	
 
 }

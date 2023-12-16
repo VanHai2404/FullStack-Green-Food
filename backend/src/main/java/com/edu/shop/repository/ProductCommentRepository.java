@@ -12,7 +12,7 @@ import com.edu.shop.domain.Customer;
 
 @Repository
 public interface ProductCommentRepository extends JpaRepository<ProductComment, Integer>{
-	     List<ProductComment> findByStatus(Boolean status);
+	     List<ProductComment> findByStatus(String status);
 	   // Custom query to retrieve comments for a product
 	    List<ProductComment> findByProduct(Product product);
 	    List<ProductComment> findByProductAndCustomer(Product product, Customer customer);

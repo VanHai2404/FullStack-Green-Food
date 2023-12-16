@@ -24,10 +24,15 @@ public class CategoryServiceImpl implements CategoryService {
 		this.categoryRepository = categoryRepository;
 	}
 
+	
+	
 	@Override
 	public <S extends Category> S save(S entity) {
 		return categoryRepository.save(entity);
 	}
+	
+	
+	
 
 	@Override
 	public <S extends Category> List<S> saveAll(Iterable<S> entities) {

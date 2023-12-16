@@ -1,7 +1,9 @@
 package com.edu.shop.domain;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,10 +27,11 @@ public class Tag implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long tag_id;
 
-    @Column(nullable = false)
+	@Column(columnDefinition = "nvarchar(200) not null")
     private String name;
 
 	@OneToMany(mappedBy = "tag")
-	private Set<PostTag> postTags;
+	@JsonBackReference
+	private List<Post> posts;
 
 }

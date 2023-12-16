@@ -52,9 +52,6 @@ public class OrderServicelmpI implements OrderService {
 	private ProductService productService;
 
 	@Autowired
-	private OrderService orderService;
-
-	@Autowired
 	private OrderdetailService orderDetailService;
 
 	@Autowired
@@ -75,6 +72,7 @@ public class OrderServicelmpI implements OrderService {
 		dto.setOrderDate(date);
 		dto.setAmount(invoiceRequest.getAmont());
 		dto.setStatus(OrderStatus.WAITING);
+		dto.setNote(invoiceRequest.getNote());
 		BeanUtils.copyProperties(dto, order);
 
 		String email = invoiceRequest.getEmail();
@@ -85,14 +83,11 @@ public class OrderServicelmpI implements OrderService {
 		} else {
 			return null;
 		}
-		Customer customer = optional.get();
-		Set<Address> addresses = customer.getAddress();
-		if (!addresses.isEmpty()) {
-			Address address = addresses.iterator().next();
-			order.setAddress(address);
+		if (invoiceRequest.getAddressId() != null) {
+			Optional<Address> address = addressService.findById(invoiceRequest.getAddressId());
+			order.setAddress(address.get());
 		} else {
 			Address address = new Address();
-
 			AddressDTO addressDTO = new AddressDTO();
 			addressDTO.setCode(invoiceRequest.getCode());
 			addressDTO.setCity(invoiceRequest.getCity());
@@ -110,18 +105,20 @@ public class OrderServicelmpI implements OrderService {
 
 		payment.setAmount(invoiceRequest.getAmont());
 		payment.setPayDate(date);
-		payment.setTimestamp(System.currentTimeMillis());
-
+		payment.setTimestamp(new Date());
 		// Set payment method based on the provided value
 		int paymentMethodValue = invoiceRequest.getPayMentMethod();
+		System.out.println("TT THÀNH TOÁN" + paymentMethodValue);
 		if (paymentMethodValue == 1) {
+			System.out.println("TT THÀNH TOÁN 1 " + paymentMethodValue);
 			payment.setPaymentMethod(PaymentMethod.CASH);
 		} else if (paymentMethodValue == 2) {
+			System.out.println("TT THÀNH TOÁN 2" + paymentMethodValue);
 			payment.setPaymentMethod(PaymentMethod.VNPAY);
 		}
 		PayMent paymentSave = payMentService.save(payment);
 		order.setPayMent(paymentSave);
-		Order savedOrder = orderService.save(order);
+		Order savedOrder = repostory.save(order);
 		processOrderDetails(cartItemsRequest, savedOrder);
 		return savedOrder;
 	}
@@ -147,9 +144,56 @@ public class OrderServicelmpI implements OrderService {
 		}
 	}
 
-	
-	
-	
+	@Override
+	public void updateOrderStatus(Integer orderId, String newStatus) throws RuntimeException {
+        if (orderId != null) {
+            Optional<Order> optional = repostory.findById(orderId);
+            if (optional.isPresent()) {
+                Order order = optional.get();
+                order.setStatus(OrderStatus.valueOf(newStatus));
+                repostory.save(order);
+            } else {
+                throw new RuntimeException("Không tìm thấy đơn hàng với ID: " + orderId);
+            }
+        } else {
+            throw new IllegalArgumentException("orderId không được null");
+        }
+    }
+	@Override
+	public void cancelOrder(Integer orderId, String reason) throws RuntimeException {
+	    if (orderId != null) {
+	        Optional<Order> optional = repostory.findById(orderId);
+	        if (optional.isPresent()) {
+	            Order order = optional.get();
+	            order.setStatus(OrderStatus.CANCELLED);
+	            System.out.println("NỘI DUNG"+reason);
+	            // Kiểm tra và xử lý lý do hủy
+	            if (reason != null) {
+	                order.setReason(reason);
+	            } else {
+	                // Xử lý khi reason là null, có thể đặt giá trị mặc định hoặc bỏ qua
+	            }
+
+	            repostory.save(order);
+	        } else {
+	            throw new RuntimeException("Không tìm thấy đơn hàng với ID: " + orderId);
+	        }
+	    } else {
+	        throw new IllegalArgumentException("orderId không được null");
+	    }
+	}
+
+
+	@Override
+	public List<Order> findByCustomer(Customer customer) {
+		return repostory.findByCustomer(customer);
+	}
+
+	@Override
+	public List<Order> findByStatus(OrderStatus status) {
+		return repostory.findByStatus(status);
+	}
+
 	@Override
 	public <S extends Order> S save(S entity) {
 		return repostory.save(entity);

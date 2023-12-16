@@ -1,11 +1,14 @@
 // src/components/DeliveryInformation.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { validateEmail, validatePhoneNumber } from '../../../constants/validationUtils';
 import { updateInformationData, updateAddressData } from '../../../redux/actions/order-action';
 import AddressForm from './AddressForm';
 import { useDispatch } from 'react-redux';
-const DeliveryInformation = ({ onPayment ,updateShippingFee }) => {
+import { getAddressCustomer } from '../../../services/address';
+const DeliveryInformation = ({ onPayment, updateShippingFee }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [phoneError, setPhoneError] = useState('');
@@ -17,18 +20,56 @@ const DeliveryInformation = ({ onPayment ,updateShippingFee }) => {
     phone: "",
   });
 
+  const [customerId, setCustomerId] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  useEffect(() => {
+    // Lấy customerId từ localStorage khi component được render
+    const storedUserData = localStorage.getItem("customer");
+    const parsedUserData = JSON.parse(storedUserData);
+    if (parsedUserData) {
+      setCustomerId(parsedUserData.customerId);
+    }
+  }, []);
+  useEffect(() => {
+    // Gọi API để lấy danh sách địa chỉ khi customerId thay đổi
+    if (customerId !== null) {
+      fetchAddresses();
+    }
+  }, [customerId]);
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await getAddressCustomer(customerId);
+      setAddresses(response || []);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
   const [selectedAddress, setSelectedAddress] = useState({
-    codeCity: null,
+    code: null,
     city: null,
     district: null,
     ward: null,
     streetNumber: null,
   });
 
-  const [deliveryOption, setDeliveryOption] = useState('giaoTaiNha'); // 'giaoTaiNha' là giả sử mặc định là giao tận nơi
+  const [deliveryOption, setDeliveryOption] = useState('diachimoi'); // 'diachimoi' là giả sử mặc định là giao tận nơi
   const handleDeliveryOptionChange = (e) => {
     setDeliveryOption(e.target.value);
   };
+
+  const handleSelectAddress = (address) => {
+    updateShippingFee(address.code);
+    setSelectedAddress({
+      addressId: address.addressId,
+      code: address.code,
+      city: address.city,
+      district: address.district,
+      ward: address.ward,
+      streetNumber: address.streetNumber,
+    });
+  };
+
 
   useEffect(() => {
     // Kiểm tra xem có dữ liệu trong localStorage không
@@ -71,7 +112,7 @@ const DeliveryInformation = ({ onPayment ,updateShippingFee }) => {
       setPhoneError('');
     }
 
-    // if (deliveryOption === 'giaoTaiNha' && !address.trim()) {
+    // if (deliveryOption === 'diachimoi' && !address.trim()) {
     //   setAddressError('Vui lòng nhập địa chỉ.');
     //   isValid = false;
     // } else {
@@ -85,22 +126,26 @@ const DeliveryInformation = ({ onPayment ,updateShippingFee }) => {
 
   const handleContinueToPayment = () => {
     console.log("User selectedAddress:", selectedAddress);
-  
+
+    if (!selectedAddress || !selectedAddress.code) {
+      toast.error('Vui lòng chọn địa chỉ nhận hàng!', { position: toast.POSITION.TOP_RIGHT });
+      return;
+    }
 
 
-    updateShippingFee(selectedAddress.codeCity);
+    updateShippingFee(selectedAddress.code);
 
-    if (!validateInputs() ) {
+    if (!validateInputs()) {
       // Nếu dữ liệu không hợp lệ
       return;
     }
-// Gọi hàm cập nhật phí vận chuyển và tiếp tục
+    // Gọi hàm cập nhật phí vận chuyển và tiếp tục
 
     dispatch(updateInformationData({ userData }));
     dispatch(updateAddressData({ selectedAddress }));
     onPayment();
   };
-  
+
 
 
 
@@ -185,18 +230,18 @@ const DeliveryInformation = ({ onPayment ,updateShippingFee }) => {
                           type="radio"
                           name="customer_pick_at_location"
                           className="input-radio"
-                          value="giaoTaiNha"
-                          checked={deliveryOption === 'giaoTaiNha'}
+                          value="diachimoi"
+                          checked={deliveryOption === 'diachimoi'}
                           onChange={handleDeliveryOptionChange}
                         />
                       </div>
                       <span className="radio-label-primary">
-                        Giao tận nơi
+                        Nhập địa chỉ mới
                       </span>
                     </label>
                   </div>
 
-                  {deliveryOption === 'giaoTaiNha' && (
+                  {deliveryOption === 'diachimoi' && (
                     <AddressForm onAddressSelect={setSelectedAddress} />
                   )}
 
@@ -208,16 +253,40 @@ const DeliveryInformation = ({ onPayment ,updateShippingFee }) => {
                           id="customer_pick_at_location_true"
                           name="customer_pick_at_location"
                           className="input-radio"
-                          value="nhanTaiCuaHang"
-                          checked={deliveryOption === 'nhanTaiCuaHang'}
+                          value="chonDiaChi"
+                          checked={deliveryOption === 'chonDiaChi'}
                           onChange={handleDeliveryOptionChange}
                         />
                       </div>
                       <span className="radio-label-primary">
-                        Nhận tại cửa hàng
+                        Chọn địa chỉ có sẳn
                       </span>
                     </label>
                   </div>
+                  {deliveryOption === 'chonDiaChi' && (
+                    <div className=" radio-wrapper content-box-row content-box-row-padding ">
+                      {addresses.map((address, index) => (
+                        <div key={index} className="radio-wrapper content-box-row">
+                          <label className="radio-label">
+                            <div className="radio-input">
+                              <input
+                                type="checkbox"
+                               
+                                name="customer_pick_at_location"
+                                className="input-radio"
+                                value={address.addressId}
+                                onChange={() => handleSelectAddress(address)}
+                              />
+                            </div>
+                            <span className="radio-label-primary">
+                              {address.streetNumber || 'N/A'} , {address.ward || 'N/A'} , {address.district || 'N/A'},{address.city || 'N/A'}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+
+                  )}
                 </div>
               </form>
             </div>

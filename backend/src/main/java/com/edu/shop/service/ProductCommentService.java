@@ -31,7 +31,7 @@ public interface ProductCommentService {
 
 	List<ProductComment> findByProduct(Product product);
 
-	List<ProductComment> findByStatus(Boolean status);
+	List<ProductComment> findByStatus(String status);
 
 	List<ProductComment> findAll();
 

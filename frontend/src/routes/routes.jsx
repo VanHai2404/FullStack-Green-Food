@@ -15,6 +15,8 @@ import ContactPage from '../pages/Customer/ContactPage/ContactPage';
 import CheckoutPage from '../pages/Customer/CheckoutPage/CheckoutPage';
 import ProductDetail from '../pages/Customer/ProductDetailPage/ProductDetai';
 import UserProfile from '../pages/Customer/ProfilePage/UserProfile';
+import CompleteOrder from '../components/Order/complete-order';
+import PaymentSuccess from '../components/Order/Payment-Success';
 
 
 // Public routes
@@ -29,7 +31,9 @@ const publicRoutes = [
     { path: config.routes.Contact,component:ContactPage},
     { path: config.routes.Checkout,component:CheckoutPage ,layout: null},
     { path: config.routes.GetProduct,component:ProductDetail},
-    {path : config.routes.get}
+    { path: config.routes.Profile,component:UserProfile},
+    { path: config.routes.CompleteOrder,component:CompleteOrder},
+    { path: config.routes.PaymentSuccessful,component:PaymentSuccess,layout: null}
 
 ];
 

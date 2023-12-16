@@ -90,6 +90,40 @@ public class ProductServiceIml implements ProductService {
         return productRepository.save(entity);
     }
 
+    
+    
+    
+    @Override
+	public List<Product> findByCategory_CategoryId(Long categoryId) {
+		return productRepository.findByCategory_CategoryId(categoryId);
+	}
+    
+    
+    
+
+	@Override
+	public List<Product> findBySupplier_SupplierId(Long supplierId) {
+		return productRepository.findBySupplier_SupplierId(supplierId);
+	}
+
+	@Override
+	public List<Product> findBySupplier_SupplierIdIn(List<Long> supplierIds) {
+		return productRepository.findBySupplier_SupplierIdIn(supplierIds);
+	}
+
+	@Override
+	public List<Product> findByPriceRange(Double minPrice, Double maxPrice) {
+        return productRepository.findBySalePriceBetween(minPrice, maxPrice);
+    }
+    
+    
+	
+	
+
+	@Override
+	public List<Product> findByCategory_SlugIn(List<String> categorySlugs) {
+		return productRepository.findByCategory_SlugIn(categorySlugs);
+	}
 
 	@Override
 	public List<Product> findByNameContaining(String Name) {

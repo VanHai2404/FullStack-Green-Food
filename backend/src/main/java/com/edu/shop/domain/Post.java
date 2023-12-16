@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.edu.shop.constants.PostStatus;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,11 +40,11 @@ public class Post implements Serializable {
 	private String name;
 	@Column(columnDefinition = "nvarchar(100) null")
 	private String image;
-	@Column(columnDefinition = "TEXT")
+	@Column(columnDefinition = "nvarchar(max) not null")
 	private String description;
 	@Column(columnDefinition = "nvarchar(200) not null")
 	private String metaKeywords;
-	@Column(columnDefinition = "nvarchar(200) not null")
+	@Column(columnDefinition = "nvarchar(1000) not null")
 	private String metaDescription;
 	
     @Enumerated(EnumType.STRING)
@@ -63,13 +64,16 @@ public class Post implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "accountId")
+	@JsonManagedReference
 	private Account account;
 	
 	@ManyToOne
-	@JoinColumn(name = "id")
-	private  PostTag postTag;
+	@JoinColumn(name = "tag_id")
+	@JsonManagedReference
+	private Tag tag;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-	private Set<PostComment> postComments;
+	@JsonManagedReference
+	private List<PostComment> postComments;
 
 }

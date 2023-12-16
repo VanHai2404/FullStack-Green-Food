@@ -9,9 +9,7 @@ const AddressForm = ({ onAddressSelect }) => {
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [wards, setWards] = useState([]);
     const [selectedWard, setSelectedWard] = useState(null);
-    const [cityError, setCityError] = useState('');
-    const [districtError, setDistrictError] = useState('');
-    const [wardError, setWardError] = useState('');
+
 
 
 
@@ -69,7 +67,7 @@ const AddressForm = ({ onAddressSelect }) => {
             if (selectedCityData && selectedDistrictData && selectedWardData) {
                 const streetNumber = document.getElementById("street-number").value;
                 const selectedAddress = {
-                    codeCity: selectedCityData.code,
+                    code: selectedCityData.code,
                     city: selectedCityData.name,
                     district: selectedDistrictData.name,
                     ward: selectedWardData.name,
@@ -81,37 +79,7 @@ const AddressForm = ({ onAddressSelect }) => {
         }
     }, [selectedCity, selectedDistrict, selectedWard, cities, onAddressSelect]);
 
-    const validateAddress = () => {
-        let isValid = true;
-        if (!selectedCity) {
-            // Thông báo lỗi
-            setCityError('Vui lòng chọn tỉnh/thành phố.');
-            isValid = false;
-        } else {
-            setCityError('');
-        }
-
-        // Kiểm tra quận/huyện
-        if (!districts) {
-            // Thông báo lỗi
-            setDistrictError('Vui lòng chọn quận/huyện.');
-            isValid = false;
-        } else {
-            setDistrictError('');
-        }
-
-        // Kiểm tra phường/xã
-        if (!wards) {
-            // Thông báo lỗi
-            setWardError('Vui lòng chọn phường/xã.');
-            isValid = false;
-        } else {
-            setWardError('');
-        }
-
-        return isValid;
-
-    };
+  
 
 
     return (

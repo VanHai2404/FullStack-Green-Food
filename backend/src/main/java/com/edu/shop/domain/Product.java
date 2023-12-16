@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.edu.shop.constants.ProductUnit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
@@ -15,6 +18,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +39,6 @@ import lombok.ToString;
 @Entity
 
 @Table(name = "products")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,25 +83,41 @@ public class Product implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "supplierId")
+	@JsonManagedReference
 	private Supplier supplier;
-	@JsonIgnore 
+	
+
 	@ManyToOne
 	@JoinColumn(name = "accountId")
+	@JsonBackReference
 	private Account account;
 	
 	@ManyToOne
 	@JoinColumn(name = "categoryId")
+	@JsonManagedReference
 	private Category category;
 	
 	
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private Set<ProductImage> images;
+	   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @JsonManagedReference
+	private List<ProductImage>  images;
+
 	
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+  
+	@OneToMany(mappedBy = "product")
+	@JsonBackReference
 	private Set<OrderDetail> orderDetails;
 	
 
+	
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	    private List<ProductComment> comments;
+	@JsonBackReference
+	private List<ProductComment> comments;
+    
+    
+    @JsonIgnore
+    public List<ProductImage> getImages() {
+        return images;
+    }
 
 }

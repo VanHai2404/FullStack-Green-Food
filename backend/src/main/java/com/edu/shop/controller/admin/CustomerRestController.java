@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,12 +32,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import com.edu.shop.domain.Customer;
+import com.edu.shop.domain.User;
 import com.edu.shop.model.dto.CustomerDto;
+import com.edu.shop.repository.UserRespository;
 
 import org.springframework.http.HttpHeaders;
 
 import com.edu.shop.service.CustomerService;
 import com.edu.shop.service.StorageService;
+import com.edu.shop.service.UserService;
+
 import io.micrometer.common.util.StringUtils;
 
 @RestController
@@ -48,10 +53,16 @@ public class CustomerRestController {
 	CustomerService customerService;
 	@Autowired
 	StorageService storageService;
-
+	
+	@Autowired
+	UserService userService;
+	
+	
+	@Autowired
+     UserRespository userRespository;
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Customer> updateCategory(@PathVariable Integer id, @RequestBody CustomerDto customerDto) {
+	public ResponseEntity<Customer> updateCustomer(@PathVariable Integer id, @RequestBody CustomerDto customerDto) {
 		if (customerService.existsById(id)) {
 			customerDto.setCustomerId(id);
 			Customer entity = new Customer();
@@ -98,29 +109,40 @@ public class CustomerRestController {
 	   @DeleteMapping("/{customerId}")
 	    public ResponseEntity<String> delete(@PathVariable("customerId") Integer customerId) throws IOException {
 	        Optional<Customer> opt = customerService.findById(customerId);
+    	    Optional<User> user =userRespository.findByEmail(opt.get().getEmail());
 	        System.out.println("THÔNG TIN : "+opt.get());
 	        if (opt.isPresent()) {
 	            if (!StringUtils.isEmpty(opt.get().getImage())) {
 	                storageService.delete(opt.get().getImage());
 	            }
+	            userRespository.delete(user.get());
 	            customerService.delete(opt.get());
 	            return ResponseEntity.ok("Customer delete successful");
 	        } else {
 	            return ResponseEntity.ok("Customer not found");
 	        }
 	    }
-	   
 
 	   @PostMapping("/save-customer")
 	    public ResponseEntity<Integer> saveCustomer(@Validated @RequestBody CustomerDto dto) {
+		   User user = new User();
+		   user.setEmail(dto.getEmail());
+		   user.setPassword(dto.getPassword());
+		   User userSave =userService.saveUser(user);
+		   userService.addToUser(userSave.getEmail(), "ROLE_USER");
 	        // Save customer information
 			Customer entity = new Customer();
 			BeanUtils.copyProperties(dto, entity);
 			Date currentDate = new Date();
 			entity.setRegisteredDate(currentDate);
+			entity.setUser(userSave);
+			short status =0;
+			entity.setStatus(status);
 	        Customer savedCustomer = customerService.save(entity);
 	        return ResponseEntity.ok(savedCustomer.getCustomerId()); // Return the customer ID
 	    }
+	   
+	   
 
 	    @PostMapping("/upload-image")
 	    public ResponseEntity<String> uploadImage(
@@ -129,16 +151,22 @@ public class CustomerRestController {
              customerService.uploadImage(customerId, imageFile);
 	        return ResponseEntity.ok("Image uploaded successfully");
 	    }
-	    
 	    @GetMapping("/{filename:.+}")
 	    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+	        // Check if filename is not null or empty
+	        if (filename == null || filename.trim().isEmpty()) {
+	            return ResponseEntity.badRequest().build();
+	        }
+
 	        // Gọi service để load file và trả về dưới dạng Resource
 	        Resource file = storageService.loadAsResource(filename);
+	        
 	        // Trả về response với file đã load
 	        return ResponseEntity.ok()
 	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 	                .body(file);
 	    }
+
 	    @GetMapping
 	    public ResponseEntity<Map<String, Object>> list(
 	            @RequestParam(name = "search", required = false) String search,

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import Checkbox from './Checkbox'; // Import Checkbox component
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
 
 
 
 
-const ShopByLineFilter = ({ title, List ,value}) => {
+const ShopByLineFilter = ({ title, List, value, onCheckboxChange, selectedItems = [] }) => {
   const [isOpen, setIsOpen] = useState(value);
+
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
@@ -29,7 +29,20 @@ const ShopByLineFilter = ({ title, List ,value}) => {
         <div id="filter-categories" className="tab-pane active col-12 pf-5" style={{ maxHeight: '400px', overflow: 'auto', float: 'left', overflowX: 'hidden', width: '100%' }}>
           <div style={{ paddingLeft: '3px' }} className="filter_list">
             {List.map(item => (
-              <Checkbox key={item.id} id={item.id} label={item.title} />
+              <label key={item.categoryId} className="custom-checkbox custom-control">
+                <div className="d-flex">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input mt-1"
+                    id={item.categoryId}
+                    onChange={() => onCheckboxChange(item.categoryId)}
+                    checked={selectedItems.includes(item.categoryId)}
+                  />
+                  <label className="custom-control-label" htmlFor={item.categoryId}>
+                    {item.name}
+                  </label>
+                </div>
+              </label>
             ))}
           </div>
         </div>

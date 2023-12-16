@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.edu.shop.constants.OrderStatus;
 import com.edu.shop.domain.Customer;
 import com.edu.shop.domain.Order;
 
@@ -12,5 +13,5 @@ import com.edu.shop.domain.Order;
 public interface OrderRepostory extends JpaRepository<Order, Integer> {
 
 	List<Order> findByCustomer(Customer customer);
-
+	List<Order> findByStatus(OrderStatus status);
 }

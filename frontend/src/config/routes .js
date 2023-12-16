@@ -5,11 +5,14 @@ const routes = {
     Register:'/account/register',
     Cart:'/products/cart',
     Post:'/blogs/news',
-    Post_details:'/blogs/details',
+    Post_details:'/blogs/details/:postId',
     Contact:'/contact',
     Checkout:'/checkouts',
     GetProduct:'/products/details/:productId',
-    Profile: '/profile'
+    Profile: '/profile',
+    CompleteOrder: '/complete-order/:orderId',
+    PaymentSuccessful: '/payment-successful'
+
 
 };
 export default routes;

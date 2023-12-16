@@ -3,6 +3,7 @@ package com.edu.shop.domain;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.edu.shop.constants.VoucherStatus;
 import com.edu.shop.constants.VoucherType;
 
 import jakarta.persistence.Column;
@@ -18,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,10 +51,26 @@ public class Voucher implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private LocalDate endTime;
 	
+	@Enumerated(EnumType.STRING)
+	private VoucherStatus status;
+	
 	@Column(columnDefinition = "TEXT")
 	private String Desciption;
 	
 	@Column(nullable = true)
 	private Integer usageLimit;
+	
+	
+	   @Transient
+	    private boolean checkedAndExpired = false;
+
+	    public void checkAndExpire() {
+	        if (!checkedAndExpired && status == VoucherStatus.ACTIVE && endTime.isBefore(LocalDate.now())) {
+	            // Nếu trạng thái là ACTIVE và thời gian kết thúc trước thời điểm hiện tại
+	            // Cập nhật trạng thái thành EXPIRED
+	            status = VoucherStatus.EXPIRED;
+	            checkedAndExpired = true;
+	        }
+	    }
 
 }

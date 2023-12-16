@@ -1,9 +1,6 @@
 package com.edu.shop.model.dto;
 
 import java.util.Date;
-
-import com.edu.shop.domain.Customer;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCommentDto {
+
 	private Integer commentId;
+
 	private String detail;
-	private Boolean status;
-	private String images;
+
+	private Integer starRating;
+
 	private Date createDate;
+
 	private Date updatedDate;
-	private Customer customer;
+
+	private Integer customerId;
+
+	private Integer productId;
 }

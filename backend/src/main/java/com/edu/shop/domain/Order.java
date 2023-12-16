@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.edu.shop.constants.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
@@ -27,12 +30,14 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode(exclude = "payment")
 @Table(name = "orders")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
 public class Order implements Serializable {
@@ -49,11 +54,16 @@ public class Order implements Serializable {
 	@Column(columnDefinition = "nvarchar(100) not null")
 	private String note;
 
+	@Column(columnDefinition = "nvarchar(400) null")
+	private String reason;
+	
 	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
 	private OrderStatus status;
 	
 	@ManyToOne
 	@JoinColumn(name = "customerId")
+	@JsonManagedReference
 	private Customer customer;
 	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
@@ -61,6 +71,7 @@ public class Order implements Serializable {
 	
 	@OneToOne
 	@JoinColumn(name = "addressId")
+	@JsonManagedReference
 	private Address address;
 	
 	@OneToOne
@@ -68,6 +79,7 @@ public class Order implements Serializable {
 	private Voucher voucher;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
 	private List<OrderDetail> orderDetails;
 
 }
