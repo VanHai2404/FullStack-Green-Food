@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.edu.shop.constants.PostStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -62,10 +63,10 @@ public class Post implements Serializable {
     @Column
     private Integer dislikeCount;
 
-	@ManyToOne
-	@JoinColumn(name = "accountId")
-	@JsonManagedReference
-	private Account account;
+    @ManyToOne
+    @JoinColumn(name = "accountId")
+    @JsonManagedReference
+    private Account account;
 	
 	@ManyToOne
 	@JoinColumn(name = "tag_id")
@@ -75,5 +76,12 @@ public class Post implements Serializable {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<PostComment> postComments;
+	
+	
+	
+	@JsonIgnore
+	public Account getAccount() {
+		return account;
+	}
 
 }

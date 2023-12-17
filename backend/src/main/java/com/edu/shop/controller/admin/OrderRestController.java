@@ -53,10 +53,11 @@ public class OrderRestController {
     
     
     @GetMapping("")
-    public ResponseEntity<List<Order>> getOrderId() {
+    public ResponseEntity<List<Order>> findAll() {
         List<Order> orders = orderService.findAll();
         return ResponseEntity.ok(orders);
     }
+
     
     @GetMapping("/status") // lấy hóa đơn theo 2 trang thái
     public ResponseEntity<List<Order>> getOrderStatus() {

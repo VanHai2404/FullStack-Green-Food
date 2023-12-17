@@ -184,7 +184,7 @@ const MenuHeaderComponent = () => {
                                 <li className="nav-item dropdown">
                                     <Dropdown overlay={ABOUT} placement="bottomLeft">
                                         <a className="nav-link" style={{ color: '#4d4d4d' }}>
-                                        VỀ CHUNG TÔI<AiOutlineDown className='fa-caret-down' />
+                                         CHÚNG TÔI<AiOutlineDown className='fa-caret-down' />
                                         </a>
                                     </Dropdown>
                                 </li>

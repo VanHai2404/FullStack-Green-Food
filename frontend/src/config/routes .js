@@ -2,6 +2,8 @@ const routes = {
     home: '/',
     products_list:'/products/products-listing',
     Login:'/account/login',
+    Verify:'/account/verify',
+    Information:'/account/information',
     Register:'/account/register',
     Cart:'/products/cart',
     Post:'/blogs/news',
@@ -11,7 +13,7 @@ const routes = {
     GetProduct:'/products/details/:productId',
     Profile: '/profile',
     CompleteOrder: '/complete-order/:orderId',
-    PaymentSuccessful: '/payment-successful'
+    PaymentSuccessful: '/payment-successful/:orderId'
 
 
 };

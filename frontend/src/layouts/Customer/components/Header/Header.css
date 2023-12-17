@@ -295,3 +295,34 @@ header {
     font-size: 12px;
     /* Kích thước chữ khi hover */
   }
+/* Trong file CSS của bạn hoặc sử dụng styled-components */
+.ant-select-item-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.search-option img {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.search-option span {
+  font-size: 16px;
+}
+/* Trong file CSS của bạn hoặc sử dụng styled-components */
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+/* Đặt CSS để ẩn icon tìm kiếm trong Input.Search */
+.ant-input-search-button {
+  display: none;
+}
+

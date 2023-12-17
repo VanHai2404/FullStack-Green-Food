@@ -1,7 +1,7 @@
 package com.edu.shop.constants;
 
 public enum ProductUnit {
-	GOI("Gói"), KG("KG"), CAI("Cái");
+	HOP("hộp"),GOI("Gói"), KG("KG"), CAI("Cái");
 
 	private String displayName;
 

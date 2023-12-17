@@ -71,7 +71,7 @@ const CheckoutPage = () => {
 
     if (shippingFee !== 1) {
       console.log("dbewuvfue8wvcbu sfrgc ftgyevhbgiuvng6rnywyvu ")
-      const updatedTotalAmount = totalAmount - shippingFee;
+      const updatedTotalAmount = totalAmount + shippingFee;
       setTotalAmountAll(updatedTotalAmount);
     } else {
       setTotalAmountAll(totalAmount);
@@ -98,7 +98,7 @@ const CheckoutPage = () => {
                     </a>
                     <ul className="breadcrumb">
                       <li className="breadcrumb-item">
-                        <a >Giỏ hàng</a>
+                        <a href="/products/order">Giỏ hàng</a>
                       </li>
                       <li className="breadcrumb-item breadcrumb-item-current">
                         Thông tin giao hàng
@@ -246,7 +246,7 @@ const CheckoutPage = () => {
                           </div>
                         </div>
 
-                        <div
+                        {/* <div
                           className="order-summary-section order-summary-section-redeem redeem-login-section"
                           data-order-summary-section="discount"
                         >
@@ -259,7 +259,7 @@ const CheckoutPage = () => {
                               <a >Đăng nhập</a>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                         <div
                           className="order-summary-section order-summary-section-total-lines payment-lines"
                           style={{ paddingBottom: "8em" }}

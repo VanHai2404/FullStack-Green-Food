@@ -2,6 +2,7 @@ package com.edu.shop.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -50,9 +52,8 @@ public class Address implements Serializable {
 	@JoinColumn(name = "customerId")
 	private Customer customer;
 
-	@OneToOne
-	@JsonIgnore
-	@JoinColumn(name = "orderId")
-	private Order order;
+	  @OneToMany(mappedBy = "address")
+	  @JsonIgnore
+	  private List<Order> orders;
 
 }

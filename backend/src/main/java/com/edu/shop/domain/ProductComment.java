@@ -7,6 +7,7 @@ import java.util.Date;
 import com.edu.shop.constants.CommentStatus;
 import com.edu.shop.constants.PostStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

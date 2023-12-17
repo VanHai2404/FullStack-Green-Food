@@ -69,10 +69,11 @@ public class Order implements Serializable {
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private PayMent payMent;
 	
-	@OneToOne
-	@JoinColumn(name = "addressId")
+	@ManyToOne
+	@JoinColumn(name = "address_id")
 	@JsonManagedReference
 	private Address address;
+	    
 	
 	@OneToOne
 	@JoinColumn(name = "voucher_id")

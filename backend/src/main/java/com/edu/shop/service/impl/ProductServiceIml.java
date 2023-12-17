@@ -1,8 +1,12 @@
 package com.edu.shop.service.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -12,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +49,7 @@ public class ProductServiceIml implements ProductService {
     @Override
 	public void uploadImage(Integer productId, MultipartFile[] imageFiles) {
         Product entity = findById(productId).orElse(null);
+    
         // Chỉ lấy phần tử đầu tiên từ mảng imageFiles (nếu mảng có ít nhất một phần tử)
         if (imageFiles != null && imageFiles.length > 0 && !imageFiles[0].isEmpty()) {
             MultipartFile firstImageFile = imageFiles[0];
@@ -68,6 +74,55 @@ public class ProductServiceIml implements ProductService {
             imageService.save(image);
         }
     }
+    
+//    @Override
+//	public void uploadImage(Integer productId, MultipartFile[] imageFiles) {
+//	    Product entity = findById(productId).orElse(null);
+//
+//	    if (entity == null) {
+//	        // Xử lý khi không tìm thấy sản phẩm
+//	        return;
+//	    }
+//
+//	    // Xóa tất cả các ảnh chi tiết của sản phẩm từ cả CSDL
+//	    List<ProductImage> productImages = new ArrayList<>(entity.getImages());
+//	    productImages.forEach(productImage -> {
+//	        try {
+//	        	imageService.deleteById(productImage.getImageId());
+//	            storageService.delete(productImage.getImageUrl());
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//	    });
+//
+//	    // Nếu không có file ảnh mới, chỉ cần xóa ảnh cũ và ảnh chi tiết là đủ
+//	    if (imageFiles == null || imageFiles.length == 0 || imageFiles[0].isEmpty()) {
+//	        entity.setImage(null);
+//	        entity.setImages(new ArrayList<>());
+//	        save(entity);
+//	        return;
+//	    }
+//	    // Lưu ảnh mới cho sản phẩm
+//	    MultipartFile firstImageFile = imageFiles[0];
+//	    UUID uuid = UUID.randomUUID();
+//	    String uustring = uuid.toString();
+//	    String newImageFilename = storageService.getStoreFilename(firstImageFile, uustring);
+//	    entity.setImage(newImageFilename);
+//	    storageService.store(firstImageFile, newImageFilename);
+//	    save(entity);
+//
+//	    // Lưu list các ảnh chi tiết
+//	    for (MultipartFile imageFile : imageFiles) {
+//	        ProductImage image = new ProductImage();
+//	        UUID imageUuid = UUID.randomUUID();
+//	        String imageUuidString = imageUuid.toString();
+//	        String imageUrl = storageService.getStoreFilename(imageFile, imageUuidString);
+//	        image.setImageUrl(imageUrl);
+//	        storageService.store(imageFile, imageUrl);
+//	        image.setProduct(entity);
+//	        imageService.save(image);
+//	    }
+//	}
 
     @Override
     public <S extends Product> S save(S entity) {

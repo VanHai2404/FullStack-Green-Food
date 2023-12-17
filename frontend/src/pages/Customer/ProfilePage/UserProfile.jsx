@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './UserProfile.css';
 import Anh1 from '../../../assets/images/products/SP1.jpeg';
 import InvoiceTable from '../../../components/Table/InvoiceTable';
@@ -11,6 +11,22 @@ const UserProfile = () => {
   
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
+    const [customer,setCustomer] =useState('');
+
+
+
+
+
+
+
+    useEffect(() => {
+        const storedUserData = localStorage.getItem("customer");
+    
+        if (storedUserData) {
+          const parsedUserData = JSON.parse(storedUserData);    
+          setCustomer(parsedUserData);
+        }
+      }, []);
 
 
     const [activeTab, setActiveTab] = useState('profile');
@@ -203,24 +219,20 @@ const UserProfile = () => {
                                             <h5>Ngày đăng kí :</h5><span>12/03/23 01:55 pm</span>
                                         </li>
                                         <li>
-                                            <h5>Họ và tên :</h5><span className="text-capitalize">Trần Hoàng Vũ</span>
+                                            <h5>Họ và tên :</h5><span className="text-capitalize">{customer.fullname}</span>
                                         </li>
                                         <li>
-                                            <h5>Email :</h5><span> vuthpd06907@fpt.edu.vn </span>
+                                            <h5>Email :</h5><span> {customer.email}</span>
                                         </li>
                                         <li>
-                                            <h5>Điện thoại :</h5><span> 0375608917 </span>
+                                            <h5>Điện thoại :</h5><span> {customer.phone} </span>
                                         </li>
                                         <li>
-                                            <h5>Giới tính :</h5><span>Nam giới</span>
+                                            <h5>Giới tính :</h5><span><span>{customer.gender === 'Male' ? 'Con Trai' : 'Con Gái'}</span></span>
                                         </li>
                                         <li>
                                             <h5>Tiểu sử :</h5><span>
-                                                Trần Hoàng Vũ đang kết thúc năm đầu tiên tại Đại học DePaul, nơi cô quan
-                                                tâm đến kinh doanh. Mặc dù vẫn chưa chọn chuyên ngành nhưng cô ấy đang cân
-                                                nhắc về tài chính hoặc tiếp thị. Sau khi chứng kiến ​​cha mẹ điều hành một
-                                                nhà hàng trong nhiều năm, khi còn rất trẻ, cô đã biết rằng mình cũng muốn
-                                                kinh doanh.</span>
+                                                </span>
                                         </li>
                                     </ul>
                                 </div>

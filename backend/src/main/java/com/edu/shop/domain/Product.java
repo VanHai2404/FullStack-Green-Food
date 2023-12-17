@@ -53,7 +53,7 @@ public class Product implements Serializable {
 	private Double importPrice;
 	@Column(length = 200)
 	private String image;
-	@Column(columnDefinition = "nvarchar(max) not null")
+	@Column(columnDefinition = "nvarchar(max) null")
 	private String description;	
 	@Column(nullable = true)
 	private Double discount;	
@@ -110,9 +110,12 @@ public class Product implements Serializable {
 	
 
 	
+
+    
+    @ToString.Exclude
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	@JsonBackReference
-	private List<ProductComment> comments;
+    private List<ProductComment> comments;
+
     
     
     @JsonIgnore

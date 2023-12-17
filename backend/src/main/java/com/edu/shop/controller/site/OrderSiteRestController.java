@@ -59,16 +59,6 @@ public class OrderSiteRestController {
 
 		System.out.println("HOA DON---" + orderRequest.getInvoiceRequest());
 		CartItemsRequest[] cartItems = orderRequest.getCartItemsRequest();
-		if (cartItems != null) {
-
-			for (CartItemsRequest cartItemsRequest2 : cartItems) {
-				System.out.println("GIỎ HÀNG --" + cartItemsRequest2);
-			}
-
-		} else {
-			System.out.println("CART NULLL---");
-		}
-
 		Order ordersave;
 		String redirectUrl = "";
 
@@ -78,13 +68,15 @@ public class OrderSiteRestController {
 			PayMent ment = ordersave.getPayMent();
 			Optional<PayMent> ment2 = mentService.findById(ment.getPaymentId());
 			ment2.get().setPaymentStatus(PaymentStatus.UNPAID);
+			ment2.get().setOrder(ordersave);
 			mentService.save(ment2.get());
 			// Trả về ID của hóa đơn
 			return ResponseEntity.ok().body(Map.of("id", ordersave.getOrderId()));
 		} else if (orderRequest.getInvoiceRequest().getPayMentMethod() == 2) {
 			// Xử lý khi sử dụng phương thức thanh toán qua VNPay
-			redirectUrl = vnPayService.createPayment(orderRequest.getInvoiceRequest().getAmont(), request);
 			ordersave = orderService.createOrder(orderRequest.getCartItemsRequest(), orderRequest.getInvoiceRequest());
+			Integer orderId =ordersave.getOrderId();
+			redirectUrl = vnPayService.createPayment(orderRequest.getInvoiceRequest().getAmont(),orderId, request);
 			PayMent ment = ordersave.getPayMent();
 			Optional<PayMent> ment2 = mentService.findById(ment.getPaymentId());
 			ment2.get().setPaymentStatus(PaymentStatus.PAID);

@@ -26,8 +26,25 @@ class AuthService {
     }
 
   
-    register(user){
-        return axios.post(AUTH_URL + "signup", user);
+    register(values){
+        return axios.post('http://localhost:8080/api/user/register', values);
+    }
+
+    senEmail(email){
+        try {
+            if (!email) {
+                // Xử lý khi không có email trong phản hồi
+                console.error('Không có email trong phản hồi getCurrentUser().');
+                return null;
+            }
+            const url = `http://localhost:8080/api/user/send/${email}`;
+            return axios.get(url);
+        } catch (error) {
+            console.error('Lỗi khi gọi API để lấy thông tin người dùng đăng nhập.', error);
+            throw error; 
+        }
+
+
     }
 
     getUserLogin() {

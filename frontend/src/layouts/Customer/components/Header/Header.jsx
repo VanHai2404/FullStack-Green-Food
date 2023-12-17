@@ -3,18 +3,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/images/Logo/LOGO.jpg';
-import searchIcon from '../../../../assets/images/Logo/searchIcon.png';
 import config from '../../../../config';
 import { BsTelephoneFill } from 'react-icons/bs';
 import { FaRegHeart, FaRegUser, FaShoppingBasket, FaShoppingCart } from 'react-icons/fa';
 import { RiAccountCircleFill, RiLoginCircleLine } from 'react-icons/ri';
-import { AutoComplete, Input, Select } from 'antd';
+import { AutoComplete, Input, Menu, Select, Dropdown } from 'antd';
 import ProductService from '../../../../services/ProductService';
 import './Header.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../../redux/actions/auth-action';
 import MenuHeaderComponent from '../../../../components/Menu/menuHeader';
-
+import { DownOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -41,8 +40,8 @@ const Header = ({ toggleCart }) => {
     };
     const customerData = JSON.parse(localStorage.getItem('customer'));
     const getUsername = () => {
-        if (customerData && customerData.fullname) {
-            return " user: " + customerData.fullname;
+        if (customerData && customerData.image) {
+            return customerData.image;
         }
         return "";
     };
@@ -68,7 +67,7 @@ const Header = ({ toggleCart }) => {
         };
     }, [isAppHeaderVisible]);
 
-    const handlelogout = () => {
+    const handleLogout = () => {
         dispatch(logout(navigate));
 
     };
@@ -84,29 +83,93 @@ const Header = ({ toggleCart }) => {
     const dropdownClasses = `dropdown-menu dropdown-menu-end dropdown-menu-arrow profile${isDropdownOpen ? '-open' : ''}`;
 
     const [options, setOptions] = useState([]);
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [autoCompleteVisible, setAutoCompleteVisible] = useState(false);
 
     const handleSearch = async (value) => {
         try {
-            const response = await ProductService.finby(value); // Sử dụng hàm finby từ axiosUser
-            console.log(response.data)
-            setOptions(response.data); // Gán dữ liệu từ API vào state options
+            if (value.length >= 1) {
+                const response = await ProductService.finby(value);
+                setOptions(response.data.map(option => ({
+                    value: option.name,
+                    label: (
+                        <div className="search-option" style={{ alignItems: 'center', padding: '10px', borderBottom: '1px solid #ddd', transition: 'background 0.3s' }}>
+                            <img src={`http://localhost:8080/api/home/image/${option.image}`} alt={option.name} style={{ width: '30px', height: '30px', objectFit: 'cover', borderRadius: '50%', marginRight: '10px' }} />
+                            <span style={{ marginRight: '10px' }}>{option.name}</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+                                <span style={{ marginLeft: '40px', fontSize: '13px', color: '#808080' }}>Nhà sản xuất :  {option.supplier.nation}</span>
+                                <span style={{ marginLeft: '40px', fontSize: '16px' }}>Giá {option.salePrice}</span>
+                            </div>
+                        </div>
+                    ),
+                    product: option,
+                })));
+            } else {
+                setOptions([]);
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
     const onSelect = (value, option) => {
-        // Xử lý khi một option được chọn
-        console.log('onSelect', value, option);
-        setSelectedProduct(option);
+        setSelectedOption(option);
+        navigate(`/products/details/${option.product.productId}`);
     };
 
+    const handleBlur = () => {
+        // Khi AutoComplete mất focus, kiểm tra nếu một option đã được chọn thì chuyển đến trang
+        if (selectedOption) {
+            navigate(`/products/details/${selectedOption.product.productId}`);
+        }
+        // Đặt lại trạng thái của AutoComplete
+        setAutoCompleteVisible(false);
+    };
+    const menu = (
+        <Menu>
+            {isLoggedIn ? (
+                <>
+                    <Menu.Item>
+                        <Link to={config.routes.Profile}>
+                            <a className="dropdown-profile d-flex align-items-center">
+                                <FaShoppingCart style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                <span> My Orders</span>
+                            </a>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Link to={config.routes.Profile}>
+                            <a className="dropdown-profile d-flex align-items-center">
+                                <RiAccountCircleFill style={{ paddingRight: '5px', fontSize: '18px' }} />
+                                <span>My Account</span>
+                            </a>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <a className="dropdown-profile d-flex align-items-center" onClick={handleLogout}>
+                            <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
+                            <span>Đăng xuất</span>
+                        </a>
+                    </Menu.Item>
+                </>
+            ) : (
+                <Menu.Item>
+                    <Link to={config.routes.Login}>
+                        <a className="dropdown-profile d-flex align-items-center">
+                            <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
+                            <span>Đăng nhập</span>
+                        </a>
+                    </Link>
+                </Menu.Item>
+            )}
+        </Menu>
+    );
     return (
         <header>
             {isAppHeaderVisible && (
                 <div className="app-header">
                     <div className="content-header row">
+
                         <div className="col-lg-2 col-md-2 col-sm-3">
                             <div className="logo_sec">
 
@@ -119,33 +182,32 @@ const Header = ({ toggleCart }) => {
                             <div className="d-flex">
                                 <div className="col-lg-6 col-md-6 col-sm-6 px-3">
                                     <div className="search_sec">
-                                        <div className="autocomplete-container">
-                                            <div className="input-container">
-                                                <AutoComplete
-                                                    style={{ width: '100%' }}
-                                                    onSearch={handleSearch}
-                                                    onSelect={onSelect}
-                                                    optionLabelProp="label"
-                                                >
-                                                    <Input.Search placeholder="Search" enterButton />
-                                                    <Select> 
-                                                    {options.map((option) => (
-                                                        
-                                                        <Option key={option.productId} value={option.name} label={option.name}>
-                                                            <div className="search-option">
-                                                                <img src={option.image} alt={option.name} />
-                                                                <span>{option.name}</span>
-                                                            </div>
-                                                        </Option>
-                                                        
-                                                    ))}
-                                                    </Select>
-                                                </AutoComplete>
-                                                <div className="x">
-                                                    <img src={searchIcon} alt="search icon" style={{ width: '20px', paddingBottom: '10px' }} />
+
+                                        <AutoComplete
+                                            popupMatchSelectWidth="100%"
+                                            className="autocomplete-container"
+                                            options={options}
+                                            onSelect={onSelect}
+                                            onSearch={handleSearch}
+                                            size="large"
+                                            notFoundContent={
+                                                <div style={{ textAlign: 'center', padding: '8px' }}>
+                                                    Không tìm thấy kết quả
                                                 </div>
+                                            }
+                                            onBlur={handleBlur}
+                                            dropdownVisible={autoCompleteVisible}
+                                            onDropdownVisibleChange={(visible) => setAutoCompleteVisible(visible)}
+                                        >
+                                            <div className="input-container">
+                                                <Input.Search
+                                                    size="large"
+                                                    placeholder="Tìm sản phẩm"
+                                                    enterButton
+                                                />
                                             </div>
-                                        </div>
+                                        </AutoComplete>
+
                                     </div>
                                 </div>
                                 <div className="col-md-2 px-3">
@@ -176,45 +238,12 @@ const Header = ({ toggleCart }) => {
                                             <p style={{ color: 'rgb(68, 68, 68)', fontSize: '15px', fontFamily: 'Tajawal', fontWeight: 700 }}></p>
                                         </div>
                                         <div className="t5-icons text-center nav-item dropdown">
-                                            <FaRegUser aria-expanded={isDropdownOpen} onClick={handleDropdownToggle} />
-                                            <ul className={dropdownClasses}>
-                                                {isLoggedIn ? (
-                                                    <>
-                                                        <li>
-                                                            <a className="dropdown-profile d-flex align-items-center" href="users-profile.html">
-                                                                <FaShoppingCart style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                                <span> My Orders</span>
-                                                            </a>
-                                                        </li>
-                                                        <Link to={config.routes.Profile}>
-                                                            <li>
-                                                                <a className="dropdown-profile d-flex align-items-center" href="login.html">
-                                                                    <RiAccountCircleFill style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                                    <span>My Account</span>
-                                                                </a>
-                                                            </li>
-                                                        </Link>
+                                            <Dropdown overlay={menu} placement="bottomRight" arrow>
+                                                <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                                                    <FaRegUser />
 
-                                                        <li>
-                                                            <a className="dropdown-profile d-flex align-items-center" onClick={handlelogout}>
-                                                                <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                                <span>Đăng xuất</span>
-                                                            </a>
-                                                        </li>
-
-                                                    </>
-                                                ) : (
-                                                    // Render login link if not logged in
-                                                    <Link to={config.routes.Login}>
-                                                        <li>
-                                                            <a className="dropdown-profile d-flex align-items-center" >
-                                                                <RiLoginCircleLine style={{ paddingRight: '5px', fontSize: '18px' }} />
-                                                                <span>Đăng nhập</span>
-                                                            </a>
-                                                        </li>
-                                                    </Link>
-                                                )}
-                                            </ul>
+                                                </a>
+                                            </Dropdown>
                                         </div>
                                         <div className="t5-icons text-center">
                                             <FaShoppingBasket id="cart-icon" onClick={toggleCart} />
@@ -227,7 +256,16 @@ const Header = ({ toggleCart }) => {
                                     </div>
                                 </div>
                                 <div className="col-md-2 px-3 pt-3">
-                                    {username}
+                                    {username && (
+                                        <div style={{ height: '40px', width: '40px' }}>
+                                            <img
+                                                style={{ height: '40px', width: '40px', borderRadius: '8px' }}
+                                                src={`http://localhost:8080/api/home/image/${username}`}
+                                                alt=""
+                                            />
+                                        </div>
+                                    )}
+
                                 </div>
                             </div>
                         </div>
@@ -238,6 +276,7 @@ const Header = ({ toggleCart }) => {
             <div className="container-full header-full">
                 {/*  */}
                 <MenuHeaderComponent />
+
             </div>
         </header>
     );

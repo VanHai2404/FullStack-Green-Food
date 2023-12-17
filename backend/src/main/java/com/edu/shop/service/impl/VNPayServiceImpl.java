@@ -17,12 +17,13 @@ import java.util.*;
 public class VNPayServiceImpl implements VNPayService {
 
     @Override
-    public String createPayment(Double amount, HttpServletRequest req) throws UnsupportedEncodingException {
+    public String createPayment(Double amount,Integer orderId, HttpServletRequest req) throws UnsupportedEncodingException {
 
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         String vnp_IpAddr = VNPayConfig.getIpAddress(req);
-
+        String vnp_ReturnUrl = "http://localhost:3001/payment-successful/"+orderId;
         amount = amount * 100;
+        
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", VNPayConfig.vnp_Version);
@@ -36,7 +37,7 @@ public class VNPayServiceImpl implements VNPayService {
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_OrderType", "billpayment01");
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

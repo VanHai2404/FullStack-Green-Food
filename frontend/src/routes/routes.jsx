@@ -17,6 +17,8 @@ import ProductDetail from '../pages/Customer/ProductDetailPage/ProductDetai';
 import UserProfile from '../pages/Customer/ProfilePage/UserProfile';
 import CompleteOrder from '../components/Order/complete-order';
 import PaymentSuccess from '../components/Order/Payment-Success';
+import Verify from '../pages/Customer/RegisterPage/Verify';
+import Information from '../pages/Customer/RegisterPage/Information';
 
 
 // Public routes
@@ -24,16 +26,19 @@ const publicRoutes = [
     { path: config.routes.home, component: Home },
     { path: config.routes.products_list, component: Products_Listing },
     { path: config.routes.Login,component:Login},
+    { path: config.routes.Verify,component:Verify},
     { path: config.routes.Register,component:Register},
-    { path: config.routes.Cart,component:CartPage},
+    { path: config.routes.Verify,component:Verify},
+    { path: config.routes.Information,component:Information},
     { path: config.routes.Post,component:Post},
     { path: config.routes.Post_details,component:PostDetail},
     { path: config.routes.Contact,component:ContactPage},
+    { path: config.routes.Cart,component:CartPage},
     { path: config.routes.Checkout,component:CheckoutPage ,layout: null},
     { path: config.routes.GetProduct,component:ProductDetail},
     { path: config.routes.Profile,component:UserProfile},
     { path: config.routes.CompleteOrder,component:CompleteOrder},
-    { path: config.routes.PaymentSuccessful,component:PaymentSuccess,layout: null}
+    { path: config.routes.PaymentSuccessful,component:PaymentSuccess}
 
 ];
 

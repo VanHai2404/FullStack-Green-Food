@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +20,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.edu.shop.domain.Address;
 import com.edu.shop.domain.Customer;
+import com.edu.shop.domain.User;
 import com.edu.shop.model.dto.AddressDTO;
 import com.edu.shop.model.dto.CustomerDto;
+import com.edu.shop.model.request.CustomerRequest;
+import com.edu.shop.repository.UserRespository;
 import com.edu.shop.service.AddressService;
 import com.edu.shop.service.CustomerService;
+import com.edu.shop.service.UserService;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -35,7 +41,12 @@ public class ProfileRestController {
 	AddressService addressService;
 
 	@Autowired
+	UserRespository userRespository;
+
+	@Autowired
 	CustomerService customerService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@GetMapping("/address/{customerId}")
 	public List<Address> getAddressCustomer(@PathVariable Integer customerId) {
@@ -47,13 +58,14 @@ public class ProfileRestController {
 	}
 
 	@PostMapping("/address")
-	public ResponseEntity<String> addAddress(@RequestParam("customerId") Integer customerId,@RequestBody AddressDTO dto) {
-		System.out.println("ID KHÁCH HÀNG "+customerId);
-	 Optional<Customer> customer = customerService.findById(customerId);
+	public ResponseEntity<String> addAddress(@RequestParam("customerId") Integer customerId,
+			@RequestBody AddressDTO dto) {
+		System.out.println("ID KHÁCH HÀNG " + customerId);
+		Optional<Customer> customer = customerService.findById(customerId);
 		if (dto == null || dto.getStreetNumber() == null || dto.getCity() == null) {
 			return new ResponseEntity<>("Invalid address data", HttpStatus.BAD_REQUEST);
 		}
-		if(customer.get()==null) {
+		if (customer.get() == null) {
 			return new ResponseEntity<>("Invalid Cusstomer data", HttpStatus.BAD_REQUEST);
 		}
 		Address address = new Address();
@@ -99,16 +111,24 @@ public class ProfileRestController {
 	}
 
 	@PutMapping("/customer/{id}")
-	public ResponseEntity<Customer> updateCategory(@PathVariable Integer id, @RequestBody CustomerDto customerDto) {
-		if (customerService.existsById(id)) {
-			customerDto.setCustomerId(id);
-			Customer entity = new Customer();
-			BeanUtils.copyProperties(customerDto, entity);
-			Customer updated = customerService.save(entity);
-			return ResponseEntity.ok(updated);
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+	public ResponseEntity<Customer> update(@PathVariable Integer id,
+			@RequestBody CustomerRequest customerRequest) {
+		Customer entityToUpdate = customerService.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		BeanUtils.copyProperties(customerRequest, entityToUpdate);
+		Customer updated = customerService.save(entityToUpdate);
+		return ResponseEntity.ok(updated);
+	}
+
+	@PutMapping("/ChangePassword/{email}")
+	public ResponseEntity<User> changePassword(@PathVariable String email,
+			@RequestParam("newPassword") String newPassword) {
+		User entityToUpdate = userRespository.findByEmail(email)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		entityToUpdate.setPassword(passwordEncoder.encode(newPassword));
+
+		User updated = userRespository.save(entityToUpdate);
+		return ResponseEntity.ok(updated);
 	}
 
 	@PostMapping("/upload-image")
@@ -117,9 +137,5 @@ public class ProfileRestController {
 		customerService.uploadImage(customerId, imageFile);
 		return ResponseEntity.ok("Image uploaded successfully");
 	}
-	
-	
-	
-	
 
 }

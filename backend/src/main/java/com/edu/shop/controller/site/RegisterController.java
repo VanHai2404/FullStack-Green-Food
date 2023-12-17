@@ -1,6 +1,7 @@
 package com.edu.shop.controller.site;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.shop.auth.UserRegistrationRequest;
 import com.edu.shop.domain.Customer;
 import com.edu.shop.domain.User;
+import com.edu.shop.repository.UserRespository;
 import com.edu.shop.service.CustomerService;
 import com.edu.shop.service.UserService;
 
@@ -30,6 +32,8 @@ public class RegisterController {
 	
 	@Autowired
 	UserService userService;
+	@Autowired
+	UserRespository respository;
 	
 	
 	
@@ -77,19 +81,29 @@ public class RegisterController {
 	    }
 	}
 
+	@GetMapping("/send/{email}")
+	public ResponseEntity<String> sendEmail(@PathVariable String email) {
+	    Optional<User> user = respository.findByEmail(email);
+	    
+	    if (user.isPresent()) {
+	        System.out.println("EMAIL ĐÃ TON TẠI");
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body("Email đã tồn tại");
 	
-	   @GetMapping("/send/{email}")
-	    public ResponseEntity<String> sendEmail(@PathVariable String email) {
+	    } else {
 	        try {
-	        	VerificationCode  =  userService.sendVerificationEmail(email);
+	            System.out.println("EMAIL ĐÃ GỬI");
+	            String verificationCode = userService.sendVerificationEmail(email);
+	            VerificationCode=verificationCode;
 	            return ResponseEntity.ok("Mã xác nhận đã gửi về email bạn");
 	        } catch (IllegalArgumentException e) {
 	            e.printStackTrace();
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                                 .body("Invalid verification code");
+	                    .body("Invalid verification code");
 	        }
 	    }
-	
+	}
+
 	
 	
 	

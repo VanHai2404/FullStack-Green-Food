@@ -37,14 +37,12 @@ const cartReducer = (state = initialState, action) => {
         ),
       };
       case INCREASE_QUANTITY:
-        toast.success('Tăng Số Lương thành công ', { position: toast.POSITION.TOP_LEFT });
         return {
             ...state,
             items: action.payload.items,
         };
   
       case DECREASE_QUANTITY:
-        toast.success('Giám Số Lương thành công ', { position: toast.POSITION.TOP_LEFT });
         return {
             ...state,
             items: action.payload.items,

@@ -13,7 +13,6 @@ const PaymentMethod = ({ total }) => {
     const cartItems = useSelector((state) => state.cart.items);
     const cartData = useSelector(state => state.order.cartData);
     const addressData = useSelector(state => state.order.addresstData.selectedAddress);
-console.log("TÔNG TIỀN PHẢI TRẢ ",total);
     const customerData = JSON.parse(localStorage.getItem('customer'));
     const [invoiceRequest, setInvoiceRequest] = useState({
         payMentMethod: null,
@@ -46,7 +45,8 @@ console.log("TÔNG TIỀN PHẢI TRẢ ",total);
                 const response = await createOrder(invoiceRequest, cartItems);
                 // Xử lý dữ liệu trả về từ API (response)
                 if (invoiceRequest.payMentMethod === 1) {
-                    navigate(`${config.routes.CompleteOrder}/${response.id}`);
+                    const orderId =response.id;
+                    navigate(`/complete-order/${orderId}`);
                     // Xử lý khi thanh toán tiền mặt
                     console.log('Order ID:', response.id);
                 } else if (invoiceRequest.payMentMethod === 2) {
@@ -60,7 +60,6 @@ console.log("TÔNG TIỀN PHẢI TRẢ ",total);
             }
         } else {
             toast.error('Vui long chọn phường thức thành toán !', { position: toast.POSITION.TOP_RIGHT });
-
         }
     };
     const handlePaymentMethodChange = (paymentMethodId) => {

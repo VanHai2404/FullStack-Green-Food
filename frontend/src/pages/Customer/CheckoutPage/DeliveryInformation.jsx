@@ -308,7 +308,7 @@ const DeliveryInformation = ({ onPayment, updateShippingFee }) => {
           </span>
         </button>
 
-        <a className="step-footer-previous-link" href="#">
+        <a className="step-footer-previous-link" href="/products/order">
           Giỏ hàng
         </a>
       </div>

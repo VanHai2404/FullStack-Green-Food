@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Spin } from 'antd';
 import Anh1 from '../../../assets/images/products/SP1.jpeg';
 import Anh2 from '../../../assets/images/products/SP3.jpeg';
 import Logo from '../../../assets/images/Logo/LogoGiamGia.png';
-import MultipleCarousel from '../../../components/MultipleCarousel/MultipleCarousel'; // Import MultipleCarousel component
+import MultipleCarousel from '../../../components/MultipleCarousel/MultipleCarousel';
 import SliderComponent from '../../../components/Carousel/Carousel';
 import ListCategoryComponent from '../../../components/ListCategory/ListCategory';
 import SectionTopProduct from '../../../components/TopProduct/SectionTopProduct';
@@ -21,36 +21,51 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        await dispatch(fetchProducts());
+      await dispatch(fetchProducts());
     };
     fetchData();
-}, [dispatch]);
+  }, [dispatch]);
 
-if (loading) {
-    return <div>Loading...</div>;
-}
-console.log("CART",cartItems)
+  const topProducts = Listproduct.slice(0, 9);
+  const firstCarouselProducts = Listproduct.slice(0, 6);
+  const secondCarouselProducts = Listproduct.slice(6, 12);
+  const thirdCarouselProducts = Listproduct.slice(12, 18);
 
-    return (
-        <div>
-            <SliderComponent />
-            <CategoryComponent />
-            <LisItemCategory/>
+  console.log("CART", cartItems);
 
-            {/* Multiple Carousel for Trending Products */}
-
-
-            <MultipleCarousel title="" products={Listproduct} />
-            <MultipleCarousel title="" products={Listproduct} />
-            <MultipleCarousel title="" products={Listproduct} />
-            <SectionTopProduct/>
-            <BannerSection/>
-
-
-
-
+  return (
+    <div>
+      {/* Conditionally render the loading spinner */}
+      {loading && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            background: 'rgba(255, 255, 255, 0.8)', // Optional overlay background color
+            zIndex: 9999, // Optional z-index to ensure the spinner appears above other content
+          }}
+        >
+          <Spin size="large" />
         </div>
-    )
-}
+      )}
 
-export default Home
+      {/* The rest of your component */}
+      <SliderComponent />
+      <CategoryComponent />
+      <LisItemCategory />
+      <MultipleCarousel products={firstCarouselProducts} />
+      <MultipleCarousel products={secondCarouselProducts} />
+      <MultipleCarousel products={thirdCarouselProducts} />
+      <SectionTopProduct products={topProducts} />
+      <BannerSection />
+    </div>
+  );
+};
+
+export default Home;

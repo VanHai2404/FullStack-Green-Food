@@ -63,10 +63,14 @@ public class CustomerRestController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Customer> updateCustomer(@PathVariable Integer id, @RequestBody CustomerDto customerDto) {
+		Optional<User> user =userRespository.findByEmail(customerDto.getEmail());
 		if (customerService.existsById(id)) {
 			customerDto.setCustomerId(id);
+			System.out.println("KHÁCH HÀNG 1"+customerDto);
 			Customer entity = new Customer();
 			BeanUtils.copyProperties(customerDto, entity);
+			System.out.println("KHÁCH HÀNG"+entity);
+			entity.setUser(user.get());
 			Customer updated = customerService.save(entity);
 			return ResponseEntity.ok(updated);
 		} else {

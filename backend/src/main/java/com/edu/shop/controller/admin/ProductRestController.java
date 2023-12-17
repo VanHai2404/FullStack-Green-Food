@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +45,7 @@ import com.edu.shop.domain.ProductImage;
 import com.edu.shop.domain.Supplier;
 import com.edu.shop.model.dto.CategoryDto;
 import com.edu.shop.model.dto.CustomerDto;
+import com.edu.shop.model.dto.ProducDTO;
 import com.edu.shop.model.dto.ProductDto;
 import com.edu.shop.model.dto.SupplierDto;
 import com.edu.shop.service.AccountService;
@@ -55,6 +57,7 @@ import com.edu.shop.service.SupplierService;
 import io.micrometer.common.util.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RestController
 @RequestMapping("/api/admin/products")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -78,6 +81,7 @@ public class ProductRestController {
 	AccountService accountService;
 	private static final Logger logger = LoggerFactory.getLogger(Product.class);
 	private final ObjectMapper objectMapper = new ObjectMapper();
+
 	@GetMapping("/categories")
 	public ResponseEntity<List<CategoryDto>> getAllCategories() {
 		List<CategoryDto> categoryDtos = categoryService.findAll().stream().map(item -> {
@@ -98,26 +102,27 @@ public class ProductRestController {
 		}).toList();
 		return ResponseEntity.ok(supplierDtos);
 	}
+
 	@GetMapping("list")
 	public ResponseEntity<List<Product>> list() {
-	    try {
-	        logger.info("NGƯỜI DUNG :");
-	        List<Product> products = productService.findAll();
-	        if (products.isEmpty()) {
-	            logger.warn("Empty product list");
-	            return ResponseEntity.notFound().build();
-	        }
-	        String json = objectMapper.writeValueAsString(products);
-	        logger.info("Serialized product list: {}", json);
-	        return ResponseEntity.ok(products);
-	    } catch (JsonProcessingException e) {
-	        logger.error("Error serializing product list", e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	    }
+		try {
+			logger.info("NGƯỜI DUNG :");
+			List<Product> products = productService.findAll();
+			if (products.isEmpty()) {
+				logger.warn("Empty product list");
+				return ResponseEntity.notFound().build();
+			}
+			String json = objectMapper.writeValueAsString(products);
+			logger.info("Serialized product list: {}", json);
+			return ResponseEntity.ok(products);
+		} catch (JsonProcessingException e) {
+			logger.error("Error serializing product list", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
-	
+
 	@GetMapping("/{productId}")
-	public ResponseEntity<Product> getProductById(@PathVariable("productId")Integer productId) {
+	public ResponseEntity<Product> getProductById(@PathVariable("productId") Integer productId) {
 		Optional<Product> opt = productService.findById(productId);
 		if (opt.isPresent()) {
 			Product entity = opt.get();
@@ -164,7 +169,7 @@ public class ProductRestController {
 			Date currentDate = new Date();
 			entity.setEnterdDate(currentDate);
 			entity.setUpdateDate(currentDate);
-			System.out.println("SẢN PHẨM SẼ LƯU"+entity);
+			System.out.println("SẢN PHẨM SẼ LƯU" + entity);
 
 			Product productSave = productService.save(entity);
 			return ResponseEntity.ok(productSave.getProductId());
@@ -191,15 +196,12 @@ public class ProductRestController {
 		return ResponseEntity.ok("Image uploaded successfully");
 	}
 
-	@DeleteMapping("/{Id}")
+	@DeleteMapping("/{productId}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) throws IOException {
 		Optional<Product> opt = productService.findById(productId);
 
 		if (opt.isPresent()) {
-			if (!StringUtils.isEmpty(opt.get().getImage())) {
-				storageService.delete(opt.get().getImage());
-				System.out.println("đã xóa Imge -----------" + opt.get().getImage());
-			}
+
 			List<ProductImage> images = imageService.findAll();
 			Set<ProductImage> imagesl = new HashSet<>();
 
@@ -215,15 +217,15 @@ public class ProductRestController {
 			if (!imagesl.isEmpty()) {
 
 				for (ProductImage image : imagesl) {
+					imageService.deleteById(image.getImageId());
 					storageService.delete(image.getImageUrl());
 					System.out.println("đã xóa Imges -----------" + image.getImageUrl());
 					System.out.println("ID IMG" + image.getImageId());
-					imageService.deleteById(image.getImageId());
+
 				}
 			}
-
 			productService.delete(opt.get());
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.ok().build();
 		} else {
 			return ResponseEntity.notFound().build();
 
@@ -232,24 +234,62 @@ public class ProductRestController {
 
 	@GetMapping
 	public ResponseEntity<List<Product>> listAll() {
-	    try {
-	        List<Product> productList = productService.findAll();
-	        return new ResponseEntity<>(productList, HttpStatus.OK);
-	    } catch (Exception e) {
-	        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
+		try {
+			List<Product> productList = productService.findAll();
+			return new ResponseEntity<>(productList, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
-	
-    @GetMapping("/images/{filename:.+}")
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        // Gọi service để load file và trả về dưới dạng Resource
-        Resource file = storageService.loadAsResource(filename);
-        // Trả về response với file đã load
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
-    }
-	
-	
+	@GetMapping("/images/{filename:.+}")
+	public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+		// Gọi service để load file và trả về dưới dạng Resource
+		Resource file = storageService.loadAsResource(filename);
+		// Trả về response với file đã load
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+				.body(file);
+	}
+
+	@PutMapping("/update/{productId}")
+	public ResponseEntity<Integer> updateProduct(@PathVariable Integer productId,
+			@RequestBody ProductDto updatedProductDto) {
+		try {
+			Optional<Product> existingProductOptional = productService.findById(productId);
+
+			if (existingProductOptional.isPresent()) {
+				Product existingProduct = existingProductOptional.get();
+				// Sử dụng BeanUtils.copyProperties để cập nhật thông tin từ DTO mới sang sản
+				// phẩm hiện có
+				BeanUtils.copyProperties(updatedProductDto, existingProduct);
+
+				// Cập nhật nhà cung cấp nếu có thay đổi
+				if (updatedProductDto.getSupplierId() != null) {
+					Optional<Supplier> supplierOptional = supplierService.findById(updatedProductDto.getSupplierId());
+					if (supplierOptional.isPresent()) {
+						existingProduct.setSupplier(supplierOptional.get());
+					} else {
+						return ResponseEntity.badRequest().build();
+					}
+				}
+				// Cập nhật danh mục nếu có thay đổi
+				if (updatedProductDto.getCategoryId() != null) {
+					Optional<Category> categoryOptional = categoryService.findById(updatedProductDto.getCategoryId());
+					if (categoryOptional.isPresent()) {
+						existingProduct.setCategory(categoryOptional.get());
+					} else {
+						return ResponseEntity.badRequest().build();
+					}
+				}
+				// Lưu sản phẩm đã cập nhật
+				productService.save(existingProduct);
+				return ResponseEntity.ok(existingProduct.getProductId());
+			} else {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }
