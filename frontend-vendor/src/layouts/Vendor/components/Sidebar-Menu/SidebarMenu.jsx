@@ -9,7 +9,7 @@ import { TbFileInvoice } from 'react-icons/tb';
 import { GiFruitBowl } from 'react-icons/gi';
 import { Link } from 'react-router-dom';
 import config from '../../../../config';
-import Logo from '../../../../assets/images/Logo/LogoAdmin.png';
+import Logo from '../../../../assets/images/Logo/LOGO2.png';
 import Logo_sm from '../../../../assets/images/Logo/logo-sm.png';
 import NavItem from '../../../../components/NavItem/NavItem';
 
@@ -27,18 +27,17 @@ const SidebarMenu = () => {
   const products = [
     { to: config.routes.ListProduct, title: 'Danh Sách Sản Phẩm' },
     { to: config.routes.AddProduct, title: 'Tạo Sản Phẩm' },
-    { to: config.routes.AddProduct, title: 'Quản lý Bình Luận' }
+    { to: config.routes.ListComment, title: 'Quản lý Bình Luận' }
 
   ];
   const Invoice = [
-    { href: '#', title: 'Hóa Đơn Chơ Xác Nhận' },
+    {to: config.routes.InvoiceConfirmation, title: 'Hóa Đơn Chơ Xác Nhận' },
     { to: config.routes.ListOrder, title: 'Danh Sách Hóa Đơn' },
     { href: '#', title: 'Thông Tin Chi Tiết' },
   ];
   const Blog = [
     { href: '#', title: 'Danh Sách Bài Viết' },
     {to: config.routes.TagPost, title: 'Tags' },
-    { href: '#', title: 'Danh Mục Bài Viết' },
     {to: config.routes.AddPost, title: 'Tạo Bài Viết' },
 
   ];
@@ -68,7 +67,7 @@ const SidebarMenu = () => {
             <img src={Logo_sm} alt="" height={22} />
           </span>
           <span className="logo-lg">
-            <img src={Logo} alt="" height={20} />
+            <img src={Logo} alt="" height={80} />
           </span>
         </a>
         <a aria-current="page" href="/admin/" className="router-link-active router-link-exact-active logo logo-light" >
@@ -134,7 +133,7 @@ const SidebarMenu = () => {
                       <li>
                         {/**/}
                         <a
-                          href="/minible/vue/v-light/chat"
+                          href="#"
                           className="side-nav-link-ref"
                         >
                           <i className="uil-comments-alt" />
@@ -146,61 +145,7 @@ const SidebarMenu = () => {
                         {/**/}
                       </li>
                       {/*Thươngf mai điện tử start*/}
-                      <li>
-                        <a
-                          href="#"
-                          className="is-parent has-arrow"
-                          aria-expanded="false"
-                        >
-                          <i className="uil-store" />
-                          {/**/}
-                          <span>Thương mại điện tử</span>
-                        </a>
-                        {/**/}
-                        <ul className="sub-menu mm-collapse" aria-expanded="false">
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ecommerce/checkout"
-                              className="side-nav-link-ref"
-                            >
-                              Thông tin Giao hàng
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ecommerce/shops"
-                              className="side-nav-link-ref"
-                            >
-                              Danh sách lô hàng
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ecommerce/add-product"
-                              className="side-nav-link-ref"
-                            >
-                              Tạo lô hàng
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                          <li>
-                            <a
-                              href="/minible/vue/v-light/ecommerce/add-product"
-                              className="side-nav-link-ref"
-                            >
-                              Theo dõi
-                            </a>
-                            {/**/}
-                            {/**/}
-                          </li>
-                        </ul>
-                      </li>
-
+                
                       {/*Thương mai điện tử end */}
                       <NavItem title="Quản lý Sản Phẩm" icon={GiFruitBowl} links={products} />
                       {/**/}

@@ -5,6 +5,7 @@ const ProductService = {
     const url = '/products';
     return axiosAdmin.get(url);
   },
+  
 
   get(id) {
     const url = `/products/${id}`;
@@ -34,7 +35,7 @@ const ProductService = {
 
 
   update(data) {
-    const url = `/products/${data.Id}`;
+    const url = `/products/update/${data.productId}`;
     return axiosAdmin.put(url, data);
   },
 

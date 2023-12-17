@@ -4,6 +4,7 @@ const routes = {
     AddProduct:'/admin/products/create',
     EditProduct:'/admin/products/edit/:productId',
     ListProduct:'/admin/products',
+    ListComment:'/admin/products/comment',
     AddCatrgory:'/admin/categories/create',
     EditCatrgory: '/admin/categories/edit/:categoryId',
     ListCategory:'/admin/categories',
@@ -16,6 +17,7 @@ const routes = {
     TagPost :'/admin/post',
     AddPost : '/admin/post/add',
     ListOrder:'/admin/order/list',
+    InvoiceConfirmation:'/admin/order/confirmation',
     Bill:'/admin/order',
     Forbidden:'/403',
 

@@ -8,9 +8,10 @@ import { fetchSuppliers } from '../../redux/actions/supplier-action';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProduct, addImageProduct } from '../../redux/actions/product-action';
 import { toast } from 'react-toastify';
-
+import { Spin } from 'antd'; // Import Spin from Ant Design
 const AddProductForm = () => {
     const dispatch = useDispatch();
+    const [loading, setloading] = useState(false);
     const categories = useSelector((state) => state.category.categories);
     const suppliers = useSelector((state) => state.supplier.getAll);
     const [errors, setErrors] = useState({});
@@ -101,6 +102,7 @@ const AddProductForm = () => {
         fileInputRef.current.click();
     };
     const handleSubmitProduct = async (event) => {
+           setloading(true)
         event.preventDefault();
         
         // Validate the form
@@ -108,26 +110,28 @@ const AddProductForm = () => {
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             toast.error('Vui lòng Nhập lại dữ liệu!', { position: toast.POSITION.TOP_RIGHT });
+            setloading(false) 
             return;
         }
     
         if (!hasSelectedImages) {
             toast.error('Vui lòng chọn hình ảnh sản phẩm!', { position: toast.POSITION.TOP_RIGHT });
+            setloading(false) 
             return;
         }
     
         try {
             const productId = await dispatch(addProduct(product));
-    
-            // hành động nào khác sau khi thêm sản phẩm thành công
+            setloading(false) 
             console.log('Thêm sản phẩm thành công, ID:', productId);
-            // Gửi hình ảnh sau khi đã lưu thông tin sản phẩm
             await dispatch(addImageProduct(productId, selectedImages));
+            Rest();
         } catch (error) {
+            setloading(false) 
             console.error('Lỗi khi thêm sản phẩm:', error);
         } finally {
             // Reset form or perform any other necessary actions
-            Rest();
+            
         }
         console.log("FORM",product)
     };
@@ -203,6 +207,7 @@ const AddProductForm = () => {
 
 
     return (
+        <Spin spinning={loading} size="large" tip="Loading...">
         <form action=""  >
             <div className="row">
                 {/* Nội dung grid */}
@@ -358,17 +363,7 @@ const AddProductForm = () => {
 
                             </div>
                         </div>
-                        <div className="col">
-                            <div className="form-outline">
-                                <span className='form-label'>Hot(Ngày Kết Thúc)</span>
-                                <input type="date"
-                                    name='hotEndDate'
-                                    value={product.hotEndDate}
-                                    onChange={handleChange}
-                                    className={`form-control form-add ${errors.name ? 'is-invalid' : ''}`}
-                                    placeholder="Mã sản phẩm" />
-                            </div>
-                        </div>
+                     
                     </div>
                     <div className="row mb-4">
                         <div className="form-outline mb-4">
@@ -615,7 +610,7 @@ const AddProductForm = () => {
             </div>
 
         </form>
-
+        </Spin>
     );
 };
 

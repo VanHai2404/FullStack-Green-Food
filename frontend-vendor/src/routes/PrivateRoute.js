@@ -1,20 +1,32 @@
-import React from 'react';
+// routes/PrivateRoute.js
+import React, { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AuthService from '../services/AuthService';
 import { jwtDecode } from 'jwt-decode';
 
-
 const PrivateRoute = ({ element }) => {
-  const CurrentUser = AuthService.getCurrentUser();
+  console.log('PrivateRoute');
+  useEffect(() => {
+    console.log('PrivateRoute useEffect');
+    const checkLoginStatus = async () => {
+      const currentUser = AuthService.getCurrentUser();
 
-  if (!CurrentUser || !CurrentUser.accessToken) {
-    return <Navigate to="/alogin" />;
-  }
+      if (!currentUser || !currentUser.accessToken) {
+        console.log('Redirecting to /alogin');
+        return <Navigate to="/alogin" />;
+      }
 
-  const decodedToken = jwtDecode(CurrentUser.accessToken);
-  if (!decodedToken || !(decodedToken.roles.includes('ROLE_STAFF') || decodedToken.roles.includes('ROLE_ADMIN'))) {
-    return <Navigate to="/403" />;
-  }
+      const decodedToken = jwtDecode(currentUser.accessToken);
+      console.log('decodedToken', decodedToken);
+
+      if (!decodedToken || !(decodedToken.roles.includes('ROLE_STAFF') || decodedToken.roles.includes('ROLE_ADMIN'))) {
+        console.log('Redirecting to /403');
+        return <Navigate to="/403" />;
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   return (
     <Routes>

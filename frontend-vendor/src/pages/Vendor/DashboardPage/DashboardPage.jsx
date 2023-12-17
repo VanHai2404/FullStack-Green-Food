@@ -1,11 +1,46 @@
-// DashboardPage.js
-
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ColumnPlot from './ColumnPlot';
 import PieChart from './PieChart';
-import './DashboardPage.css'
+import axios from 'axios'; // Import axios hoặc thư viện HTTP client bạn sử dụng
+import './DashboardPage.css';
 
 const DashboardPage = () => {
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalCustomers, setTotalCustomers] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/admin/statistics/total-revenue');
+        setTotalRevenue(response);
+
+
+        const response2 = await axios.get('http://localhost:8080/api/admin/statistics/total-order');
+        setTotalOrders(response2);
+
+
+        const response3 = await axios.get('http://localhost:8080/api/admin/statistics/total-Custoemr');
+        setTotalCustomers(response3);
+
+        const response4 = await axios.get('http://localhost:8080/api/admin/statistics/total-product');
+        setTotalProducts(response4);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const formattedTotalRevenue = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(totalRevenue);
 
 
   return (
@@ -43,15 +78,15 @@ const DashboardPage = () => {
                 {" "}
                 {" "}
                 <span data-plugin="counterup">
-                  <span>400.000 VND</span>
+                  <span>{formattedTotalRevenue}</span>
                 </span>
               </h4>
-              <p className="text-muted mb-0">Total Revenue</p>
+              <p className="text-muted mb-0">Tổng doanh thu</p>
             </div>
             <p className="text-muted mt-3 mb-0">
               <i className="bi bi-arrow-up" style={{ color: "#28a745" }} />
-              &nbsp;<span className="text-success me-1">2.65%</span> since
-              last week
+              &nbsp;<span className="text-success me-1">2.65%</span> từ
+              tuần trước
             </p>
           </div>
         </div>
@@ -65,15 +100,15 @@ const DashboardPage = () => {
             <div>
               <h4 className="mb-1 mt-1">
                 <span data-plugin="counterup">
-                  <span>1</span>
+                  <span>{totalOrders}</span>
                 </span>
               </h4>
-              <p className="text-muted mb-0">Orders</p>
+              <p className="text-muted mb-0">Đơn đặt hàng</p>
             </div>
             <p className="text-muted mt-3 mb-0">
               <i className="bi bi-arrow-down" style={{ color: "#dc3545" }} />
               &nbsp;
-              <span className="text-danger me-1">0.82%</span> since last week
+              <span className="text-danger me-1">0.82%</span> kể từ tuần trước
             </p>
           </div>
         </div>
@@ -87,15 +122,14 @@ const DashboardPage = () => {
             <div>
               <h4 className="mb-1 mt-1">
                 <span data-plugin="counterup">
-                  <span>1</span>
+                  <span>{totalCustomers}</span>
                 </span>
               </h4>
-              <p className="text-muted mb-0">Customers</p>
+              <p className="text-muted mb-0">Khách hàng</p>
             </div>
             <p className="text-muted mt-3 mb-0">
               <i className="bi bi-arrow-down" style={{ color: "#dc3545" }} />
-              &nbsp;<span className="text-danger me-1">6.24%</span> since last
-              week
+              &nbsp;<span className="text-danger me-1">6.24%</span> kể từ tuần trước
             </p>
           </div>
         </div>
@@ -109,9 +143,9 @@ const DashboardPage = () => {
             <div>
               <h4 className="mb-1 mt-1">
                 {" "}
-                 <span data-plugin="counterup">12</span>
+                 <span data-plugin="counterup">{totalProducts}</span>
               </h4>
-              <p className="text-muted mb-0">Products</p>
+              <p className="text-muted mb-0">Sản Phẩm</p>
             </div>
             <p className="text-muted mt-3 mb-0">
               <i className="bi bi-arrow-up" style={{ color: "#28a745" }} />

@@ -60,7 +60,6 @@ import {
               error: ''
           };
           case UPDATE_IMAGE_PRODUCT_SUCCESS:
-            toast.success('Lưu ảnh Thành Công', { position: toast.POSITION.TOP_RIGHT });
             return {
                 ...state,
                 loading: false,
@@ -74,7 +73,6 @@ import {
           error: action.payload
         };
       case UPDATE_IMAGE_PRODUCT_FAILURE:
-        toast.error('Đã xảy ra lỗi khi Lưu Hình ảnh', { position: toast.POSITION.TOP_RIGHT });
         return {
           ...state,
           loading: false,

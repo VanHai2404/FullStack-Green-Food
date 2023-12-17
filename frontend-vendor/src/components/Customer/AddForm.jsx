@@ -62,6 +62,7 @@ const AddCustomerForm = () => {
             if (customerDto.imageFile) {
                 await dispatch(addImageCustomer(customerId, customerDto.imageFile));
             }
+            handleResetForm();
         } catch (error) {
             console.error('Error adding customer:', error);
         }

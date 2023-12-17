@@ -5,6 +5,10 @@ const OrderService = {
     const url = '/orders';
     return axiosAdmin.get(url);
   },
+  getbyStatus() {
+    const url = '/orders/status';
+    return axiosAdmin.get(url);
+  },
 
   getOrderDetails: async (orderId) => {
     try {

@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { login } from '../../redux/actions/auth-action';
 import { useDispatch } from 'react-redux';
-import AuthService from '../../services/AuthService';
+import { Spin } from 'antd'; // Import the Spin component
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  
+
+  const [loading, setLoading] = useState(false);
+
   const validateInputs = () => {
     let isValid = true;
 
-    // Kiểm tra email
     if (!email.trim()) {
       setEmailError('Vui lòng nhập email.');
       isValid = false;
@@ -25,7 +26,6 @@ const LoginForm = () => {
       setEmailError('');
     }
 
-    // Kiểm tra password
     if (!password.trim()) {
       setPasswordError('Vui lòng nhập mật khẩu.');
       isValid = false;
@@ -36,25 +36,29 @@ const LoginForm = () => {
     return isValid;
   };
 
-
-   // Tạo đối tượng chứa thông tin đăng nhập
-   const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInputs()) {
-        return;
-      }
-    // Tạo đối tượng chứa thông tin đăng nhập
+      return;
+    }
+
+    setLoading(true);
+
     const user = {
       email,
       password,
-
     };
-    // Gọi action đăng nhập từ Redux
-   
-    dispatch(login(user, navigate));
 
+    try {
+      await dispatch(login(user, navigate));
+    } catch (error) {
+      console.error('Error during login:', error);
+    } finally {
+      setLoading(false);
+    }
   };
     return (
+      <Spin spinning={loading} tip="Đang xử lý...">
         <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label className="mb-2 ">
@@ -109,7 +113,7 @@ const LoginForm = () => {
           </button>
         </div>
       </form>
-
+      </Spin>
 
     );
 };

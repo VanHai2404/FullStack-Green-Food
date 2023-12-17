@@ -23,7 +23,6 @@ const TableListProduct = () => {
     const handleDelete = async (productId) => {
         try {
             await dispatch(deleteProduct(productId)); 
-
             // Làm mới dữ liệu sau khi xóa thành công
             fetchData();
         } catch (error) {
@@ -112,11 +111,11 @@ const TableListProduct = () => {
             render: (text) => {
                 switch (text) {
                     case 1:
-                        return 'ACTIVE';
+                        return 'Hàng Mới';
                     case 2:
-                        return 'INACTIVE';
+                        return 'Sắp ra mắt';
                     case 3:
-                        return 'Out of Stock';
+                        return 'Chỉ có sẵn ngoại tuyến';
                     default:
                         return '';
                 }

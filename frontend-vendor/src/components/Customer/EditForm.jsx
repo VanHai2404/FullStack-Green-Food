@@ -6,7 +6,7 @@ import { Spin } from 'antd'; // Import Spin from Ant Design
 
 const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCustomer,addImageCustomer}) => {
     const { customerId } = useParams();
-
+    const navigate = useNavigate();
     const [customerDto, setCustomerDto] = useState({
         username: "",
         fullname: "",
@@ -32,11 +32,6 @@ const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCu
             setCustomerDto(customer);
         }
     }, [customer]);
-
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
-
 
     // 
     const handleChange = (e) => {
@@ -68,12 +63,13 @@ const EditCustomerForm = ({ customer, loading, error, fetchByCustomer , updateCu
             updateCustomer(customerDto);
             // Thêm bất kỳ hành động nào khác sau khi thêm khách hàng thành công
             console.log('Thêm khách hàng thành công, ID:', customerId);
-
+            navigate('/admin/customers')
             // Nếu có hình ảnh, gửi hình ảnh sau khi đã lưu thông tin khách hàng
             if (customerDto.imageFile) {
                 addImageCustomer(customerId, imageFile);
                 console.log('Lưu ảnh thành công');
             }
+
         } catch (error) {
             console.error('Lỗi khi thêm khách hàng:', error);
         }

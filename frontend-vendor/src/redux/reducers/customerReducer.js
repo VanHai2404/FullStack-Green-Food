@@ -58,7 +58,7 @@ const customerReducer = (state = initialState, action) => {
         error: ''
       };
     case UPDATE_IMAGE_SUCCESS:
-      toast.success('Lưu ảnh Thành Công', { position: toast.POSITION.TOP_RIGHT });
+     
       return {
         ...state,
         loading: false,

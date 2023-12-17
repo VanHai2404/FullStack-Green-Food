@@ -23,18 +23,24 @@ import ListPageOrder from '../pages/Vendor/PageOrder/ListPage';
 import ListBilPage from '../pages/Vendor/BillPage/ListBilPage';
 import AddPost from '../pages/Vendor/PostPage/AddPost';
 import EditProducts from '../pages/Vendor/ProductPage/EditProducts';
-
+import ListComment from '../pages/Vendor/ProductPage/ListComment';
+import InvoiceConfirmation from '../pages/Vendor/PageOrder/InvoiceConfirmation';
 
 // Public routes
 const publicRoutes = [
     { path: config.routes.Login, component: Login, layout: null },
     { path: config.routes.Forbidden, component: ForbiddenPage, layout: null },
+   
+];
+
+
+const privateRoutes = [
     { path: config.routes.Dashboard, component: DashboardPage },
     
     { path: config.routes.AddProduct, component: AddProducts },
     { path: config.routes.ListProduct, component: ListProducts },
     { path: config.routes.EditProduct,component:EditProducts},
-
+    { path: config.routes.ListComment, component: ListComment },
     { path: config.routes.AddCatrgory, component: AddCategory },
     { path: config.routes.EditCatrgory, component: EditCategory },
     { path: config.routes.ListCategory, component: ListCategory },
@@ -50,11 +56,11 @@ const publicRoutes = [
     { path: config.routes.TagPost,component: ListTag},
     { path: config.routes.AddPost,component: AddPost},
     {path:config.routes.ListOrder,component: ListPageOrder},
+    { path: config.routes.InvoiceConfirmation, component: InvoiceConfirmation },
+
+
     {path:config.routes.Bill,component: ListBilPage},
 
 ];
-
-
-const privateRoutes = [];
 
 export { publicRoutes, privateRoutes };

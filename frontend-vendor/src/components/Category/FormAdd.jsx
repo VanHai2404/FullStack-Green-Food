@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import CKEditorComponent from '../CKEditor/CKEditor';
 import { addCategory } from '../../redux/actions/category-action';
+import { useNavigate } from 'react-router-dom';
 
 const FormCategory = () => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const [categoryDto, setCategoryDto] = useState({
         name: "",
         slug: "",
@@ -48,7 +49,7 @@ const FormCategory = () => {
             dispatch(addCategory(categoryDto));
 
             // Reset form after successful submission
-
+            navigate("/admin/categories")
             resetForm();
         }
     };

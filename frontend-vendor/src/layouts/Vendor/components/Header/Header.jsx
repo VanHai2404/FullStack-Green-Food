@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Link } from 'react-router-dom';
 // import config from '../../../../config';
 import { FaBars } from 'react-icons/fa';
+import Logo from '../../../../assets/images/Logo/LOGO2.png';
 import MenuLanguage from '../../../../components/Dropdown/MenuLanguage';
 import MenuProfile from '../../../../components/Dropdown/MenuProfile';
 import './Header.css'
@@ -21,19 +22,19 @@ const Header = () => {
                     <div className="navbar-brand-box">
                         <a
                             aria-current="page"
-                            href="/minible/vue/v-light/"
+                            
                             className="router-link-active router-link-exact-active logo logo-dark"
                         >
                             <span className="logo-sm">
                                 <img
-                                    src="/minible/vue/v-light/img/logo-sm.132fcb2a.png"
+                                src={Logo}
                                     alt=""
                                     height={22}
                                 />
                             </span>
                             <span className="logo-lg">
                                 <img
-                                    src="/minible/vue/v-light/img/logo-dark.f3fe36a5.png"
+                                    src={Logo}
                                     alt=""
                                     height={20}
                                 />
@@ -41,19 +42,19 @@ const Header = () => {
                         </a>
                         <a
                             aria-current="page"
-                            href="/minible/vue/v-light/"
+                            
                             className="router-link-active router-link-exact-active logo logo-light"
                         >
                             <span className="logo-sm">
                                 <img
-                                    src="/minible/vue/v-light/img/logo-sm.132fcb2a.png"
+                                    src={Logo}
                                     alt=""
                                     height={22}
                                 />
                             </span>
                             <span className="logo-lg">
                                 <img
-                                    src="/minible/vue/v-light/img/logo-light.63bd6def.png"
+                                    src={Logo}
                                     alt=""
                                     height={20}
                                 />

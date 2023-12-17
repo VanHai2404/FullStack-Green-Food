@@ -78,6 +78,7 @@ export const addProduct = (data) => {
           type: UPDATE_PRODUCT_SUCCESS,
           payload: response.data
         })
+        return response.data;
       } catch (error) {
         dispatch({
           type:UPDATE_PRODUCT_FAILURE,

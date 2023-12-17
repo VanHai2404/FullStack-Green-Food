@@ -10,10 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import ProductService from '../../services/ProductService';
 import { updateProduct, addImageProduct } from '../../redux/actions/product-action';
 import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditProductForm = () => {
     const initialFormState = {
+        productId: '',
         name: '',
         hotEndDate: '',
         categoryId: '',
@@ -32,6 +33,7 @@ const EditProductForm = () => {
     };
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const categories = useSelector((state) => state.category.categories);
     const suppliers = useSelector((state) => state.supplier.getAll);
     const { productId } = useParams();
@@ -58,6 +60,7 @@ const EditProductForm = () => {
             const getProduct = response.data;
             console.log('Fetched data:', getProduct);
             setProduct({
+                productId: getProduct.productId,
                 name: getProduct.name,
                 hotEndDate: getProduct.hotEndDate,
                 categoryId: getProduct.category?.categoryId,
@@ -76,7 +79,6 @@ const EditProductForm = () => {
             });
             console.log("ảnh", getProduct.images)
             setImagesP(getProduct.images);
-            console.log("test   11111 ");
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -115,12 +117,13 @@ const EditProductForm = () => {
     };
     const handleImageDeleteL = (index) => {
         const updatedImages = [...imagesP];
-       updatedImages.splice(index, 1);
+        updatedImages.splice(index, 1);
         setImagesP(updatedImages);
-      };
-      
+    };
+
     const Rest = () => {
         setProduct({
+            productId: '',
             name: '',
             hotEndDate: '',
             categoryId: '',
@@ -148,32 +151,40 @@ const EditProductForm = () => {
 
     const handleSubmitProduct = async (event) => {
         event.preventDefault();
-
+        setLoading(true);
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             toast.error('Vui lòng Nhập lại dữ liệu!', { position: toast.POSITION.TOP_RIGHT });
+            setLoading(false);
             return;
         }
 
-        if (!hasSelectedImages) {
-            toast.error('Vui lòng chọn hình ảnh sản phẩm!', { position: toast.POSITION.TOP_RIGHT });
+        if (hasSelectedImages || getImages) {
+            try {
+                const updatedProductId = await dispatch(updateProduct(product));
+                if (hasSelectedImages) {
+                    console.log("HINH ANH CẤP NHẬT",updatedProductId);
+                    await dispatch(addImageProduct(updatedProductId, selectedImages));
+                }
+                setLoading(false);
+                navigate("/admin/products");
+                Rest();
+            } catch (error) {
+                setLoading(false);
+                console.error('Lỗi khi cập nhật sản phẩm:', error);
+            }
+        } else {
+            setLoading(false);
+            toast.error('Vui lòng Chọn hình ảnh SP!', { position: toast.POSITION.TOP_RIGHT });
             return;
         }
-
-        try {
-            const updatedProductId = await dispatch(updateProduct(product));
-            console.log('Cập nhật sản phẩm thành công, ID:', updatedProductId);
-            await dispatch(addImageProduct(updatedProductId, selectedImages));
-            Rest();
-        } catch (error) {
-            console.error('Lỗi khi cập nhật sản phẩm:', error);
-        } 
 
         console.log("FORM", product);
     };
 
     const hasSelectedImages = selectedImages.length > 0;
+    const getImages = imagesP.length > 0;
 
     const validateForm = () => {
         const errors = {};

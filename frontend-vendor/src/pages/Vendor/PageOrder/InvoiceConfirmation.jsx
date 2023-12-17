@@ -1,9 +1,11 @@
 // src/components/AddProducts/AddProducts.jsx
 import React from 'react';
-import './AddProducts.css';
+import '../ProductPage/AddProducts.css';
 import { BsSearch }from 'react-icons/bs';
-import TableListComment from '../../../components/Product/TableListComment';
-const ListComment = () => {
+
+import TableConfirmation from '../../../components/Order/TableConfirmation';
+
+const InvoiceConfirmation = () => {
     return (
         <div>
             <div className="row">
@@ -11,7 +13,7 @@ const ListComment = () => {
                     <div className="page-title-box d-flex align-items-center justify-content-between">
                         <h4 className="mb-0">
                             <font style={{ verticalAlign: "inherit" }}>
-                                <font style={{ verticalAlign: "inherit" }}>Danh Sách Bình Luận </font>
+                                <font style={{ verticalAlign: "inherit" }}>Các Hóa Đơn</font>
                             </font>
                         </h4>
                         <div className="page-title-right">
@@ -21,7 +23,7 @@ const ListComment = () => {
                                         <a className="" href="#" target="_self">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                    Sản phẩm
+                                                  Hóa Đơn
                                                 </font>
                                             </font>
                                         </a>
@@ -30,7 +32,7 @@ const ListComment = () => {
                                         <span aria-current="location">
                                             <font style={{ verticalAlign: "inherit" }}>
                                                 <font style={{ verticalAlign: "inherit" }}>
-                                                   List Bình Luận
+                                                    Các Hóa Đơn
                                                 </font>
                                             </font>
                                         </span>
@@ -83,7 +85,7 @@ const ListComment = () => {
 
 
 
-                    <TableListComment />
+                    <TableConfirmation />
 
 
 
@@ -95,4 +97,4 @@ const ListComment = () => {
     );
 };
 
-export default ListComment;
+export default InvoiceConfirmation;
